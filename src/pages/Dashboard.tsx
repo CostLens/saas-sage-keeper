@@ -80,9 +80,9 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          {/* Stats Overview */}
-          <div className="grid grid-cols-1 gap-6">
-            {showUsageFeatures ? (
+          {/* Stats Overview - Only show if usage features are enabled */}
+          {showUsageFeatures && (
+            <div className="grid grid-cols-1 gap-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard
                   title="Total Annual SaaS Spend"
@@ -111,42 +111,11 @@ const Dashboard = () => {
                   description={`${unusedLicenses} unused licenses across all apps`}
                 />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                <StatCard
-                  title="Total Annual SaaS Spend"
-                  value={`$${(totalSpend).toLocaleString()}`}
-                  icon={<DollarSign className="h-5 w-5" />}
-                  trend={{ value: 12, isPositive: false }}
-                  description="12% increase from last year"
-                />
-                
-                <StatCard
-                  title="Upcoming Renewals"
-                  value={upcomingRenewals}
-                  icon={<Calendar className="h-5 w-5" />}
-                  description="Coming up in the next 90 days"
-                />
-                
-                <StatCard
-                  title="Payments Due"
-                  value={paymentsCount}
-                  icon={<AlertTriangle className="h-5 w-5" />}
-                  description="Invoices pending payment"
-                />
-                
-                <StatCard
-                  title="Termination Deadlines"
-                  value={terminationDeadlines}
-                  icon={<FileTerminal className="h-5 w-5" />}
-                  description="Approaching in 30 days"
-                />
-              </div>
-            )}
-            
-            <div className="md:col-span-3">
-              <RenewalCalendar saasData={mockSaasData} />
             </div>
+          )}
+            
+          <div className="md:col-span-3">
+            <RenewalCalendar saasData={mockSaasData} />
           </div>
 
           {/* SaaS Table Section */}

@@ -24,7 +24,7 @@ const Settings = () => {
                       type="text" 
                       placeholder="Your name"
                       className="w-full px-3 py-2 border rounded-md"
-                      defaultValue="Kevin Hart"
+                      defaultValue="Kanav Hasija"
                     />
                   </div>
                   <div>
@@ -33,7 +33,7 @@ const Settings = () => {
                       type="email" 
                       placeholder="Your email"
                       className="w-full px-3 py-2 border rounded-md"
-                      defaultValue="kevin@costlens.com"
+                      defaultValue="kanav.hasija@gmail.com"
                     />
                   </div>
                 </div>

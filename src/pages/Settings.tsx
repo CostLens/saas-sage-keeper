@@ -24,7 +24,9 @@ const Settings = () => {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [contractRenewalAlerts, setContractRenewalAlerts] = useState(true);
   const [spendAlerts, setSpendAlerts] = useState(true);
-  const [showUsageFeatures, setShowUsageFeatures] = useState(true);
+  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
+    return localStorage.getItem("show-usage-features") === "true";
+  });
   const [gmailConnected, setGmailConnected] = useState(false);
   const [quickbooksConnected, setQuickbooksConnected] = useState(false);
   const [gmailDialogOpen, setGmailDialogOpen] = useState(false);

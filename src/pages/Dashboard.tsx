@@ -5,11 +5,24 @@ import { Sidebar } from "@/components/Sidebar";
 import { SaasTable } from "@/components/SaasTable";
 import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
-import { RenewalCalendar } from "@/components/RenewalCalendar";
 import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
 import { DollarSign, Users, TrendingDown, Calendar, AlertTriangle, FileTerminal } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ChevronRight, CalendarClock, Wallet, Flag } from "lucide-react";
+import { format } from "date-fns";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -65,58 +78,42 @@ const Dashboard = () => {
     setIsDetailModalOpen(true);
   };
 
-  const upcomingRenewals = mockSaasData.filter(saas => 
-    saas.renewalDate !== "N/A" && 
-    new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
-  ).length;
-
-  const paymentsCount = 3;
-  const terminationDeadlines = 2;
-
-  // Generate all dashboard cards in a unified array
-  const allCards = [];
+  // Get upcoming renewals
+  const upcomingRenewals = mockSaasData
+    .filter(saas => 
+      saas.renewalDate !== "N/A" && 
+      new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+    )
+    .map(saas => ({
+      ...saas,
+      renewalDateObj: new Date(saas.renewalDate)
+    }));
   
-  // Total Annual SaaS Spend card is always shown
-  allCards.push(
-    <StatCard
-      key="total-spend"
-      title="Total Annual SaaS Spend"
-      value={`$${(totalSpend).toLocaleString()}`}
-      icon={<DollarSign className="h-4 w-4" />}
-      trend={{ value: 12, isPositive: false }}
-      description="12% increase from last year"
-      className="h-full"
-    />
-  );
+  const upcomingRenewalAmount = upcomingRenewals.reduce((sum, saas) => sum + saas.price, 0);
+
+  // Get upcoming payments
+  const paymentsData = mockSaasData
+    .filter(saas => saas.lastPayment && new Date(saas.lastPayment.date) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
+    .slice(0, 3);
   
-  // Add additional cards if usage features are enabled
-  if (showUsageFeatures) {
-    allCards.push(
-      <StatCard
-        key="license-utilization"
-        title="License Utilization"
-        value={`${overallUtilization}%`}
-        icon={<Users className="h-5 w-5" />}
-        description={`${activeUsers} active of ${totalLicenses} total licenses`}
-        className="h-full"
-      >
-        <div className="mt-2">
-          <Progress value={overallUtilization} className="h-2" />
-        </div>
-      </StatCard>
-    );
-    
-    allCards.push(
-      <StatCard
-        key="potential-savings"
-        title="Potential Cost Savings"
-        value={`$${Math.round(potentialSavings).toLocaleString()}`}
-        icon={<TrendingDown className="h-5 w-5" />}
-        description={`${unusedLicenses} unused licenses across all apps`}
-        className="h-full"
-      />
-    );
-  }
+  const paymentsAmount = paymentsData.reduce((sum, saas) => 
+    sum + (saas.lastPayment ? saas.lastPayment.amount : 0), 0);
+
+  // Get upcoming termination deadlines
+  const terminationsData = mockSaasData
+    .filter(saas => 
+      saas.contract && 
+      saas.contract.cancellationDeadline && 
+      new Date(saas.contract.cancellationDeadline) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    )
+    .slice(0, 2);
+
+  // Days remaining helper function
+  const getDaysRemaining = (date: Date): number => {
+    const today = new Date();
+    const diffTime = date.getTime() - today.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -132,21 +129,143 @@ const Dashboard = () => {
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          {/* Unified grid layout for ALL dashboard cards */}
-          <div className="grid gap-4 md:gap-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-              {/* First row: Stat cards */}
-              {allCards.map((card, index) => (
-                <div key={index} className={`${index === 0 && allCards.length === 1 ? 'col-span-full md:col-span-1' : ''}`}>
-                  {card}
+          {/* First Row: Stats Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+            {/* Total Annual SaaS Spend card is always shown */}
+            <StatCard
+              key="total-spend"
+              title="Total Annual SaaS Spend"
+              value={`$${totalSpend.toLocaleString()}`}
+              icon={<DollarSign className="h-4 w-4" />}
+              trend={{ value: 12, isPositive: false }}
+              description="12% increase from last year"
+              className="h-full"
+            />
+            
+            {/* Additional cards if usage features are enabled */}
+            {showUsageFeatures && (
+              <>
+                <StatCard
+                  key="license-utilization"
+                  title="License Utilization"
+                  value={`${overallUtilization}%`}
+                  icon={<Users className="h-5 w-5" />}
+                  description={`${activeUsers} active of ${totalLicenses} total licenses`}
+                  className="h-full"
+                >
+                  <div className="mt-2">
+                    <Progress value={overallUtilization} className="h-2" />
+                  </div>
+                </StatCard>
+                
+                <StatCard
+                  key="potential-savings"
+                  title="Potential Cost Savings"
+                  value={`$${Math.round(potentialSavings).toLocaleString()}`}
+                  icon={<TrendingDown className="h-5 w-5" />}
+                  description={`${unusedLicenses} unused licenses across all apps`}
+                  className="h-full"
+                />
+              </>
+            )}
+          </div>
+
+          {/* Second Row: Calendar Cards - Now in a unique layout */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {/* Upcoming Renewals Card */}
+            <Card className="glass-panel glass-panel-hover">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center justify-between text-base">
+                  <div className="flex items-center gap-2">
+                    <CalendarClock className="h-4 w-4 text-primary" />
+                    <span>Upcoming Renewals</span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs flex items-center gap-1 h-6 px-2"
+                  >
+                    View All
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pb-4">
+                <div className="bg-primary/5 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium">Next 90 Days</span>
+                    <span className="text-sm font-bold">${upcomingRenewalAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {upcomingRenewals.length} {upcomingRenewals.length === 1 ? 'subscription' : 'subscriptions'} to renew
+                  </div>
                 </div>
-              ))}
-              
-              {/* The calendar should take the remaining space */}
-              <div className={`${allCards.length === 1 ? 'col-span-full md:col-span-2' : 'col-span-full md:col-span-1'}`}>
-                <RenewalCalendar saasData={mockSaasData} />
-              </div>
-            </div>
+              </CardContent>
+            </Card>
+
+            {/* Payments Due Card */}
+            <Card className="glass-panel glass-panel-hover">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center justify-between text-base">
+                  <div className="flex items-center gap-2">
+                    <Wallet className="h-4 w-4 text-emerald-500" />
+                    <span>Payments Due</span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs flex items-center gap-1 h-6 px-2"
+                  >
+                    View All
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pb-4">
+                <div className="bg-emerald-500/5 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium">Next 30 Days</span>
+                    <span className="text-sm font-bold">${paymentsAmount.toLocaleString()}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {paymentsData.length} {paymentsData.length === 1 ? 'payment' : 'payments'} due
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Third Row: Termination Deadlines Card */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <Card className="glass-panel glass-panel-hover md:col-span-1">
+              <CardHeader className="pb-2">
+                <CardTitle className="flex items-center justify-between text-base">
+                  <div className="flex items-center gap-2">
+                    <Flag className="h-4 w-4 text-amber-500" />
+                    <span>Termination Deadlines</span>
+                  </div>
+                  <Button 
+                    variant="ghost" 
+                    size="sm" 
+                    className="text-xs flex items-center gap-1 h-6 px-2"
+                  >
+                    View All
+                    <ChevronRight className="h-3 w-3" />
+                  </Button>
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pb-4">
+                <div className="bg-amber-500/5 rounded-lg p-3">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-medium">Next 30 Days</span>
+                    <span className="text-sm font-bold">{terminationsData.length}</span>
+                  </div>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {terminationsData.length} {terminationsData.length === 1 ? 'deadline' : 'deadlines'} approaching
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <div className="space-y-4">

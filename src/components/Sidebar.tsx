@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
@@ -27,13 +28,13 @@ const Sidebar = ({ className }: SidebarProps) => {
   });
   
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    return localStorage.getItem("show-usage-features") !== "false"; // Default to true if not set
+    return localStorage.getItem("show-usage-features") === "true"; // Default to false if not set
   });
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
     const handleStorageChange = () => {
-      setShowUsageFeatures(localStorage.getItem("show-usage-features") !== "false");
+      setShowUsageFeatures(localStorage.getItem("show-usage-features") === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);

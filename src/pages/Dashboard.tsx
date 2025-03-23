@@ -17,13 +17,13 @@ const Dashboard = () => {
     return localStorage.getItem("sidebar-collapsed") === "true";
   });
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    return localStorage.getItem("show-usage-features") !== "false"; // Default to true if not set
+    return localStorage.getItem("show-usage-features") === "true"; // Default to false if not set
   });
 
   useEffect(() => {
     const handleStorageChange = () => {
       setSidebarCollapsed(localStorage.getItem("sidebar-collapsed") === "true");
-      setShowUsageFeatures(localStorage.getItem("show-usage-features") !== "false");
+      setShowUsageFeatures(localStorage.getItem("show-usage-features") === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);

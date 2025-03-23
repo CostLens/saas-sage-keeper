@@ -18,12 +18,12 @@ const queryClient = new QueryClient();
 
 const App = () => {
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    return localStorage.getItem("show-usage-features") !== "false"; // Default to true if not set
+    return localStorage.getItem("show-usage-features") === "true"; // Default to false if not set
   });
 
   useEffect(() => {
     const handleStorageChange = () => {
-      setShowUsageFeatures(localStorage.getItem("show-usage-features") !== "false");
+      setShowUsageFeatures(localStorage.getItem("show-usage-features") === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);

@@ -60,6 +60,12 @@ const Dashboard = () => {
     setIsDetailModalOpen(true);
   };
 
+  // Count upcoming renewals for the next 90 days
+  const upcomingRenewals = mockSaasData.filter(saas => 
+    saas.renewalDate !== "N/A" && 
+    new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+  ).length;
+
   return (
     <div className="min-h-screen flex">
       <Sidebar />
@@ -72,7 +78,7 @@ const Dashboard = () => {
 
           {/* Stats Overview */}
           <div className="grid grid-cols-1 gap-6">
-            <div className={`grid grid-cols-1 md:grid-cols-${showUsageFeatures ? '3' : '2'} gap-6`}>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <StatCard
                 title="Total Annual SaaS Spend"
                 value={`$${(totalSpend).toLocaleString()}`}
@@ -81,36 +87,31 @@ const Dashboard = () => {
                 description="12% increase from last year"
               />
               
-              {showUsageFeatures && (
-                <StatCard
-                  title="License Utilization"
-                  value={`${overallUtilization}%`}
-                  icon={<Users className="h-5 w-5" />}
-                  description={`${activeUsers} active of ${totalLicenses} total licenses`}
-                  className="relative"
-                >
-                  <div className="mt-2">
-                    <Progress value={overallUtilization} className="h-2" />
-                  </div>
-                </StatCard>
-              )}
-              
-              {showUsageFeatures && (
-                <StatCard
-                  title="Potential Cost Savings"
-                  value={`$${Math.round(potentialSavings).toLocaleString()}`}
-                  icon={<TrendingDown className="h-5 w-5" />}
-                  description={`${unusedLicenses} unused licenses across all apps`}
-                />
-              )}
-
-              {!showUsageFeatures && (
+              {showUsageFeatures ? (
+                <>
+                  <StatCard
+                    title="License Utilization"
+                    value={`${overallUtilization}%`}
+                    icon={<Users className="h-5 w-5" />}
+                    description={`${activeUsers} active of ${totalLicenses} total licenses`}
+                    className="relative"
+                  >
+                    <div className="mt-2">
+                      <Progress value={overallUtilization} className="h-2" />
+                    </div>
+                  </StatCard>
+                  
+                  <StatCard
+                    title="Potential Cost Savings"
+                    value={`$${Math.round(potentialSavings).toLocaleString()}`}
+                    icon={<TrendingDown className="h-5 w-5" />}
+                    description={`${unusedLicenses} unused licenses across all apps`}
+                  />
+                </>
+              ) : (
                 <StatCard
                   title="Upcoming Renewals"
-                  value={`${mockSaasData.filter(saas => 
-                    saas.renewalDate !== "N/A" && 
-                    new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
-                  ).length}`}
+                  value={upcomingRenewals}
                   icon={<Calendar className="h-5 w-5" />}
                   description="Coming up in the next 90 days"
                 />

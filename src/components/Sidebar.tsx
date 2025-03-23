@@ -7,7 +7,7 @@ import {
   LayoutDashboard, 
   TrendingUp, 
   FileText,
-  PiggyBank, 
+  Coins, 
   Settings, 
   HelpCircle,
   ChevronLeft,
@@ -83,14 +83,14 @@ const Sidebar = ({ className }: SidebarProps) => {
         {!isCollapsed && (
           <div className="flex items-center gap-2">
             <div className="rounded-md bg-primary/10 p-1">
-              <PiggyBank className="h-6 w-6 text-primary" />
+              <Coins className="h-6 w-6 text-primary" />
             </div>
             <span className="font-bold text-xl tracking-tight">CostLens</span>
           </div>
         )}
         {isCollapsed && (
           <div className="rounded-md bg-primary/10 p-1 mx-auto">
-            <PiggyBank className="h-6 w-6 text-primary" />
+            <Coins className="h-6 w-6 text-primary" />
           </div>
         )}
         <Button 

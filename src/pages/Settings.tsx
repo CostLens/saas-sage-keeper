@@ -6,6 +6,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Google, MailIcon } from "lucide-react";
 
 const Settings = () => {
   const [name, setName] = useState("Kanav Hasija");
@@ -14,6 +15,8 @@ const Settings = () => {
   const [contractRenewalAlerts, setContractRenewalAlerts] = useState(true);
   const [spendAlerts, setSpendAlerts] = useState(true);
   const [showUsageFeatures, setShowUsageFeatures] = useState(true);
+  const [gmailConnected, setGmailConnected] = useState(false);
+  const [quickbooksConnected, setQuickbooksConnected] = useState(false);
   const { toast } = useToast();
 
   // Load settings from localStorage on initial render
@@ -21,6 +24,17 @@ const Settings = () => {
     const savedShowUsageFeatures = localStorage.getItem("show-usage-features");
     if (savedShowUsageFeatures !== null) {
       setShowUsageFeatures(savedShowUsageFeatures === "true");
+    }
+    
+    // For demonstration purposes, we'll load connected status from localStorage
+    const savedGmailConnected = localStorage.getItem("gmail-connected");
+    if (savedGmailConnected !== null) {
+      setGmailConnected(savedGmailConnected === "true");
+    }
+    
+    const savedQuickbooksConnected = localStorage.getItem("quickbooks-connected");
+    if (savedQuickbooksConnected !== null) {
+      setQuickbooksConnected(savedQuickbooksConnected === "true");
     }
   }, []);
 
@@ -30,12 +44,55 @@ const Settings = () => {
     // Dispatch an event so other components can listen for the change
     window.dispatchEvent(new Event("usageFeaturesToggled"));
   }, [showUsageFeatures]);
+  
+  // Save connection statuses to localStorage when they change
+  useEffect(() => {
+    localStorage.setItem("gmail-connected", gmailConnected.toString());
+  }, [gmailConnected]);
+  
+  useEffect(() => {
+    localStorage.setItem("quickbooks-connected", quickbooksConnected.toString());
+  }, [quickbooksConnected]);
 
   const handleSaveSettings = () => {
     // Save settings logic would go here
     toast({
       title: "Settings saved",
       description: "Your settings have been saved successfully.",
+    });
+  };
+  
+  const handleConnectGmail = () => {
+    // In a real app, this would redirect to Gmail OAuth flow
+    setGmailConnected(true);
+    toast({
+      title: "Gmail connected",
+      description: "Your Gmail account has been connected successfully.",
+    });
+  };
+  
+  const handleDisconnectGmail = () => {
+    setGmailConnected(false);
+    toast({
+      title: "Gmail disconnected",
+      description: "Your Gmail account has been disconnected.",
+    });
+  };
+  
+  const handleConnectQuickbooks = () => {
+    // In a real app, this would redirect to QuickBooks OAuth flow
+    setQuickbooksConnected(true);
+    toast({
+      title: "QuickBooks connected",
+      description: "Your QuickBooks account has been connected successfully.",
+    });
+  };
+  
+  const handleDisconnectQuickbooks = () => {
+    setQuickbooksConnected(false);
+    toast({
+      title: "QuickBooks disconnected",
+      description: "Your QuickBooks account has been disconnected.",
     });
   };
 
@@ -76,6 +133,65 @@ const Settings = () => {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                       />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Integrations */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Integrations</CardTitle>
+                  <CardDescription>Connect with other applications</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
+                          <Google className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium">Gmail</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {gmailConnected 
+                              ? "Connected to Gmail" 
+                              : "Connect to import contract emails and notifications"}
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant={gmailConnected ? "outline" : "default"}
+                        onClick={gmailConnected ? handleDisconnectGmail : handleConnectGmail}
+                        size="sm"
+                      >
+                        {gmailConnected ? "Disconnect" : "Connect"}
+                      </Button>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-md bg-green-100 flex items-center justify-center">
+                          <svg className="h-5 w-5 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M22.3 2.9c-.5-.3-1.3-.3-2.2 0l-6.8 2.3V2.7c0-.7-.6-1.3-1.3-1.3h-4.5c-.7 0-1.3.6-1.3 1.3v4.6L1.7 9.9C.6 10.3 0 11.3 0 12.5v9c0 1.4 1.1 2.5 2.5 2.5h19c1.4 0 2.5-1.1 2.5-2.5v-16c0-.9-.7-1.8-1.7-2.6zm-14-1.5h6v5.5l-6-2.1V1.4zm10.2 21.1H5.5v-7.1l6.5 3.2 6.5-3.2v7.1zm1.3-9.5L12 16.5 4.2 13c-.8-.4-.8-1.5 0-1.9l6.4-2.9 7.4-2.5c.8-.3 1.5.2 1.5 1 0 .6-.3 1.1-.9 1.4l-7.9 2.7-3.4 1.5 7.9 3.5 7.9-3.5c.1-.1.2-.1.2-.2v-.5c0-.7-.7-1.3-1.5-1l-.9.3-.1-1.1 1-.3c1.5-.5 3.1.2 3.1 1.8v.7c0 .9-.7 1.8-1.8 2.3z"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium">QuickBooks</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {quickbooksConnected 
+                              ? "Connected to QuickBooks" 
+                              : "Connect to import accounting data and expenses"}
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant={quickbooksConnected ? "outline" : "default"}
+                        onClick={quickbooksConnected ? handleDisconnectQuickbooks : handleConnectQuickbooks}
+                        size="sm"
+                      >
+                        {quickbooksConnected ? "Disconnect" : "Connect"}
+                      </Button>
                     </div>
                   </div>
                 </CardContent>

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Settings, HelpCircle, Search, X } from "lucide-react";
+import { Bell, HelpCircle, Search } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -17,7 +17,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Checkbox } from "@/components/ui/checkbox";
 
 interface HeaderProps {
   className?: string;
@@ -160,12 +159,6 @@ export function Header({ className }: HeaderProps) {
           <Link to="/help">
             <Button variant="ghost" size="icon">
               <HelpCircle className="h-5 w-5" />
-            </Button>
-          </Link>
-
-          <Link to="/settings">
-            <Button variant="ghost" size="icon">
-              <Settings className="h-5 w-5" />
             </Button>
           </Link>
 

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, Wallet } from "lucide-react";
+import { Bell, Search, PiggyBank } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -81,9 +81,9 @@ export function Header({ className }: HeaderProps) {
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 md:hidden">
           <div className="rounded-md bg-primary/10 p-1">
-            <Wallet className="h-5 w-5 text-primary" />
+            <PiggyBank className="h-5 w-5 text-primary" />
           </div>
-          <span className="font-semibold text-lg tracking-tight">SpendWise</span>
+          <span className="font-semibold text-lg tracking-tight">CostLens</span>
         </div>
       </div>
 

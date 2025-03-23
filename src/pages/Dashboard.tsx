@@ -80,8 +80,8 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          {/* Stats Overview - Only show if usage features are enabled */}
-          {showUsageFeatures && (
+          {/* Stats Overview - Show based on feature flag */}
+          {showUsageFeatures ? (
             <div className="grid grid-cols-1 gap-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard
@@ -111,6 +111,16 @@ const Dashboard = () => {
                   description={`${unusedLicenses} unused licenses across all apps`}
                 />
               </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+              <StatCard
+                title="Total Annual SaaS Spend"
+                value={`$${(totalSpend).toLocaleString()}`}
+                icon={<DollarSign className="h-5 w-5" />}
+                trend={{ value: 12, isPositive: false }}
+                description="12% increase from last year"
+              />
             </div>
           )}
             

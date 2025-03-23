@@ -32,6 +32,7 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
 
   // Generate chart data
   const paymentData = generatePaymentTrendData(saas.id);
+  const usageData = generateUsageTrendData(saas.id);
 
   // Format currency
   const formatCurrency = (amount: number) => {
@@ -124,6 +125,18 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
             </TabsList>
             
             <TabsContent value="analytics" className="space-y-6">
+              {/* Re-added Spend Trend Chart */}
+              <TrendChart
+                title="Spend Trend"
+                description="Monthly spend for this application"
+                data={paymentData}
+                dataKey="name"
+                categories={["amount"]}
+                colors={["hsl(var(--primary))"]}
+                valueFormatter={(value) => `$${value.toFixed(2)}`}
+                height={300}
+              />
+              
               <div className="bg-muted/30 rounded-lg p-6">
                 <h3 className="text-lg font-medium mb-4">Optimization Insights</h3>
                 <ul className="space-y-3">

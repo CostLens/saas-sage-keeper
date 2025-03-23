@@ -25,7 +25,7 @@ export function Header({ className }: HeaderProps) {
       )}
     >
       <div className="flex items-center gap-2">
-        <span className="font-semibold text-lg tracking-tight">SaaS Sage</span>
+        <span className="font-semibold text-lg tracking-tight">Cost Lens</span>
       </div>
 
       <div className="flex items-center gap-4">

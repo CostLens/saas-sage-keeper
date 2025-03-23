@@ -66,7 +66,7 @@ export function Sidebar({ className }: SidebarProps) {
             <div className="rounded-md bg-primary/10 p-1">
               <Package className="h-6 w-6 text-primary" />
             </div>
-            <span className="font-bold text-xl tracking-tight">SaaS Sage</span>
+            <span className="font-bold text-xl tracking-tight">Cost Lens</span>
           </div>
         )}
         {isCollapsed && (

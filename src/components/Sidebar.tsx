@@ -7,7 +7,7 @@ import {
   LayoutDashboard, 
   TrendingUp, 
   FileText,
-  Package, 
+  Wallet, 
   Settings, 
   HelpCircle,
   ChevronLeft,
@@ -59,14 +59,14 @@ export function Sidebar({ className }: SidebarProps) {
         {!isCollapsed && (
           <div className="flex items-center gap-2">
             <div className="rounded-md bg-primary/10 p-1">
-              <Package className="h-6 w-6 text-primary" />
+              <Wallet className="h-6 w-6 text-primary" />
             </div>
-            <span className="font-bold text-xl tracking-tight">Cost Lens</span>
+            <span className="font-bold text-xl tracking-tight">SpendWise</span>
           </div>
         )}
         {isCollapsed && (
           <div className="rounded-md bg-primary/10 p-1 mx-auto">
-            <Package className="h-6 w-6 text-primary" />
+            <Wallet className="h-6 w-6 text-primary" />
           </div>
         )}
         <Button 

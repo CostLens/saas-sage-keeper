@@ -1,3 +1,4 @@
+
 import React from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { SaaSData } from "@/lib/mockData";
@@ -10,8 +11,8 @@ import {
   CreditCard,
   Repeat,
   Database,
+  CheckCircle,
   AlertCircle,
-  Activity,
   Users
 } from "lucide-react";
 
@@ -85,9 +86,9 @@ export function SaasTable({ data, onRowClick, showUsage = true }: SaasTableProps
         sortable: true,
         cell: (row: SaaSData) => (
           <div className="flex items-center gap-2">
-            <Activity className="h-4 w-4 text-muted-foreground" />
             {row.active ? (
               <Badge variant="outline" className="text-green-500 border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
+                <CheckCircle className="h-3 w-3 mr-1" />
                 Active
               </Badge>
             ) : (

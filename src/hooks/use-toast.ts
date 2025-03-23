@@ -1,3 +1,4 @@
+
 import * as React from "react"
 
 import type {
@@ -71,7 +72,7 @@ const addToRemoveQueue = (toastId: string) => {
   toastTimeouts.set(toastId, timeout)
 }
 
-export const reducer = (state: State, action: Action): State => {
+const reducer = (state: State, action: Action): State => {
   switch (action.type) {
     case "ADD_TOAST":
       return {
@@ -126,9 +127,12 @@ export const reducer = (state: State, action: Action): State => {
   }
 }
 
-const listeners: Array<(state: State) => void> = []
+// Initial state
+const initialState: State = { toasts: [] }
 
-let memoryState: State = { toasts: [] }
+// Global state listeners
+const listeners: Array<(state: State) => void> = []
+let memoryState: State = initialState
 
 function dispatch(action: Action) {
   memoryState = reducer(memoryState, action)
@@ -137,9 +141,8 @@ function dispatch(action: Action) {
   })
 }
 
-type Toast = Omit<ToasterToast, "id">
-
-function toast({ ...props }: Toast) {
+// Define the toast function outside of the hook to avoid recreating it on each render
+const toast = (props: Omit<ToasterToast, "id">) => {
   const id = genId()
 
   const update = (props: ToasterToast) =>
@@ -179,7 +182,7 @@ function useToast() {
         listeners.splice(index, 1)
       }
     }
-  }, [state])
+  }, [])
 
   return {
     ...state,

@@ -7,9 +7,7 @@ import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
 import { RenewalCalendar } from "@/components/RenewalCalendar";
 import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
-import { 
-  DollarSign
-} from "lucide-react";
+import { DollarSign } from "lucide-react";
 
 const Dashboard = () => {
   const [selectedSaas, setSelectedSaas] = useState<SaaSData | null>(null);

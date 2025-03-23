@@ -15,15 +15,12 @@ import {
   Gauge,
   Coins
 } from "lucide-react";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SidebarProps {
   className?: string;
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
-  const isMobile = useIsMobile();
-  
   // Use localStorage to persist the collapsed state
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem("sidebar-collapsed");
@@ -31,15 +28,13 @@ const Sidebar = ({ className }: SidebarProps) => {
   });
   
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    const savedValue = localStorage.getItem("show-usage-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
+    return localStorage.getItem("show-usage-features") === "true"; // Default to false if not set
   });
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
     const handleStorageChange = () => {
-      const savedValue = localStorage.getItem("show-usage-features");
-      setShowUsageFeatures(savedValue === "true");
+      setShowUsageFeatures(localStorage.getItem("show-usage-features") === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -83,8 +78,7 @@ const Sidebar = ({ className }: SidebarProps) => {
     <aside
       className={cn(
         "fixed inset-y-0 left-0 z-20 flex flex-col border-r bg-background/80 backdrop-blur-sm transition-all duration-300",
-        isCollapsed ? "w-16" : isMobile ? "w-full" : "w-64",
-        isMobile && !isCollapsed ? "translate-x-0" : isMobile && isCollapsed ? "-translate-x-full" : "",
+        isCollapsed ? "w-16" : "w-64",
         className
       )}
     >
@@ -168,4 +162,5 @@ const Sidebar = ({ className }: SidebarProps) => {
   );
 };
 
+// Export the isCollapsed state for use in other components
 export { Sidebar };

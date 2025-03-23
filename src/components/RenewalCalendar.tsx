@@ -1,7 +1,9 @@
 
 import React from "react";
 import { SaaSData } from "@/lib/mockData";
-import { Card } from "@/components/ui/card";
+import { RenewalCard } from "./calendar/RenewalCard";
+import { PaymentsCard } from "./calendar/PaymentsCard";
+import { TerminationsCard } from "./calendar/TerminationsCard";
 import { 
   getUpcomingRenewals,
   getUpcomingPayments,
@@ -12,13 +14,30 @@ interface RenewalCalendarProps {
   saasData: SaaSData[];
 }
 
-// This component is kept only for compatibility, but is not currently used on the dashboard
 export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
+  // Get all the data we need for our cards
+  const { renewals, upcomingRenewalAmount } = getUpcomingRenewals(saasData);
+  const { paymentsData, paymentsAmount } = getUpcomingPayments(saasData);
+  const { terminationsData } = getUpcomingTerminations(saasData);
+
   return (
-    <Card className="p-4">
-      <div className="text-center text-sm text-muted-foreground">
-        This component has been replaced by direct implementation in the Dashboard.
-      </div>
-    </Card>
+    <>
+      {/* Each card takes up one column in the grid */}
+      <RenewalCard 
+        renewals={renewals}
+        upcomingRenewalAmount={upcomingRenewalAmount}
+      />
+
+      {/* Payments Due Card */}
+      <PaymentsCard 
+        paymentsData={paymentsData} 
+        paymentsAmount={paymentsAmount} 
+      />
+
+      {/* Termination Deadlines Card */}
+      <TerminationsCard 
+        terminationsData={terminationsData}
+      />
+    </>
   );
 }

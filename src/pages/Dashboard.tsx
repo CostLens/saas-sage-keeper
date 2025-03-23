@@ -108,7 +108,7 @@ const Dashboard = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6">
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
                 <StatCard
                   title="Total Annual SaaS Spend"
                   value={`$${(totalSpend).toLocaleString()}`}
@@ -116,6 +116,27 @@ const Dashboard = () => {
                   trend={{ value: 12, isPositive: false }}
                   description="12% increase from last year"
                   className="h-auto py-4"
+                />
+                
+                <StatCard
+                  title="Upcoming Renewals"
+                  value={upcomingRenewals}
+                  icon={<Calendar className="h-5 w-5" />}
+                  description="Due in next 90 days"
+                />
+
+                <StatCard
+                  title="Due Payments"
+                  value={paymentsCount}
+                  icon={<AlertTriangle className="h-5 w-5" />}
+                  description="Payments due this month"
+                />
+
+                <StatCard
+                  title="Termination Deadlines"
+                  value={terminationDeadlines}
+                  icon={<FileTerminal className="h-5 w-5" />}
+                  description="Contracts with approaching deadlines"
                 />
               </div>
             </div>

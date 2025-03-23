@@ -107,14 +107,14 @@ const Dashboard = () => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6">
+            <div className="flex">
               <StatCard
                 title="Total Annual SaaS Spend"
                 value={`$${(totalSpend).toLocaleString()}`}
                 icon={<DollarSign className="h-4 w-4" />}
                 trend={{ value: 12, isPositive: false }}
                 description="12% increase from last year"
-                className="max-w-xs h-auto py-3 mx-auto md:mx-0"
+                className="h-auto py-4 flex-1"
               />
             </div>
           )}

@@ -5,10 +5,10 @@ import { Sidebar } from "@/components/Sidebar";
 import { SaasTable } from "@/components/SaasTable";
 import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
+import { RenewalCalendar } from "@/components/RenewalCalendar";
 import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
 import { 
-  DollarSign, 
-  Calendar
+  DollarSign
 } from "lucide-react";
 
 const Dashboard = () => {
@@ -30,13 +30,6 @@ const Dashboard = () => {
 
   // Calculate total spending
   const totalSpend = mockSaasData.reduce((sum, saas) => sum + saas.price, 0);
-  
-  // Find next renewal
-  const today = new Date();
-  const upcomingRenewals = mockSaasData
-    .filter(saas => saas.renewalDate !== "N/A")
-    .sort((a, b) => new Date(a.renewalDate).getTime() - new Date(b.renewalDate).getTime());
-  const nextRenewal = upcomingRenewals.find(saas => new Date(saas.renewalDate) > today);
 
   const handleRowClick = (saas: SaaSData) => {
     setSelectedSaas(saas);
@@ -62,12 +55,9 @@ const Dashboard = () => {
               trend={{ value: 12, isPositive: false }}
               description="12% increase from last year"
             />
-            <StatCard
-              title="Next Renewal"
-              value={nextRenewal ? nextRenewal.name : "N/A"}
-              description={nextRenewal ? `Due on ${new Date(nextRenewal.renewalDate).toLocaleDateString()}` : "No upcoming renewals"}
-              icon={<Calendar className="h-5 w-5" />}
-            />
+            
+            {/* Renewal Calendar replacing the Next Renewal card */}
+            <RenewalCalendar saasData={mockSaasData} />
           </div>
 
           {/* SaaS Table Section */}

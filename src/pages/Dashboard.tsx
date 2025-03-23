@@ -80,19 +80,19 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          {showUsageFeatures ? (
-            <>
-              {/* Usage feature enabled view - 3 KPI cards */}
-              <div className="grid grid-cols-1 gap-6">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                  <StatCard
-                    title="Total Annual SaaS Spend"
-                    value={`$${(totalSpend).toLocaleString()}`}
-                    icon={<DollarSign className="h-5 w-5" />}
-                    trend={{ value: 12, isPositive: false }}
-                    description="12% increase from last year"
-                  />
-                  
+          {/* Stats Overview */}
+          <div className="grid grid-cols-1 gap-6">
+            <div className={`grid grid-cols-1 ${showUsageFeatures ? 'md:grid-cols-3' : 'md:grid-cols-1'} gap-6`}>
+              <StatCard
+                title="Total Annual SaaS Spend"
+                value={`$${(totalSpend).toLocaleString()}`}
+                icon={<DollarSign className="h-5 w-5" />}
+                trend={{ value: 12, isPositive: false }}
+                description="12% increase from last year"
+              />
+              
+              {showUsageFeatures && (
+                <>
                   <StatCard
                     title="License Utilization"
                     value={`${overallUtilization}%`}
@@ -111,50 +111,14 @@ const Dashboard = () => {
                     icon={<TrendingDown className="h-5 w-5" />}
                     description={`${unusedLicenses} unused licenses across all apps`}
                   />
-                </div>
-              </div>
-              
-              <RenewalCalendar saasData={mockSaasData} />
-            </>
-          ) : (
-            <>
-              {/* Usage feature disabled view - 4 KPI cards in one row */}
-              <div className="grid grid-cols-1 gap-6">
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <StatCard
-                    title="Total Annual SaaS Spend"
-                    value={`$${(totalSpend).toLocaleString()}`}
-                    icon={<DollarSign className="h-5 w-5" />}
-                    trend={{ value: 12, isPositive: false }}
-                    description="12% increase from last year"
-                  />
-                  
-                  <StatCard
-                    title="Upcoming Renewals"
-                    value={upcomingRenewals}
-                    icon={<Calendar className="h-5 w-5" />}
-                    description="In the next 90 days"
-                  />
-                  
-                  <StatCard
-                    title="Payments Due"
-                    value={paymentsCount}
-                    icon={<AlertTriangle className="h-5 w-5" />}
-                    description="In the next 30 days"
-                  />
-                  
-                  <StatCard
-                    title="Termination Deadlines"
-                    value={terminationDeadlines}
-                    icon={<FileTerminal className="h-5 w-5" />}
-                    description="Approaching soon"
-                  />
-                </div>
-              </div>
-              
-              <RenewalCalendar saasData={mockSaasData} />
-            </>
-          )}
+                </>
+              )}
+            </div>
+          </div>
+            
+          <div className="md:col-span-3">
+            <RenewalCalendar saasData={mockSaasData} />
+          </div>
 
           {/* SaaS Table Section */}
           <div className="space-y-4">

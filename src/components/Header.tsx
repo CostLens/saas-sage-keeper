@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Brain } from "lucide-react";
+import { Bell, Wallet, Coins } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -74,14 +74,14 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-gradient-to-r from-purple-100/80 to-purple-200/80 text-foreground backdrop-blur-sm px-6 shadow-sm",
+        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-gradient-to-r from-green-100/80 to-green-200/80 text-foreground backdrop-blur-sm px-6 shadow-sm",
         className
       )}
     >
       <div className="flex items-center gap-2">
         <Link to="/" className="flex items-center gap-2">
-          <div className="rounded-full bg-purple-600 p-1">
-            <Brain className="h-5 w-5 text-white" />
+          <div className="rounded-full bg-green-600 p-1">
+            <Coins className="h-5 w-5 text-white" />
           </div>
           <span className="font-semibold text-lg tracking-tight">ExpenseIQ</span>
         </Link>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
@@ -13,7 +12,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Gauge,
-  Brain
+  Coins
 } from "lucide-react";
 
 interface SidebarProps {
@@ -85,15 +84,15 @@ const Sidebar = ({ className }: SidebarProps) => {
       <div className="flex h-16 items-center border-b px-4 justify-between">
         {!isCollapsed && (
           <div className="flex items-center gap-2">
-            <div className="rounded-full bg-purple-600 p-1">
-              <Brain className="h-6 w-6 text-white" />
+            <div className="rounded-full bg-green-600 p-1">
+              <Coins className="h-6 w-6 text-white" />
             </div>
             <span className="font-bold text-xl tracking-tight">ExpenseIQ</span>
           </div>
         )}
         {isCollapsed && (
-          <div className="rounded-full bg-purple-600 p-1 mx-auto">
-            <Brain className="h-6 w-6 text-white" />
+          <div className="rounded-full bg-green-600 p-1 mx-auto">
+            <Coins className="h-6 w-6 text-white" />
           </div>
         )}
         <Button 

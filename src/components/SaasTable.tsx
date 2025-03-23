@@ -8,8 +8,7 @@ import {
   Calendar, 
   DollarSign, 
   Tag, 
-  CreditCard, 
-  Users
+  CreditCard
 } from "lucide-react";
 
 interface SaasTableProps {
@@ -102,42 +101,6 @@ export function SaasTable({ data, onRowClick }: SaasTableProps) {
           </div>
         </div>
       ),
-    },
-    {
-      id: "usage",
-      header: "Usage",
-      sortable: true,
-      cell: (row: SaaSData) => {
-        const getStatusColor = (status: string) => {
-          switch (status) {
-            case "Underutilized":
-              return "text-amber-500 bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-800";
-            case "Optimal":
-              return "text-green-500 bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800";
-            case "Overutilized":
-              return "text-red-500 bg-red-50 border-red-200 dark:bg-red-950 dark:border-red-800";
-            default:
-              return "";
-          }
-        };
-
-        return (
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 text-muted-foreground" />
-            <div className="flex flex-col">
-              <div className="flex items-center gap-2">
-                <span>
-                  {row.usage.activeUsers}
-                  {row.usage.totalLicenses ? `/${row.usage.totalLicenses}` : ""} users
-                </span>
-              </div>
-              <Badge className={`text-xs ${getStatusColor(row.usage.status)}`}>
-                {row.usage.status} ({row.usage.utilizationRate}%)
-              </Badge>
-            </div>
-          </div>
-        );
-      },
     },
   ];
 

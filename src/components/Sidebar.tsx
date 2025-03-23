@@ -5,7 +5,6 @@ import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
   LayoutDashboard, 
-  ClipboardList,
   TrendingUp, 
   FileText,
   Package, 
@@ -23,7 +22,6 @@ interface SidebarProps {
 
 const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Obligations", href: "/obligations", icon: ClipboardList },
   { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
   { name: "Contracts", href: "/contracts", icon: FileText },
 ];

@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -6,6 +7,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Mail } from "lucide-react";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogHeader, 
+  DialogTitle, 
+  DialogDescription,
+  DialogFooter 
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 const Settings = () => {
   const [name, setName] = useState("Kanav Hasija");
@@ -16,6 +27,12 @@ const Settings = () => {
   const [showUsageFeatures, setShowUsageFeatures] = useState(true);
   const [gmailConnected, setGmailConnected] = useState(false);
   const [quickbooksConnected, setQuickbooksConnected] = useState(false);
+  const [gmailDialogOpen, setGmailDialogOpen] = useState(false);
+  const [quickbooksDialogOpen, setQuickbooksDialogOpen] = useState(false);
+  const [gmailEmail, setGmailEmail] = useState("");
+  const [gmailPassword, setGmailPassword] = useState("");
+  const [quickbooksUsername, setQuickbooksUsername] = useState("");
+  const [quickbooksPassword, setQuickbooksPassword] = useState("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -56,6 +73,11 @@ const Settings = () => {
   };
   
   const handleConnectGmail = () => {
+    setGmailDialogOpen(true);
+  };
+  
+  const handleGmailLogin = () => {
+    setGmailDialogOpen(false);
     setGmailConnected(true);
     toast({
       title: "Gmail connected",
@@ -72,6 +94,11 @@ const Settings = () => {
   };
   
   const handleConnectQuickbooks = () => {
+    setQuickbooksDialogOpen(true);
+  };
+  
+  const handleQuickbooksLogin = () => {
+    setQuickbooksDialogOpen(false);
     setQuickbooksConnected(true);
     toast({
       title: "QuickBooks connected",
@@ -97,6 +124,7 @@ const Settings = () => {
             <h1 className="text-2xl font-bold mb-6">Settings</h1>
             
             <div className="space-y-6">
+              {/* Profile Settings Card */}
               <Card>
                 <CardHeader>
                   <CardTitle>Profile Settings</CardTitle>
@@ -128,6 +156,7 @@ const Settings = () => {
                 </CardContent>
               </Card>
 
+              {/* Integrations Card */}
               <Card>
                 <CardHeader>
                   <CardTitle>Integrations</CardTitle>
@@ -186,6 +215,7 @@ const Settings = () => {
                 </CardContent>
               </Card>
 
+              {/* Feature Settings Card */}
               <Card>
                 <CardHeader>
                   <CardTitle>Feature Settings</CardTitle>
@@ -209,6 +239,7 @@ const Settings = () => {
                 </CardContent>
               </Card>
 
+              {/* Notification Settings Card */}
               <Card>
                 <CardHeader>
                   <CardTitle>Notification Settings</CardTitle>
@@ -263,6 +294,88 @@ const Settings = () => {
           </div>
         </main>
       </div>
+
+      {/* Gmail Login Dialog */}
+      <Dialog open={gmailDialogOpen} onOpenChange={setGmailDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Connect to Gmail</DialogTitle>
+            <DialogDescription>
+              Enter your Gmail credentials to connect your account
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="gmail-email">Email</Label>
+              <Input
+                id="gmail-email"
+                value={gmailEmail}
+                onChange={(e) => setGmailEmail(e.target.value)}
+                placeholder="your.email@gmail.com"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="gmail-password">Password</Label>
+              <Input
+                id="gmail-password"
+                type="password"
+                value={gmailPassword}
+                onChange={(e) => setGmailPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setGmailDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleGmailLogin}>
+              Login & Connect
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* QuickBooks Login Dialog */}
+      <Dialog open={quickbooksDialogOpen} onOpenChange={setQuickbooksDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Connect to QuickBooks</DialogTitle>
+            <DialogDescription>
+              Enter your QuickBooks credentials to connect your account
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="quickbooks-username">Username</Label>
+              <Input
+                id="quickbooks-username"
+                value={quickbooksUsername}
+                onChange={(e) => setQuickbooksUsername(e.target.value)}
+                placeholder="Your QuickBooks username"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="quickbooks-password">Password</Label>
+              <Input
+                id="quickbooks-password"
+                type="password"
+                value={quickbooksPassword}
+                onChange={(e) => setQuickbooksPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setQuickbooksDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleQuickbooksLogin}>
+              Login & Connect
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

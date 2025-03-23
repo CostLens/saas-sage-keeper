@@ -60,18 +60,6 @@ const Dashboard = () => {
     setIsDetailModalOpen(true);
   };
 
-  // Get columns for SaasTable based on showUsageFeatures flag
-  const getColumns = () => {
-    // If usage features are disabled, we'll filter out the usage column
-    if (!showUsageFeatures) {
-      return mockSaasData.map(item => {
-        const { usage, ...rest } = item;
-        return rest;
-      });
-    }
-    return mockSaasData;
-  };
-
   return (
     <div className="min-h-screen flex">
       <Sidebar />
@@ -84,7 +72,7 @@ const Dashboard = () => {
 
           {/* Stats Overview */}
           <div className="grid grid-cols-1 gap-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className={`grid grid-cols-1 md:grid-cols-${showUsageFeatures ? '3' : '2'} gap-6`}>
               <StatCard
                 title="Total Annual SaaS Spend"
                 value={`$${(totalSpend).toLocaleString()}`}

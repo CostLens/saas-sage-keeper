@@ -1,7 +1,9 @@
+
 // Sample data for development
 export interface SaaSData {
   id: string;
   name: string;
+  active: boolean; // Added active property
   renewalDate: string;
   price: number;
   pricingTerms: "Usage-based" | "User-based" | "Flat-rate";
@@ -39,6 +41,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "1",
     name: "Slack",
+    active: true,
     renewalDate: "2024-08-15",
     price: 12500,
     pricingTerms: "User-based",
@@ -63,6 +66,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "2",
     name: "Salesforce",
+    active: true,
     renewalDate: "2024-06-30",
     price: 45000,
     pricingTerms: "User-based",
@@ -87,6 +91,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "3",
     name: "AWS",
+    active: true,
     renewalDate: "N/A",
     price: 8750,
     pricingTerms: "Usage-based",
@@ -109,6 +114,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "4",
     name: "Zoom",
+    active: true,
     renewalDate: "2024-07-01",
     price: 8000,
     pricingTerms: "User-based",
@@ -133,6 +139,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "5",
     name: "Adobe Creative Cloud",
+    active: true,
     renewalDate: "2024-09-15",
     price: 9600,
     pricingTerms: "User-based",
@@ -157,6 +164,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "6",
     name: "HubSpot",
+    active: false,
     renewalDate: "2024-10-01",
     price: 18000,
     pricingTerms: "Flat-rate",
@@ -181,6 +189,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "7",
     name: "Microsoft 365",
+    active: true,
     renewalDate: "2024-08-01",
     price: 15000,
     pricingTerms: "User-based",
@@ -205,6 +214,7 @@ export const mockSaasData: SaaSData[] = [
   {
     id: "8",
     name: "Dropbox Business",
+    active: true,
     renewalDate: "2024-07-15",
     price: 6000,
     pricingTerms: "User-based",

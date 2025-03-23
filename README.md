@@ -1,3 +1,4 @@
+
 # Welcome to your Lovable project
 
 ## Project info
@@ -62,8 +63,40 @@ This project is built with .
 
 ## How can I deploy this project?
 
+### Using Lovable's built-in deployment
+
 Simply open [Lovable](https://lovable.dev/projects/09ed6906-c9bb-4848-8afd-f93caee3a8d0) and click on Share -> Publish.
 
-## I want to use a custom domain - is that possible?
+### Using a custom domain with Netlify
 
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+Lovable doesn't currently support custom domains directly. If you want to deploy your project under your own domain, we recommend using Netlify:
+
+1. Create a Netlify account at [netlify.com](https://www.netlify.com/) if you don't have one already
+2. Install the Netlify CLI: `npm install -g netlify-cli`
+3. Clone your project repository locally
+4. Navigate to your project directory: `cd <project-directory>`
+5. Login to Netlify: `netlify login`
+6. Initialize Netlify in your project: `netlify init`
+   - Choose "Create & configure a new site"
+   - Follow the prompts to select your team and site name
+7. Build your project: `npm run build`
+8. Deploy to Netlify: `netlify deploy --prod`
+9. After deployment, go to the Netlify dashboard for your site
+10. Navigate to "Domain settings" to add and configure your custom domain
+11. Follow Netlify's instructions to set up DNS records for your domain
+
+For SSL/TLS configuration with your custom domain:
+- Netlify provides free SSL certificates through Let's Encrypt automatically
+- Ensure your DNS records are properly configured
+- Allow time for DNS propagation and SSL certificate issuance (usually 24-48 hours)
+
+For detailed instructions, see [Netlify's custom domain documentation](https://docs.netlify.com/domains-https/custom-domains/).
+
+## Troubleshooting SSL errors
+
+If you're seeing SSL errors like "ERR_SSL_VERSION_OR_CIPHER_MISMATCH":
+- Verify your DNS records are correctly pointing to your hosting provider
+- Ensure SSL/TLS certificates are properly set up and not expired
+- Check if your hosting service has completed SSL certificate provisioning
+- Clear your browser cache or try accessing the site in incognito mode
+

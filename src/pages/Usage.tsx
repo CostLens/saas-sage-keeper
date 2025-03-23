@@ -21,18 +21,18 @@ import {
 
 // Mock usage history data
 const usageHistory = [
-  { month: 'Jan', activeUsers: 320, totalLicenses: 450 },
-  { month: 'Feb', activeUsers: 350, totalLicenses: 450 },
-  { month: 'Mar', activeUsers: 380, totalLicenses: 500 },
-  { month: 'Apr', activeUsers: 410, totalLicenses: 500 },
-  { month: 'May', activeUsers: 390, totalLicenses: 500 },
-  { month: 'Jun', activeUsers: 415, totalLicenses: 550 },
-  { month: 'Jul', activeUsers: 440, totalLicenses: 550 },
-  { month: 'Aug', activeUsers: 460, totalLicenses: 550 },
-  { month: 'Sep', activeUsers: 480, totalLicenses: 600 },
-  { month: 'Oct', activeUsers: 510, totalLicenses: 600 },
-  { month: 'Nov', activeUsers: 540, totalLicenses: 650 },
-  { month: 'Dec', activeUsers: 580, totalLicenses: 650 },
+  { name: 'Jan', activeUsers: 320, totalLicenses: 450 },
+  { name: 'Feb', activeUsers: 350, totalLicenses: 450 },
+  { name: 'Mar', activeUsers: 380, totalLicenses: 500 },
+  { name: 'Apr', activeUsers: 410, totalLicenses: 500 },
+  { name: 'May', activeUsers: 390, totalLicenses: 500 },
+  { name: 'Jun', activeUsers: 415, totalLicenses: 550 },
+  { name: 'Jul', activeUsers: 440, totalLicenses: 550 },
+  { name: 'Aug', activeUsers: 460, totalLicenses: 550 },
+  { name: 'Sep', activeUsers: 480, totalLicenses: 600 },
+  { name: 'Oct', activeUsers: 510, totalLicenses: 600 },
+  { name: 'Nov', activeUsers: 540, totalLicenses: 650 },
+  { name: 'Dec', activeUsers: 580, totalLicenses: 650 },
 ];
 
 const UsagePage = () => {
@@ -46,10 +46,10 @@ const UsagePage = () => {
   const overallUtilization = totalLicenses > 0 ? Math.round((activeUsers / totalLicenses) * 100) : 0;
   
   // Sort apps by utilization (lowest first for optimization opportunities)
-  const sortedByUtilization = [...mockSaasData].sort((a, b) => a.usage.utilization - b.usage.utilization);
+  const sortedByUtilization = [...mockSaasData].sort((a, b) => a.usage.utilizationRate - b.usage.utilizationRate);
   
   // Get apps with low utilization (less than 60%)
-  const lowUtilizationApps = sortedByUtilization.filter(app => app.usage.utilization < 60);
+  const lowUtilizationApps = sortedByUtilization.filter(app => app.usage.utilizationRate < 60);
   
   // Calculate potential savings
   const potentialSavings = lowUtilizationApps.reduce((sum, app) => {
@@ -105,7 +105,7 @@ const UsagePage = () => {
                     <TrendChart
                       title="User License Trend (12 Month)"
                       data={usageHistory}
-                      dataKey="month"
+                      dataKey="name"
                       categories={["activeUsers", "totalLicenses"]}
                       colors={["hsl(var(--primary))", "hsl(var(--muted))"] }
                       valueFormatter={(value) => value.toString()}
@@ -146,17 +146,17 @@ const UsagePage = () => {
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
-                                <Progress value={app.usage.utilization} className="w-20 h-2" />
-                                <span>{app.usage.utilization}%</span>
+                                <Progress value={app.usage.utilizationRate} className="w-20 h-2" />
+                                <span>{app.usage.utilizationRate}%</span>
                               </div>
                             </TableCell>
                             <TableCell>
-                              {app.usage.utilization > 80 ? (
+                              {app.usage.utilizationRate > 80 ? (
                                 <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
                                   <CheckCircle2 className="h-3 w-3 mr-1" />
                                   Optimized
                                 </Badge>
-                              ) : app.usage.utilization > 60 ? (
+                              ) : app.usage.utilizationRate > 60 ? (
                                 <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50">
                                   <AlertCircle className="h-3 w-3 mr-1" />
                                   Review
@@ -291,3 +291,4 @@ const UsagePage = () => {
 };
 
 export default UsagePage;
+

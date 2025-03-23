@@ -146,8 +146,8 @@ export function SaasTable({ data, onRowClick }: SaasTableProps) {
           <Users className="h-4 w-4 text-muted-foreground" />
           <div className="flex flex-col">
             <span>{row.usage.activeUsers} / {row.usage.totalLicenses || 'Unlimited'}</span>
-            <Badge variant={row.usage.utilization > 80 ? "success" : row.usage.utilization > 60 ? "warning" : "destructive"} className="mt-1">
-              {row.usage.utilization}% Utilized
+            <Badge variant={row.usage.utilizationRate > 80 ? "default" : row.usage.utilizationRate > 60 ? "outline" : "destructive"} className="mt-1">
+              {row.usage.utilizationRate}% Utilized
             </Badge>
           </div>
         </div>
@@ -200,3 +200,4 @@ export function SaasTable({ data, onRowClick }: SaasTableProps) {
     />
   );
 }
+

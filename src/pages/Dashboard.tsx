@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -105,31 +106,12 @@ const Dashboard = () => {
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
                 <StatCard
                   title="Total Annual SaaS Spend"
                   value={`$${(totalSpend).toLocaleString()}`}
                   icon={<DollarSign className="h-4 w-4" />}
                   trend={{ value: 12, isPositive: false }}
-                />
-                
-                <StatCard
-                  title="Upcoming Renewals"
-                  value={upcomingRenewals}
-                  icon={<Calendar className="h-4 w-4" />}
-                  description="In the next 90 days"
-                />
-                
-                <StatCard
-                  title="Payments Due"
-                  value={paymentsCount}
-                  icon={<AlertTriangle className="h-4 w-4" />}
-                />
-                
-                <StatCard
-                  title="Termination Deadlines"
-                  value={terminationDeadlines}
-                  icon={<FileTerminal className="h-4 w-4" />}
                 />
               </div>
             )}

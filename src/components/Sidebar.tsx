@@ -48,6 +48,8 @@ const Sidebar = ({ className }: SidebarProps) => {
   // Update localStorage when isCollapsed changes
   useEffect(() => {
     localStorage.setItem("sidebar-collapsed", JSON.stringify(isCollapsed));
+    // Dispatch a custom event to notify pages about sidebar state change
+    window.dispatchEvent(new CustomEvent('sidebarStateChanged', { detail: { isCollapsed } }));
   }, [isCollapsed]);
 
   const toggleCollapse = () => {
@@ -159,4 +161,5 @@ const Sidebar = ({ className }: SidebarProps) => {
   );
 };
 
+// Export the isCollapsed state for use in other components
 export { Sidebar };

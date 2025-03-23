@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import { Bell, Coins } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -178,4 +178,3 @@ export function Header({ className }: HeaderProps) {
     </header>
   );
 }
-

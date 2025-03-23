@@ -9,7 +9,244 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      contracts: {
+        Row: {
+          created_at: string
+          end_date: string
+          file_url: string | null
+          id: string
+          saas_id: string
+          start_date: string
+          title: string
+        }
+        Insert: {
+          created_at?: string
+          end_date: string
+          file_url?: string | null
+          id?: string
+          saas_id: string
+          start_date: string
+          title: string
+        }
+        Update: {
+          created_at?: string
+          end_date?: string
+          file_url?: string | null
+          id?: string
+          saas_id?: string
+          start_date?: string
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_saas_id_fkey"
+            columns: ["saas_id"]
+            isOneToOne: false
+            referencedRelation: "saas_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          amount: number
+          created_at: string
+          due_date: string
+          file_url: string | null
+          id: string
+          invoice_date: string
+          saas_id: string
+          status: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          due_date: string
+          file_url?: string | null
+          id?: string
+          invoice_date: string
+          saas_id: string
+          status: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          due_date?: string
+          file_url?: string | null
+          id?: string
+          invoice_date?: string
+          saas_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_saas_id_fkey"
+            columns: ["saas_id"]
+            isOneToOne: false
+            referencedRelation: "saas_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      obligations: {
+        Row: {
+          assignee: string | null
+          created_at: string
+          description: string | null
+          due_date: string
+          id: string
+          impact: string | null
+          priority: string
+          saas_id: string
+          status: string
+          title: string
+          type: string
+          updated_at: string
+        }
+        Insert: {
+          assignee?: string | null
+          created_at?: string
+          description?: string | null
+          due_date: string
+          id?: string
+          impact?: string | null
+          priority: string
+          saas_id: string
+          status: string
+          title: string
+          type: string
+          updated_at?: string
+        }
+        Update: {
+          assignee?: string | null
+          created_at?: string
+          description?: string | null
+          due_date?: string
+          id?: string
+          impact?: string | null
+          priority?: string
+          saas_id?: string
+          status?: string
+          title?: string
+          type?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "obligations_saas_id_fkey"
+            columns: ["saas_id"]
+            isOneToOne: false
+            referencedRelation: "saas_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payment_history: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          payment_date: string
+          saas_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          payment_date: string
+          saas_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          payment_date?: string
+          saas_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_history_saas_id_fkey"
+            columns: ["saas_id"]
+            isOneToOne: false
+            referencedRelation: "saas_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      saas_applications: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+          price: number
+          pricing_terms: string
+          renewal_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+          price: number
+          pricing_terms: string
+          renewal_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
+          price?: number
+          pricing_terms?: string
+          renewal_date?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      usage_statistics: {
+        Row: {
+          active_users: number
+          created_at: string
+          id: string
+          saas_id: string
+          status: string
+          total_licenses: number | null
+          updated_at: string
+          utilization_rate: number
+        }
+        Insert: {
+          active_users: number
+          created_at?: string
+          id?: string
+          saas_id: string
+          status: string
+          total_licenses?: number | null
+          updated_at?: string
+          utilization_rate: number
+        }
+        Update: {
+          active_users?: number
+          created_at?: string
+          id?: string
+          saas_id?: string
+          status?: string
+          total_licenses?: number | null
+          updated_at?: string
+          utilization_rate?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "usage_statistics_saas_id_fkey"
+            columns: ["saas_id"]
+            isOneToOne: false
+            referencedRelation: "saas_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never

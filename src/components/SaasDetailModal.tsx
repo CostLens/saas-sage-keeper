@@ -15,7 +15,6 @@ import { Badge } from "@/components/ui/badge";
 import { 
   Calendar,
   DollarSign,
-  Users,
   FileText,
   CheckCircle,
   AlertCircle,
@@ -32,7 +31,6 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
   if (!saas) return null;
 
   // Generate chart data
-  const usageData = generateUsageTrendData(saas.id);
   const paymentData = generatePaymentTrendData(saas.id);
 
   // Format currency
@@ -85,7 +83,7 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
 
         <div className="grid grid-cols-1 gap-6 py-4">
           {/* Key Information Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             <div className="bg-muted/30 p-4 rounded-lg flex flex-col">
               <div className="text-xs text-muted-foreground mb-1 flex items-center">
                 <Calendar className="h-3 w-3 mr-1" />
@@ -108,18 +106,6 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
             
             <div className="bg-muted/30 p-4 rounded-lg flex flex-col">
               <div className="text-xs text-muted-foreground mb-1 flex items-center">
-                <Users className="h-3 w-3 mr-1" />
-                User Utilization
-              </div>
-              <div className="font-medium flex items-center gap-2">
-                {saas.usage.activeUsers}
-                {saas.usage.totalLicenses ? `/${saas.usage.totalLicenses}` : ""} users
-                <span className="text-xs ml-1">({saas.usage.utilizationRate}%)</span>
-              </div>
-            </div>
-            
-            <div className="bg-muted/30 p-4 rounded-lg flex flex-col">
-              <div className="text-xs text-muted-foreground mb-1 flex items-center">
                 <ArrowRightLeft className="h-3 w-3 mr-1" />
                 Status
               </div>
@@ -138,65 +124,18 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
             </TabsList>
             
             <TabsContent value="analytics" className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <TrendChart
-                  title="User Activity"
-                  description="Monthly active user count over time"
-                  data={usageData}
-                  dataKey="name"
-                  categories={["users"]}
-                  colors={["hsl(var(--primary))"]}
-                  valueFormatter={(value) => `${value} users`}
-                  height={240}
-                />
-                
-                <TrendChart
-                  title="Payment History"
-                  description="Monthly payment amounts over time"
-                  data={paymentData}
-                  dataKey="name"
-                  categories={["amount"]}
-                  colors={["hsl(var(--primary))"]}
-                  valueFormatter={(value) => `$${value.toFixed(2)}`}
-                  height={240}
-                />
-              </div>
-              
               <div className="bg-muted/30 rounded-lg p-6">
                 <h3 className="text-lg font-medium mb-4">Optimization Insights</h3>
                 <ul className="space-y-3">
                   {saas.usage.status === "Underutilized" && (
-                    <>
-                      <li className="flex items-start gap-2">
-                        <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
-                        <div>
-                          <p className="font-medium">License Reduction Opportunity</p>
-                          <p className="text-sm text-muted-foreground">
-                            This application is underutilized at {saas.usage.utilizationRate}%. 
-                            Consider reducing licenses from {saas.usage.totalLicenses} to {saas.usage.activeUsers + 5} to save approximately 
-                            {formatCurrency((saas.price / (saas.usage.totalLicenses || 1)) * ((saas.usage.totalLicenses || 0) - saas.usage.activeUsers - 5))} annually.
-                          </p>
-                        </div>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <Calendar className="h-5 w-5 text-primary mt-0.5" />
-                        <div>
-                          <p className="font-medium">Renewal Negotiation</p>
-                          <p className="text-sm text-muted-foreground">
-                            Prepare for renewal discussion {saas.renewalDate !== "N/A" ? format(new Date(saas.renewalDate), "MMMM d, yyyy") : ""} with usage data to negotiate better terms.
-                          </p>
-                        </div>
-                      </li>
-                    </>
-                  )}
-                  {saas.usage.status === "Optimal" && (
                     <li className="flex items-start gap-2">
-                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                      <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
                       <div>
-                        <p className="font-medium">Optimal Usage</p>
+                        <p className="font-medium">License Reduction Opportunity</p>
                         <p className="text-sm text-muted-foreground">
-                          This application is being utilized efficiently at {saas.usage.utilizationRate}%. 
-                          Continue monitoring usage patterns to maintain optimal efficiency.
+                          This application is underutilized at {saas.usage.utilizationRate}%. 
+                          Consider reducing licenses from {saas.usage.totalLicenses} to {saas.usage.activeUsers + 5} to save approximately 
+                          {formatCurrency((saas.price / (saas.usage.totalLicenses || 1)) * ((saas.usage.totalLicenses || 0) - saas.usage.activeUsers - 5))} annually.
                         </p>
                       </div>
                     </li>

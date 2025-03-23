@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { SaaSData } from "@/lib/mockData";
 import { CalendarClock, ChevronRight, Wallet, Flag } from "lucide-react";
@@ -73,13 +72,13 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
   });
 
   return (
-    <div className="grid grid-cols-1 gap-4">
+    <div className="flex gap-4 w-full">
       {/* Renewals Card */}
-      <Card className="glass-panel glass-panel-hover">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center justify-between">
+      <Card className="glass-panel glass-panel-hover flex-1">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center justify-between text-base">
             <div className="flex items-center gap-2">
-              <CalendarClock className="h-5 w-5 text-primary" />
+              <CalendarClock className="h-4 w-4 text-primary" />
               <span>Upcoming Renewals</span>
             </div>
             <Popover open={showAllRenewals} onOpenChange={setShowAllRenewals}>
@@ -87,7 +86,7 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs flex items-center gap-1"
+                  className="text-xs flex items-center gap-1 h-6 px-2"
                 >
                   View All
                   <ChevronRight className="h-3 w-3" />
@@ -133,27 +132,25 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
             </Popover>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="bg-primary/5 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Next 90 Days</span>
-                <span className="text-lg font-bold">${upcomingRenewalAmount.toLocaleString()}</span>
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {upcomingRenewals.length} {upcomingRenewals.length === 1 ? 'subscription' : 'subscriptions'} to renew
-              </div>
+        <CardContent className="pb-4">
+          <div className="bg-primary/5 rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium">Next 90 Days</span>
+              <span className="text-sm font-bold">${upcomingRenewalAmount.toLocaleString()}</span>
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {upcomingRenewals.length} {upcomingRenewals.length === 1 ? 'subscription' : 'subscriptions'} to renew
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Payments Due Card */}
-      <Card className="glass-panel glass-panel-hover">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center justify-between">
+      <Card className="glass-panel glass-panel-hover flex-1">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center justify-between text-base">
             <div className="flex items-center gap-2">
-              <Wallet className="h-5 w-5 text-emerald-500" />
+              <Wallet className="h-4 w-4 text-emerald-500" />
               <span>Payments Due</span>
             </div>
             <Popover open={showAllPayments} onOpenChange={setShowAllPayments}>
@@ -161,7 +158,7 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs flex items-center gap-1"
+                  className="text-xs flex items-center gap-1 h-6 px-2"
                 >
                   View All
                   <ChevronRight className="h-3 w-3" />
@@ -205,27 +202,25 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
             </Popover>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="bg-emerald-500/5 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Next 30 Days</span>
-                <span className="text-lg font-bold">${paymentsAmount.toLocaleString()}</span>
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {paymentsData.length} {paymentsData.length === 1 ? 'payment' : 'payments'} due
-              </div>
+        <CardContent className="pb-4">
+          <div className="bg-emerald-500/5 rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium">Next 30 Days</span>
+              <span className="text-sm font-bold">${paymentsAmount.toLocaleString()}</span>
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {paymentsData.length} {paymentsData.length === 1 ? 'payment' : 'payments'} due
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Termination Deadlines Card */}
-      <Card className="glass-panel glass-panel-hover">
-        <CardHeader className="pb-3">
-          <CardTitle className="flex items-center justify-between">
+      <Card className="glass-panel glass-panel-hover flex-1">
+        <CardHeader className="pb-2">
+          <CardTitle className="flex items-center justify-between text-base">
             <div className="flex items-center gap-2">
-              <Flag className="h-5 w-5 text-amber-500" />
+              <Flag className="h-4 w-4 text-amber-500" />
               <span>Termination Deadlines</span>
             </div>
             <Popover open={showAllTerminations} onOpenChange={setShowAllTerminations}>
@@ -233,7 +228,7 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
                 <Button 
                   variant="ghost" 
                   size="sm" 
-                  className="text-xs flex items-center gap-1"
+                  className="text-xs flex items-center gap-1 h-6 px-2"
                 >
                   View All
                   <ChevronRight className="h-3 w-3" />
@@ -306,16 +301,14 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
             </Popover>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="bg-amber-500/5 rounded-lg p-4">
-              <div className="flex items-center justify-between">
-                <span className="text-sm font-medium">Next 30 Days</span>
-                <span className="text-lg font-bold">{terminationsData.length}</span>
-              </div>
-              <div className="text-xs text-muted-foreground mt-1">
-                {terminationsData.length} {terminationsData.length === 1 ? 'deadline' : 'deadlines'} approaching
-              </div>
+        <CardContent className="pb-4">
+          <div className="bg-amber-500/5 rounded-lg p-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs font-medium">Next 30 Days</span>
+              <span className="text-sm font-bold">{terminationsData.length}</span>
+            </div>
+            <div className="text-xs text-muted-foreground mt-1">
+              {terminationsData.length} {terminationsData.length === 1 ? 'deadline' : 'deadlines'} approaching
             </div>
           </div>
         </CardContent>

@@ -45,18 +45,20 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <StatCard
-              title="Total Annual SaaS Spend"
-              value={`$${(totalSpend).toLocaleString()}`}
-              icon={<DollarSign className="h-5 w-5" />}
-              trend={{ value: 12, isPositive: false }}
-              description="12% increase from last year"
-            />
-            
-            {/* Calendar and Notifications now in a flex column in the second two columns */}
-            <div className="md:col-span-2">
-              <RenewalCalendar saasData={mockSaasData} />
+          <div className="grid grid-cols-1 gap-6">
+            <div className="flex flex-col md:flex-row gap-6">
+              <StatCard
+                title="Total Annual SaaS Spend"
+                value={`$${(totalSpend).toLocaleString()}`}
+                icon={<DollarSign className="h-5 w-5" />}
+                trend={{ value: 12, isPositive: false }}
+                description="12% increase from last year"
+                className="md:w-1/3"
+              />
+              
+              <div className="md:w-2/3">
+                <RenewalCalendar saasData={mockSaasData} />
+              </div>
             </div>
           </div>
 

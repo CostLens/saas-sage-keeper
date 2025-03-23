@@ -11,8 +11,6 @@ import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
 import { 
   DollarSign, 
   Calendar, 
-  Users, 
-  Clock,
   ArrowUpRight, 
   ChevronRight
 } from "lucide-react";
@@ -32,9 +30,6 @@ const Dashboard = () => {
     .sort((a, b) => new Date(a.renewalDate).getTime() - new Date(b.renewalDate).getTime());
   const nextRenewal = upcomingRenewals.find(saas => new Date(saas.renewalDate) > today);
   
-  // Calculate average utilization
-  const avgUtilization = mockSaasData.reduce((sum, saas) => sum + saas.usage.utilizationRate, 0) / mockSaasData.length;
-  
   // Get upcoming obligations
   const upcomingObligations = mockObligations
     .filter(obligation => obligation.status !== "Completed")
@@ -49,22 +44,15 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex">
       <Sidebar />
-      <div className="flex-1 pl-64 flex flex-col">
+      <div className="flex-1 flex flex-col transition-all duration-300">
         <Header />
         <main className="flex-1 p-6 space-y-8 animate-fade-in">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-            <div className="flex gap-4">
-              <Button variant="outline" className="gap-2">
-                <Clock className="h-4 w-4" />
-                Last updated 2 minutes ago
-              </Button>
-              <Button>Sync data</Button>
-            </div>
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <StatCard
               title="Total Annual SaaS Spend"
               value={`$${(totalSpend).toLocaleString()}`}
@@ -77,13 +65,6 @@ const Dashboard = () => {
               value={nextRenewal ? nextRenewal.name : "N/A"}
               description={nextRenewal ? `Due on ${new Date(nextRenewal.renewalDate).toLocaleDateString()}` : "No upcoming renewals"}
               icon={<Calendar className="h-5 w-5" />}
-            />
-            <StatCard
-              title="Average Utilization"
-              value={`${Math.round(avgUtilization)}%`}
-              description="Across all SaaS applications"
-              icon={<Users className="h-5 w-5" />}
-              trend={{ value: 5, isPositive: true }}
             />
           </div>
 

@@ -8,7 +8,9 @@ import {
   Calendar, 
   DollarSign, 
   Tag, 
-  CreditCard
+  CreditCard,
+  Repeat,
+  Database
 } from "lucide-react";
 
 interface SaasTableProps {
@@ -39,6 +41,30 @@ export function SaasTable({ data, onRowClick }: SaasTableProps) {
     }
   };
 
+  // Get payment frequency from contract term
+  const getPaymentFrequency = (contract: SaaSData['contract']) => {
+    if (contract.term.toLowerCase().includes('monthly')) {
+      return 'Monthly';
+    } else if (contract.term.toLowerCase().includes('annual')) {
+      return 'Annual';
+    } else if (contract.term.toLowerCase().includes('quarterly')) {
+      return 'Quarterly';
+    } else {
+      return contract.term;
+    }
+  };
+
+  // Get license or storage info
+  const getLicenseOrStorage = (saas: SaaSData) => {
+    if (saas.pricingTerms === 'User-based' && saas.usage.totalLicenses) {
+      return `${saas.usage.totalLicenses} licenses`;
+    } else if (saas.pricingTerms === 'Usage-based') {
+      return 'Pay-as-you-go';
+    } else {
+      return '';
+    }
+  };
+
   // Define columns for the data table
   const columns = [
     {
@@ -65,6 +91,17 @@ export function SaasTable({ data, onRowClick }: SaasTableProps) {
       ),
     },
     {
+      id: "paymentFrequency",
+      header: "Payment Frequency",
+      sortable: true,
+      cell: (row: SaaSData) => (
+        <div className="flex items-center gap-2">
+          <Repeat className="h-4 w-4 text-muted-foreground" />
+          <span>{getPaymentFrequency(row.contract)}</span>
+        </div>
+      ),
+    },
+    {
       id: "price",
       header: "Price",
       sortable: true,
@@ -82,7 +119,15 @@ export function SaasTable({ data, onRowClick }: SaasTableProps) {
       cell: (row: SaaSData) => (
         <div className="flex items-center gap-2">
           <Tag className="h-4 w-4 text-muted-foreground" />
-          <Badge variant="outline">{row.pricingTerms}</Badge>
+          <div className="flex flex-col">
+            <Badge variant="outline">{row.pricingTerms}</Badge>
+            {getLicenseOrStorage(row) && (
+              <span className="text-xs text-muted-foreground mt-1">
+                <Database className="h-3 w-3 inline mr-1" />
+                {getLicenseOrStorage(row)}
+              </span>
+            )}
+          </div>
         </div>
       ),
     },

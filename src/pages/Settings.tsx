@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 const Settings = () => {
   const [name, setName] = useState("Kanav Hasija");
@@ -24,7 +25,9 @@ const Settings = () => {
   const [emailNotifications, setEmailNotifications] = useState(true);
   const [contractRenewalAlerts, setContractRenewalAlerts] = useState(true);
   const [spendAlerts, setSpendAlerts] = useState(true);
-  const [showUsageFeatures, setShowUsageFeatures] = useState(true);
+  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
+    return localStorage.getItem("show-usage-features") === "true"; // Default to false if not set
+  });
   const [gmailConnected, setGmailConnected] = useState(false);
   const [quickbooksConnected, setQuickbooksConnected] = useState(false);
   const [gmailDialogOpen, setGmailDialogOpen] = useState(false);
@@ -34,6 +37,7 @@ const Settings = () => {
   const [quickbooksUsername, setQuickbooksUsername] = useState("");
   const [quickbooksPassword, setQuickbooksPassword] = useState("");
   const { toast } = useToast();
+  const isMobile = useIsMobile();
 
   // Track sidebar collapsed state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
@@ -134,11 +138,11 @@ const Settings = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-screen flex-col md:flex-row">
       <Sidebar />
-      <div className={`flex-1 flex flex-col ${isSidebarCollapsed ? 'ml-16' : 'ml-64'} transition-all duration-300`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarCollapsed ? 'ml-0 md:ml-16' : 'ml-0 md:ml-64'}`}>
         <Header />
-        <main className="flex-1 overflow-auto p-6">
+        <main className="flex-1 overflow-auto p-4 md:p-6">
           <div className="max-w-4xl mx-auto">
             <h1 className="text-2xl font-bold mb-6">Settings</h1>
             

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -6,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Google, MailIcon } from "lucide-react";
+import { Mail } from "lucide-react";
 
 const Settings = () => {
   const [name, setName] = useState("Kanav Hasija");
@@ -19,14 +18,12 @@ const Settings = () => {
   const [quickbooksConnected, setQuickbooksConnected] = useState(false);
   const { toast } = useToast();
 
-  // Load settings from localStorage on initial render
   useEffect(() => {
     const savedShowUsageFeatures = localStorage.getItem("show-usage-features");
     if (savedShowUsageFeatures !== null) {
       setShowUsageFeatures(savedShowUsageFeatures === "true");
     }
     
-    // For demonstration purposes, we'll load connected status from localStorage
     const savedGmailConnected = localStorage.getItem("gmail-connected");
     if (savedGmailConnected !== null) {
       setGmailConnected(savedGmailConnected === "true");
@@ -38,14 +35,11 @@ const Settings = () => {
     }
   }, []);
 
-  // Save showUsageFeatures to localStorage when it changes
   useEffect(() => {
     localStorage.setItem("show-usage-features", showUsageFeatures.toString());
-    // Dispatch an event so other components can listen for the change
     window.dispatchEvent(new Event("usageFeaturesToggled"));
   }, [showUsageFeatures]);
   
-  // Save connection statuses to localStorage when they change
   useEffect(() => {
     localStorage.setItem("gmail-connected", gmailConnected.toString());
   }, [gmailConnected]);
@@ -55,7 +49,6 @@ const Settings = () => {
   }, [quickbooksConnected]);
 
   const handleSaveSettings = () => {
-    // Save settings logic would go here
     toast({
       title: "Settings saved",
       description: "Your settings have been saved successfully.",
@@ -63,7 +56,6 @@ const Settings = () => {
   };
   
   const handleConnectGmail = () => {
-    // In a real app, this would redirect to Gmail OAuth flow
     setGmailConnected(true);
     toast({
       title: "Gmail connected",
@@ -80,7 +72,6 @@ const Settings = () => {
   };
   
   const handleConnectQuickbooks = () => {
-    // In a real app, this would redirect to QuickBooks OAuth flow
     setQuickbooksConnected(true);
     toast({
       title: "QuickBooks connected",
@@ -106,7 +97,6 @@ const Settings = () => {
             <h1 className="text-2xl font-bold mb-6">Settings</h1>
             
             <div className="space-y-6">
-              {/* Profile Settings */}
               <Card>
                 <CardHeader>
                   <CardTitle>Profile Settings</CardTitle>
@@ -138,7 +128,6 @@ const Settings = () => {
                 </CardContent>
               </Card>
 
-              {/* Integrations */}
               <Card>
                 <CardHeader>
                   <CardTitle>Integrations</CardTitle>
@@ -149,7 +138,7 @@ const Settings = () => {
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
                         <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                          <Google className="h-5 w-5 text-primary" />
+                          <Mail className="h-5 w-5 text-primary" />
                         </div>
                         <div>
                           <h3 className="text-sm font-medium">Gmail</h3>
@@ -197,7 +186,6 @@ const Settings = () => {
                 </CardContent>
               </Card>
 
-              {/* Feature Toggle Settings */}
               <Card>
                 <CardHeader>
                   <CardTitle>Feature Settings</CardTitle>
@@ -221,7 +209,6 @@ const Settings = () => {
                 </CardContent>
               </Card>
 
-              {/* Notification Settings */}
               <Card>
                 <CardHeader>
                   <CardTitle>Notification Settings</CardTitle>

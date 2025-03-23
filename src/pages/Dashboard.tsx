@@ -114,7 +114,7 @@ const Dashboard = () => {
                 icon={<DollarSign className="h-4 w-4" />}
                 trend={{ value: 12, isPositive: false }}
                 description="12% increase from last year"
-                className="h-auto py-4"
+                className="max-w-xs h-auto py-3 mx-auto md:mx-0"
               />
             </div>
           )}

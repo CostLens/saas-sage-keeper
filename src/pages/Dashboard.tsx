@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -17,7 +16,7 @@ const Dashboard = () => {
     return localStorage.getItem("sidebar-collapsed") === "true";
   });
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    return localStorage.getItem("show-usage-features") !== "false"; // Default to true if not set
+    return localStorage.getItem("show-usage-features") !== "false";
   });
 
   useEffect(() => {
@@ -107,15 +106,16 @@ const Dashboard = () => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard
-                title="Total Annual SaaS Spend"
-                value={`$${(totalSpend).toLocaleString()}`}
-                icon={<DollarSign className="h-4 w-4" />}
-                trend={{ value: 12, isPositive: false }}
-                className="h-auto w-full"
-              />
-              <div className="md:col-span-2"></div>
+            <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <StatCard
+                  title="Total Annual SaaS Spend"
+                  value={`$${(totalSpend).toLocaleString()}`}
+                  icon={<DollarSign className="h-4 w-4" />}
+                  trend={{ value: 12, isPositive: false }}
+                  className="h-auto w-full"
+                />
+              </div>
             </div>
           )}
             

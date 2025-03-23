@@ -74,14 +74,14 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white text-foreground backdrop-blur-sm px-6",
+        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-gradient-to-r from-indigo-500 to-purple-600 text-white backdrop-blur-sm px-6 shadow-md",
         className
       )}
     >
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 md:hidden">
-          <div className="rounded-md bg-primary/10 p-1">
-            <Coins className="h-5 w-5 text-primary" />
+          <div className="rounded-md bg-white/10 p-1">
+            <Coins className="h-5 w-5 text-white" />
           </div>
           <span className="font-semibold text-lg tracking-tight">CostLens</span>
         </div>
@@ -91,10 +91,10 @@ export function Header({ className }: HeaderProps) {
         <div className="flex items-center gap-2">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10">
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-primary text-[10px] text-primary-foreground flex items-center justify-center">
+                  <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-white text-[10px] text-indigo-600 flex items-center justify-center">
                     {unreadCount}
                   </span>
                 )}
@@ -154,8 +154,8 @@ export function Header({ className }: HeaderProps) {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="ml-2 gap-1">
-                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
+              <Button variant="ghost" size="sm" className="ml-2 gap-1 text-white hover:bg-white/10">
+                <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center text-white font-medium">
                   KH
                 </div>
               </Button>

@@ -2,8 +2,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Settings, HelpCircle, Search, LogOut } from "lucide-react";
-import { useAuth } from "@/context/AuthContext";
+import { Bell, Settings, HelpCircle, Search } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -18,24 +17,6 @@ interface HeaderProps {
 }
 
 export function Header({ className }: HeaderProps) {
-  const { user, signOut } = useAuth();
-  
-  // Get user initials for the avatar
-  const getInitials = () => {
-    if (!user) return "?";
-    
-    const fullName = user.user_metadata?.full_name || '';
-    if (fullName) {
-      return fullName.split(' ')
-        .map(name => name[0])
-        .join('')
-        .toUpperCase()
-        .substring(0, 2);
-    }
-    
-    return user.email?.substring(0, 2).toUpperCase() || "?";
-  };
-
   return (
     <header
       className={cn(
@@ -75,22 +56,17 @@ export function Header({ className }: HeaderProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="ml-2 gap-1">
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
-                  {getInitials()}
+                  KH
                 </div>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>
-                {user?.user_metadata?.full_name || "Kanav Hasija"}
-              </DropdownMenuLabel>
+              <DropdownMenuLabel>Kanav Hasija</DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={() => signOut()}>
-                <LogOut className="mr-2 h-4 w-4" />
-                Log out
-              </DropdownMenuItem>
+              <DropdownMenuItem>Log out</DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

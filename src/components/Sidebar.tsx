@@ -12,7 +12,7 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  Users
+  Gauge
 } from "lucide-react";
 
 interface SidebarProps {
@@ -23,7 +23,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
   { name: "Contracts", href: "/contracts", icon: FileText },
-  { name: "Usage", href: "/usage", icon: Users },
+  { name: "Usage", href: "/usage", icon: Gauge },
 ];
 
 const secondaryNavigation = [

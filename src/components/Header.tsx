@@ -56,7 +56,7 @@ export function Header({ className }: HeaderProps) {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="ml-2 gap-1">
                 <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
-                  JD
+                  KH
                 </div>
               </Button>
             </DropdownMenuTrigger>

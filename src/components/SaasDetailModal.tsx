@@ -1,4 +1,3 @@
-
 import React from "react";
 import {
   Dialog,
@@ -125,7 +124,7 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
             </TabsList>
             
             <TabsContent value="analytics" className="space-y-6">
-              {/* Re-added Spend Trend Chart */}
+              {/* Spend Trend Chart */}
               <TrendChart
                 title="Spend Trend"
                 description="Monthly spend for this application"
@@ -136,36 +135,6 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
                 valueFormatter={(value) => `$${value.toFixed(2)}`}
                 height={300}
               />
-              
-              <div className="bg-muted/30 rounded-lg p-6">
-                <h3 className="text-lg font-medium mb-4">Optimization Insights</h3>
-                <ul className="space-y-3">
-                  {saas.usage.status === "Underutilized" && (
-                    <li className="flex items-start gap-2">
-                      <AlertCircle className="h-5 w-5 text-amber-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">License Reduction Opportunity</p>
-                        <p className="text-sm text-muted-foreground">
-                          This application is underutilized at {saas.usage.utilizationRate}%. 
-                          Consider reducing licenses from {saas.usage.totalLicenses} to {saas.usage.activeUsers + 5} to save approximately 
-                          {formatCurrency((saas.price / (saas.usage.totalLicenses || 1)) * ((saas.usage.totalLicenses || 0) - saas.usage.activeUsers - 5))} annually.
-                        </p>
-                      </div>
-                    </li>
-                  )}
-                  {saas.usage.status === "Overutilized" && (
-                    <li className="flex items-start gap-2">
-                      <AlertCircle className="h-5 w-5 text-red-500 mt-0.5" />
-                      <div>
-                        <p className="font-medium">License Expansion Needed</p>
-                        <p className="text-sm text-muted-foreground">
-                          This application is overutilized. Consider adding more licenses to prevent service disruptions and improve user experience.
-                        </p>
-                      </div>
-                    </li>
-                  )}
-                </ul>
-              </div>
             </TabsContent>
             
             <TabsContent value="contract" className="space-y-4">

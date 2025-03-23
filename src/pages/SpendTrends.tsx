@@ -278,34 +278,6 @@ const SpendTrends = () => {
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-3">
-                <h3 className="font-medium text-lg">Cost Reduction Opportunities</h3>
-                <ul className="space-y-2">
-                  <li className="flex gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800">
-                    <div className="rounded-full h-6 w-6 bg-amber-500 text-white flex items-center justify-center mt-0.5">
-                      1
-                    </div>
-                    <div>
-                      <p className="font-medium">Reduce Salesforce licenses by 20%</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Current utilization is only 56%. Reducing licenses could save approximately $9,000 annually.
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800">
-                    <div className="rounded-full h-6 w-6 bg-amber-500 text-white flex items-center justify-center mt-0.5">
-                      2
-                    </div>
-                    <div>
-                      <p className="font-medium">Consolidate Zoom and Microsoft Teams</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        You're paying for both Zoom and Teams with overlapping functionality. Consider standardizing on one platform.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="space-y-3">
                 <h3 className="font-medium text-lg">Upcoming Renewal Negotiations</h3>
                 <ul className="space-y-2">
                   <li className="flex gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">

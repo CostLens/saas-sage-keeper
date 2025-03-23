@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -21,7 +20,6 @@ import {
   Download, 
   Search, 
   Filter, 
-  Upload, 
   File, 
   ReceiptText,
   Pencil
@@ -143,10 +141,6 @@ const ContractsRepository = () => {
               <Button variant="outline" className="gap-2">
                 <Filter className="h-4 w-4" />
                 Filter
-              </Button>
-              <Button className="gap-2">
-                <Upload className="h-4 w-4" />
-                Upload New
               </Button>
             </div>
           </div>

@@ -10,7 +10,6 @@ import {
   Package, 
   Settings, 
   HelpCircle,
-  PlusCircle,
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
@@ -87,15 +86,6 @@ export function Sidebar({ className }: SidebarProps) {
           ))}
         </nav>
 
-        {!isCollapsed && (
-          <div className="mt-6 px-4">
-            <Button className="w-full justify-start gap-2" variant="outline">
-              <PlusCircle className="h-4 w-4" />
-              <span>Connect New SaaS</span>
-            </Button>
-          </div>
-        )}
-
         <div className="mt-6">
           <div className="px-4 py-2">
             {!isCollapsed && (
@@ -133,9 +123,6 @@ export function Sidebar({ className }: SidebarProps) {
             <p className="text-xs text-muted-foreground mt-1">
               Connect your SaaS apps to get started with automated tracking.
             </p>
-            <Button variant="default" size="sm" className="mt-3 w-full">
-              View integration guide
-            </Button>
           </div>
         </div>
       )}

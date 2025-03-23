@@ -107,15 +107,37 @@ const Dashboard = () => {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <StatCard
-                title="Total Annual SaaS Spend"
-                value={`$${(totalSpend).toLocaleString()}`}
-                icon={<DollarSign className="h-4 w-4" />}
-                trend={{ value: 12, isPositive: false }}
-                className="h-auto w-full"
-              />
-              <div className="md:col-span-2"></div>
+            <div className="grid grid-cols-1 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+                <StatCard
+                  title="Total Annual SaaS Spend"
+                  value={`$${(totalSpend).toLocaleString()}`}
+                  icon={<DollarSign className="h-4 w-4" />}
+                  trend={{ value: 12, isPositive: false }}
+                  className="h-auto py-4"
+                />
+                
+                <StatCard
+                  title="Upcoming Renewals"
+                  value={upcomingRenewals.toString()}
+                  icon={<Calendar className="h-5 w-5" />}
+                  description="Due in next 90 days"
+                />
+                
+                <StatCard
+                  title="Contract Deadlines"
+                  value={terminationDeadlines.toString()}
+                  icon={<AlertTriangle className="h-5 w-5" />}
+                  description="Termination periods closing"
+                />
+                
+                <StatCard
+                  title="Payment Due"
+                  value={paymentsCount.toString()}
+                  icon={<FileTerminal className="h-5 w-5" />}
+                  description="Invoices due this month"
+                />
+              </div>
             </div>
           )}
             

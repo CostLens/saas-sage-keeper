@@ -74,17 +74,17 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-white text-foreground backdrop-blur-sm px-6",
+        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-gradient-to-r from-green-50 to-green-100 text-foreground backdrop-blur-sm px-6 shadow-sm",
         className
       )}
     >
       <div className="flex items-center gap-2">
-        <div className="flex items-center gap-2 md:hidden">
+        <Link to="/" className="flex items-center gap-2">
           <div className="rounded-md bg-primary/10 p-1">
             <Coins className="h-5 w-5 text-primary" />
           </div>
           <span className="font-semibold text-lg tracking-tight">CostLens</span>
-        </div>
+        </Link>
       </div>
 
       <div className="flex items-center gap-4">

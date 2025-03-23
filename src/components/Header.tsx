@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Wallet, Coins } from "lucide-react";
+import { Bell, Coins } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -78,7 +78,7 @@ export function Header({ className }: HeaderProps) {
         className
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="md:hidden flex items-center gap-2">
         <Link to="/" className="flex items-center gap-2">
           <div className="rounded-full bg-green-600 p-1">
             <Coins className="h-5 w-5 text-white" />

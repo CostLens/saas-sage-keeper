@@ -2,7 +2,7 @@
 import React from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Settings, HelpCircle } from "lucide-react";
+import { Bell, Settings, HelpCircle, Search } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -29,6 +29,15 @@ export function Header({ className }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-4">
+        <div className="relative flex rounded-md bg-muted/30 hover:bg-muted/50 transition-colors px-3 py-1.5">
+          <Search className="h-4 w-4 text-muted-foreground mr-2" />
+          <input
+            type="text"
+            placeholder="Search across apps..."
+            className="bg-transparent text-sm outline-none placeholder:text-muted-foreground"
+          />
+        </div>
+
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="relative">
             <Bell className="h-5 w-5" />

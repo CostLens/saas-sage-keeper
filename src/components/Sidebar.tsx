@@ -97,7 +97,7 @@ const Sidebar = ({ className }: SidebarProps) => {
           variant="ghost" 
           size="icon" 
           onClick={toggleCollapse}
-          className={cn("ml-auto", isCollapsed && "mx-auto")}
+          className={isCollapsed ? "mx-auto" : "ml-auto"}
         >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
@@ -109,6 +109,7 @@ const Sidebar = ({ className }: SidebarProps) => {
             <NavLink
               key={item.name}
               to={item.href}
+              end={item.href === "/"}
               className={({ isActive }) =>
                 cn(
                   "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",

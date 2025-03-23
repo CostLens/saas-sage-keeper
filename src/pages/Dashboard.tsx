@@ -45,7 +45,7 @@ const Dashboard = () => {
           </div>
 
           {/* Stats Overview */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <StatCard
               title="Total Annual SaaS Spend"
               value={`$${(totalSpend).toLocaleString()}`}
@@ -54,8 +54,10 @@ const Dashboard = () => {
               description="12% increase from last year"
             />
             
-            {/* Renewal Calendar replacing the Next Renewal card */}
-            <RenewalCalendar saasData={mockSaasData} />
+            {/* Calendar and Notifications now in a flex column in the second two columns */}
+            <div className="md:col-span-2">
+              <RenewalCalendar saasData={mockSaasData} />
+            </div>
           </div>
 
           {/* SaaS Table Section */}

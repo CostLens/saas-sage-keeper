@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Search, Coins } from "lucide-react";
+import { Bell } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -74,36 +74,27 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-background/80 backdrop-blur-sm px-6",
+        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-[#9b87f5] text-white backdrop-blur-sm px-6",
         className
       )}
     >
       <div className="flex items-center gap-2">
         <div className="flex items-center gap-2 md:hidden">
-          <div className="rounded-md bg-primary/10 p-1">
-            <Coins className="h-5 w-5 text-primary" />
+          <div className="rounded-md bg-white/10 p-1">
+            <Coins className="h-5 w-5 text-white" />
           </div>
           <span className="font-semibold text-lg tracking-tight">CostLens</span>
         </div>
       </div>
 
       <div className="flex items-center gap-4">
-        <div className="relative flex rounded-md bg-muted/30 hover:bg-muted/50 transition-colors px-3 py-1.5">
-          <Search className="h-4 w-4 text-muted-foreground mr-2" />
-          <input
-            type="text"
-            placeholder="Search across apps..."
-            className="bg-transparent text-sm outline-none placeholder:text-muted-foreground"
-          />
-        </div>
-
         <div className="flex items-center gap-2">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
+              <Button variant="ghost" size="icon" className="relative text-white hover:bg-white/10">
                 <Bell className="h-5 w-5" />
                 {unreadCount > 0 && (
-                  <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-primary text-[10px] text-white flex items-center justify-center">
+                  <span className="absolute top-0 right-0 h-4 w-4 rounded-full bg-white text-[10px] text-[#9b87f5] flex items-center justify-center">
                     {unreadCount}
                   </span>
                 )}
@@ -163,8 +154,8 @@ export function Header({ className }: HeaderProps) {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="sm" className="ml-2 gap-1">
-                <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center text-primary font-medium">
+              <Button variant="ghost" size="sm" className="ml-2 gap-1 text-white hover:bg-white/10">
+                <div className="h-6 w-6 rounded-full bg-white/20 flex items-center justify-center text-white font-medium">
                   KH
                 </div>
               </Button>
@@ -187,3 +178,4 @@ export function Header({ className }: HeaderProps) {
     </header>
   );
 }
+

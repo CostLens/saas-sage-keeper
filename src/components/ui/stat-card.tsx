@@ -27,7 +27,7 @@ export function StatCard({
   return (
     <div
       className={cn(
-        "relative overflow-hidden rounded-xl border p-4 glass-panel glass-panel-hover animate-scale-in",
+        "relative overflow-hidden rounded-xl border p-4 glass-panel glass-panel-hover animate-scale-in h-full",
         className
       )}
     >

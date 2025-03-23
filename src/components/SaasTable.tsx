@@ -13,7 +13,8 @@ import {
   Database,
   CheckCircle,
   AlertCircle,
-  Activity
+  Activity,
+  Users
 } from "lucide-react";
 
 interface SaasTableProps {
@@ -133,6 +134,22 @@ export function SaasTable({ data, onRowClick }: SaasTableProps) {
         <div className="flex items-center gap-2">
           <DollarSign className="h-4 w-4 text-muted-foreground" />
           <span>{formatCurrency(row.price)}</span>
+        </div>
+      ),
+    },
+    {
+      id: "usage",
+      header: "Usage",
+      sortable: true,
+      cell: (row: SaaSData) => (
+        <div className="flex items-center gap-2">
+          <Users className="h-4 w-4 text-muted-foreground" />
+          <div className="flex flex-col">
+            <span>{row.usage.activeUsers} / {row.usage.totalLicenses || 'Unlimited'}</span>
+            <Badge variant={row.usage.utilization > 80 ? "success" : row.usage.utilization > 60 ? "warning" : "destructive"} className="mt-1">
+              {row.usage.utilization}% Utilized
+            </Badge>
+          </div>
         </div>
       ),
     },

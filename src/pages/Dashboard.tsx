@@ -7,7 +7,8 @@ import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
 import { RenewalCalendar } from "@/components/RenewalCalendar";
 import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
-import { DollarSign } from "lucide-react";
+import { DollarSign, Users, TrendingDown } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
 
 const Dashboard = () => {
   const [selectedSaas, setSelectedSaas] = useState<SaaSData | null>(null);
@@ -29,6 +30,22 @@ const Dashboard = () => {
   // Calculate total spending
   const totalSpend = mockSaasData.reduce((sum, saas) => sum + saas.price, 0);
 
+  // Calculate usage metrics
+  const totalLicenses = mockSaasData.reduce((sum, saas) => sum + (saas.usage.totalLicenses || 0), 0);
+  const activeUsers = mockSaasData.reduce((sum, saas) => sum + saas.usage.activeUsers, 0);
+  const overallUtilization = totalLicenses > 0 ? Math.round((activeUsers / totalLicenses) * 100) : 0;
+  
+  // Find unused licenses
+  const unusedLicenses = totalLicenses - activeUsers;
+  const potentialSavings = mockSaasData.reduce((sum, saas) => {
+    if (saas.pricingTerms === 'User-based' && saas.usage.totalLicenses) {
+      const unusedInApp = saas.usage.totalLicenses - saas.usage.activeUsers;
+      const costPerLicense = saas.price / saas.usage.totalLicenses;
+      return sum + (unusedInApp * costPerLicense);
+    }
+    return sum;
+  }, 0);
+
   const handleRowClick = (saas: SaaSData) => {
     setSelectedSaas(saas);
     setIsDetailModalOpen(true);
@@ -46,19 +63,37 @@ const Dashboard = () => {
 
           {/* Stats Overview */}
           <div className="grid grid-cols-1 gap-6">
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <StatCard
                 title="Total Annual SaaS Spend"
                 value={`$${(totalSpend).toLocaleString()}`}
                 icon={<DollarSign className="h-5 w-5" />}
                 trend={{ value: 12, isPositive: false }}
                 description="12% increase from last year"
-                className="md:w-1/3"
               />
               
-              <div className="md:w-2/3">
-                <RenewalCalendar saasData={mockSaasData} />
-              </div>
+              <StatCard
+                title="License Utilization"
+                value={`${overallUtilization}%`}
+                icon={<Users className="h-5 w-5" />}
+                description={`${activeUsers} active of ${totalLicenses} total licenses`}
+                className="relative"
+              >
+                <div className="mt-2">
+                  <Progress value={overallUtilization} className="h-2" />
+                </div>
+              </StatCard>
+              
+              <StatCard
+                title="Potential Cost Savings"
+                value={`$${Math.round(potentialSavings).toLocaleString()}`}
+                icon={<TrendingDown className="h-5 w-5" />}
+                description={`${unusedLicenses} unused licenses across all apps`}
+              />
+            </div>
+            
+            <div className="md:col-span-3">
+              <RenewalCalendar saasData={mockSaasData} />
             </div>
           </div>
 

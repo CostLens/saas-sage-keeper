@@ -11,6 +11,7 @@ import AIAssistant from "./pages/AIAssistant";
 import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
+import Usage from "./pages/Usage";
 
 const queryClient = new QueryClient();
 
@@ -25,6 +26,7 @@ const App = () => (
           <Route path="/spend-trends" element={<SpendTrends />} />
           <Route path="/contracts" element={<ContractsRepository />} />
           <Route path="/ai-assistant" element={<AIAssistant />} />
+          <Route path="/usage" element={<Usage />} />
           <Route path="/settings" element={<Settings />} />
           <Route path="/help" element={<Help />} />
           <Route path="*" element={<NotFound />} />

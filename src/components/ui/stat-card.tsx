@@ -12,6 +12,7 @@ interface StatCardProps {
     isPositive: boolean;
   };
   className?: string;
+  children?: React.ReactNode;
 }
 
 export function StatCard({
@@ -21,6 +22,7 @@ export function StatCard({
   icon,
   trend,
   className,
+  children,
 }: StatCardProps) {
   return (
     <div
@@ -56,6 +58,8 @@ export function StatCard({
           </div>
         )}
       </div>
+
+      {children}
 
       {/* Decorative background element */}
       <div className="absolute -bottom-6 -right-6 w-24 h-24 rounded-full bg-primary/5 blur-xl"></div>

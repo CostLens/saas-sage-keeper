@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
@@ -11,7 +12,7 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  TicketIcon
+  Users
 } from "lucide-react";
 
 interface SidebarProps {
@@ -22,6 +23,7 @@ const navigation = [
   { name: "Dashboard", href: "/", icon: LayoutDashboard },
   { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
   { name: "Contracts", href: "/contracts", icon: FileText },
+  { name: "Usage", href: "/usage", icon: Users },
 ];
 
 const secondaryNavigation = [
@@ -43,12 +45,6 @@ export function Sidebar({ className }: SidebarProps) {
 
   const toggleCollapse = () => {
     setIsCollapsed(prev => !prev);
-  };
-
-  const handleCreateTicket = () => {
-    // This would be the logic to create a support ticket
-    console.log("Create support ticket");
-    // In a real app, this might open a modal or navigate to a help page
   };
 
   return (

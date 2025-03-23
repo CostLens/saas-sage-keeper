@@ -74,7 +74,7 @@ export function Header({ className }: HeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-gradient-to-r from-green-50 to-green-100 text-foreground backdrop-blur-sm px-6 shadow-sm",
+        "sticky top-0 z-30 flex h-16 items-center justify-between border-b bg-gradient-to-r from-green-100/80 to-green-200/80 text-foreground backdrop-blur-sm px-6 shadow-sm",
         className
       )}
     >

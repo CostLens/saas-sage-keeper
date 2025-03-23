@@ -103,7 +103,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         </Button>
       </div>
 
-      <div className="flex-1 overflow-auto py-4">
+      <div className="flex-1 overflow-auto py-4 bg-background">
         <nav className="grid gap-1 px-2">
           {navigation.map((item) => (
             <NavLink
@@ -137,6 +137,7 @@ const Sidebar = ({ className }: SidebarProps) => {
               <NavLink
                 key={item.name}
                 to={item.href}
+                end
                 className={({ isActive }) =>
                   cn(
                     "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",

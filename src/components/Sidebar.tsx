@@ -19,24 +19,31 @@ interface SidebarProps {
   className?: string;
 }
 
-const navigation = [
-  { name: "Dashboard", href: "/", icon: LayoutDashboard },
-  { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
-  { name: "Contracts", href: "/contracts", icon: FileText },
-  { name: "Usage", href: "/usage", icon: Gauge },
-];
-
-const secondaryNavigation = [
-  { name: "Settings", href: "/settings", icon: Settings },
-  { name: "Help & Support", href: "/help", icon: HelpCircle },
-];
-
-export function Sidebar({ className }: SidebarProps) {
+const Sidebar = ({ className }: SidebarProps) => {
   // Use localStorage to persist the collapsed state
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem("sidebar-collapsed");
     return saved ? JSON.parse(saved) : false;
   });
+  
+  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
+    return localStorage.getItem("show-usage-features") !== "false"; // Default to true if not set
+  });
+
+  // Listen for storage changes to update UI accordingly
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setShowUsageFeatures(localStorage.getItem("show-usage-features") !== "false");
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('usageFeaturesToggled', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('usageFeaturesToggled', handleStorageChange);
+    };
+  }, []);
   
   // Update localStorage when isCollapsed changes
   useEffect(() => {
@@ -46,6 +53,23 @@ export function Sidebar({ className }: SidebarProps) {
   const toggleCollapse = () => {
     setIsCollapsed(prev => !prev);
   };
+
+  // Dynamic navigation based on feature flag
+  const navigation = [
+    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
+    { name: "Contracts", href: "/contracts", icon: FileText },
+  ];
+  
+  // Add Usage tab only if feature flag is enabled
+  if (showUsageFeatures) {
+    navigation.push({ name: "Usage", href: "/usage", icon: Gauge });
+  }
+
+  const secondaryNavigation = [
+    { name: "Settings", href: "/settings", icon: Settings },
+    { name: "Help & Support", href: "/help", icon: HelpCircle },
+  ];
 
   return (
     <aside
@@ -131,4 +155,6 @@ export function Sidebar({ className }: SidebarProps) {
       </div>
     </aside>
   );
-}
+};
+
+export { Sidebar };

@@ -78,7 +78,7 @@ export function Header({ className }: HeaderProps) {
         className
       )}
     >
-      <div className="md:hidden flex items-center gap-2">
+      <div className="md:hidden">
         <Link to="/" className="flex items-center gap-2">
           <div className="rounded-full bg-green-600 p-1">
             <Coins className="h-5 w-5 text-white" />

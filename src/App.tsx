@@ -8,6 +8,8 @@ import Dashboard from "./pages/Dashboard";
 import SpendTrends from "./pages/SpendTrends";
 import ContractsRepository from "./pages/ContractsRepository";
 import AIAssistant from "./pages/AIAssistant";
+import Settings from "./pages/Settings";
+import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -23,6 +25,8 @@ const App = () => (
           <Route path="/spend-trends" element={<SpendTrends />} />
           <Route path="/contracts" element={<ContractsRepository />} />
           <Route path="/ai-assistant" element={<AIAssistant />} />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/help" element={<Help />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

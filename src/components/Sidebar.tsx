@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
@@ -134,19 +133,6 @@ export function Sidebar({ className }: SidebarProps) {
           </nav>
         </div>
       </div>
-
-      {!isCollapsed && (
-        <div className="p-4 mt-auto">
-          <Button 
-            variant="outline" 
-            className="w-full flex items-center gap-2 text-sm"
-            onClick={handleCreateTicket}
-          >
-            <HelpCircle className="h-4 w-4" />
-            <span>Need help? Create a ticket</span>
-          </Button>
-        </div>
-      )}
     </aside>
   );
 }

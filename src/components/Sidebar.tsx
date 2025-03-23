@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,6 @@ import {
   ChevronLeft,
   ChevronRight
 } from "lucide-react";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface SidebarProps {
   className?: string;
@@ -31,7 +30,20 @@ const secondaryNavigation = [
 ];
 
 export function Sidebar({ className }: SidebarProps) {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  // Use localStorage to persist the collapsed state
+  const [isCollapsed, setIsCollapsed] = useState(() => {
+    const saved = localStorage.getItem("sidebar-collapsed");
+    return saved ? JSON.parse(saved) : false;
+  });
+  
+  // Update localStorage when isCollapsed changes
+  useEffect(() => {
+    localStorage.setItem("sidebar-collapsed", JSON.stringify(isCollapsed));
+  }, [isCollapsed]);
+
+  const toggleCollapse = () => {
+    setIsCollapsed(prev => !prev);
+  };
 
   return (
     <aside
@@ -58,8 +70,8 @@ export function Sidebar({ className }: SidebarProps) {
         <Button 
           variant="ghost" 
           size="icon" 
-          onClick={() => setIsCollapsed(!isCollapsed)}
-          className="ml-auto"
+          onClick={toggleCollapse}
+          className={cn("ml-auto", isCollapsed && "mx-auto")}
         >
           {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>

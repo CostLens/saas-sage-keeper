@@ -5,16 +5,11 @@ import { Sidebar } from "@/components/Sidebar";
 import { SaasTable } from "@/components/SaasTable";
 import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
-import { ObligationCard } from "@/components/ObligationCard";
-import { Button } from "@/components/ui/button";
 import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
 import { 
   DollarSign, 
-  Calendar, 
-  ArrowUpRight, 
-  ChevronRight
+  Calendar
 } from "lucide-react";
-import { Link } from "react-router-dom";
 
 const Dashboard = () => {
   const [selectedSaas, setSelectedSaas] = useState<SaaSData | null>(null);
@@ -29,12 +24,6 @@ const Dashboard = () => {
     .filter(saas => saas.renewalDate !== "N/A")
     .sort((a, b) => new Date(a.renewalDate).getTime() - new Date(b.renewalDate).getTime());
   const nextRenewal = upcomingRenewals.find(saas => new Date(saas.renewalDate) > today);
-  
-  // Get upcoming obligations
-  const upcomingObligations = mockObligations
-    .filter(obligation => obligation.status !== "Completed")
-    .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
-    .slice(0, 3);
 
   const handleRowClick = (saas: SaaSData) => {
     setSelectedSaas(saas);
@@ -44,7 +33,7 @@ const Dashboard = () => {
   return (
     <div className="min-h-screen flex">
       <Sidebar />
-      <div className="flex-1 flex flex-col transition-all duration-300">
+      <div className="flex-1 flex flex-col ml-0 transition-all duration-300">
         <Header />
         <main className="flex-1 p-6 space-y-8 animate-fade-in">
           <div className="flex items-center justify-between">
@@ -74,23 +63,6 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold">SaaS Applications</h2>
             </div>
             <SaasTable data={mockSaasData} onRowClick={handleRowClick} />
-          </div>
-
-          {/* Upcoming Obligations Section */}
-          <div className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-xl font-semibold">Upcoming Obligations</h2>
-              <Button variant="outline" size="sm" asChild>
-                <Link to="/obligations" className="flex items-center gap-1">
-                  View all <ChevronRight className="h-4 w-4" />
-                </Link>
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {upcomingObligations.map((obligation) => (
-                <ObligationCard key={obligation.id} obligation={obligation} />
-              ))}
-            </div>
           </div>
         </main>
       </div>

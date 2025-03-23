@@ -11,7 +11,8 @@ import {
   Settings, 
   HelpCircle,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  TicketIcon
 } from "lucide-react";
 
 interface SidebarProps {
@@ -43,6 +44,12 @@ export function Sidebar({ className }: SidebarProps) {
 
   const toggleCollapse = () => {
     setIsCollapsed(prev => !prev);
+  };
+
+  const handleCreateTicket = () => {
+    // This would be the logic to create a support ticket
+    console.log("Create support ticket");
+    // In a real app, this might open a modal or navigate to a help page
   };
 
   return (
@@ -130,12 +137,14 @@ export function Sidebar({ className }: SidebarProps) {
 
       {!isCollapsed && (
         <div className="p-4 mt-auto">
-          <div className="rounded-lg bg-muted/50 p-4">
-            <h3 className="font-medium text-sm">Need help?</h3>
-            <p className="text-xs text-muted-foreground mt-1">
-              Connect your SaaS apps to get started with automated tracking.
-            </p>
-          </div>
+          <Button 
+            variant="outline" 
+            className="w-full flex items-center gap-2 text-sm"
+            onClick={handleCreateTicket}
+          >
+            <HelpCircle className="h-4 w-4" />
+            <span>Need help? Create a ticket</span>
+          </Button>
         </div>
       )}
     </aside>

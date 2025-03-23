@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -20,7 +19,6 @@ const Dashboard = () => {
     return localStorage.getItem("show-usage-features") !== "false"; // Default to true if not set
   });
 
-  // Update when sidebar collapsed state changes or usage toggle changes
   useEffect(() => {
     const handleStorageChange = () => {
       setSidebarCollapsed(localStorage.getItem("sidebar-collapsed") === "true");
@@ -36,15 +34,12 @@ const Dashboard = () => {
     };
   }, []);
 
-  // Calculate total spending
   const totalSpend = mockSaasData.reduce((sum, saas) => sum + saas.price, 0);
 
-  // Calculate usage metrics
   const totalLicenses = mockSaasData.reduce((sum, saas) => sum + (saas.usage.totalLicenses || 0), 0);
   const activeUsers = mockSaasData.reduce((sum, saas) => sum + saas.usage.activeUsers, 0);
   const overallUtilization = totalLicenses > 0 ? Math.round((activeUsers / totalLicenses) * 100) : 0;
   
-  // Find unused licenses
   const unusedLicenses = totalLicenses - activeUsers;
   const potentialSavings = mockSaasData.reduce((sum, saas) => {
     if (saas.pricingTerms === 'User-based' && saas.usage.totalLicenses) {
@@ -60,13 +55,11 @@ const Dashboard = () => {
     setIsDetailModalOpen(true);
   };
 
-  // Count upcoming renewals for the next 90 days
   const upcomingRenewals = mockSaasData.filter(saas => 
     saas.renewalDate !== "N/A" && 
     new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
   ).length;
 
-  // Mock data for additional KPIs (when feature flag is disabled)
   const paymentsCount = 3;
   const terminationDeadlines = 2;
 
@@ -80,7 +73,6 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          {/* Stats Overview */}
           <div className="grid grid-cols-1 gap-6">
             {showUsageFeatures ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -119,7 +111,6 @@ const Dashboard = () => {
                   value={`$${(totalSpend).toLocaleString()}`}
                   icon={<DollarSign className="h-4 w-4" />}
                   trend={{ value: 12, isPositive: false }}
-                  className="h-auto py-4 px-4"
                 />
                 
                 <StatCard
@@ -127,21 +118,18 @@ const Dashboard = () => {
                   value={upcomingRenewals}
                   icon={<Calendar className="h-4 w-4" />}
                   description="In the next 90 days"
-                  className="h-auto py-4 px-4"
                 />
                 
                 <StatCard
                   title="Payments Due"
                   value={paymentsCount}
                   icon={<AlertTriangle className="h-4 w-4" />}
-                  className="h-auto py-4 px-4"
                 />
                 
                 <StatCard
                   title="Termination Deadlines"
                   value={terminationDeadlines}
                   icon={<FileTerminal className="h-4 w-4" />}
-                  className="h-auto py-4 px-4"
                 />
               </div>
             )}
@@ -151,7 +139,6 @@ const Dashboard = () => {
             <RenewalCalendar saasData={mockSaasData} />
           </div>
 
-          {/* SaaS Table Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">SaaS Applications</h2>
@@ -165,7 +152,6 @@ const Dashboard = () => {
         </main>
       </div>
 
-      {/* Detail Modal */}
       <SaasDetailModal
         saas={selectedSaas}
         open={isDetailModalOpen}

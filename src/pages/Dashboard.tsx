@@ -7,7 +7,7 @@ import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
 import { RenewalCalendar } from "@/components/RenewalCalendar";
 import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
-import { DollarSign, Users, TrendingDown } from "lucide-react";
+import { DollarSign, Users, TrendingDown, Calendar } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
 const Dashboard = () => {
@@ -16,15 +16,24 @@ const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     return localStorage.getItem("sidebar-collapsed") === "true";
   });
+  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
+    return localStorage.getItem("show-usage-features") !== "false"; // Default to true if not set
+  });
 
-  // Update when sidebar collapsed state changes
+  // Update when sidebar collapsed state changes or usage toggle changes
   useEffect(() => {
     const handleStorageChange = () => {
       setSidebarCollapsed(localStorage.getItem("sidebar-collapsed") === "true");
+      setShowUsageFeatures(localStorage.getItem("show-usage-features") !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('usageFeaturesToggled', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('usageFeaturesToggled', handleStorageChange);
+    };
   }, []);
 
   // Calculate total spending
@@ -51,6 +60,18 @@ const Dashboard = () => {
     setIsDetailModalOpen(true);
   };
 
+  // Get columns for SaasTable based on showUsageFeatures flag
+  const getColumns = () => {
+    // If usage features are disabled, we'll filter out the usage column
+    if (!showUsageFeatures) {
+      return mockSaasData.map(item => {
+        const { usage, ...rest } = item;
+        return rest;
+      });
+    }
+    return mockSaasData;
+  };
+
   return (
     <div className="min-h-screen flex">
       <Sidebar />
@@ -72,24 +93,40 @@ const Dashboard = () => {
                 description="12% increase from last year"
               />
               
-              <StatCard
-                title="License Utilization"
-                value={`${overallUtilization}%`}
-                icon={<Users className="h-5 w-5" />}
-                description={`${activeUsers} active of ${totalLicenses} total licenses`}
-                className="relative"
-              >
-                <div className="mt-2">
-                  <Progress value={overallUtilization} className="h-2" />
-                </div>
-              </StatCard>
+              {showUsageFeatures && (
+                <StatCard
+                  title="License Utilization"
+                  value={`${overallUtilization}%`}
+                  icon={<Users className="h-5 w-5" />}
+                  description={`${activeUsers} active of ${totalLicenses} total licenses`}
+                  className="relative"
+                >
+                  <div className="mt-2">
+                    <Progress value={overallUtilization} className="h-2" />
+                  </div>
+                </StatCard>
+              )}
               
-              <StatCard
-                title="Potential Cost Savings"
-                value={`$${Math.round(potentialSavings).toLocaleString()}`}
-                icon={<TrendingDown className="h-5 w-5" />}
-                description={`${unusedLicenses} unused licenses across all apps`}
-              />
+              {showUsageFeatures && (
+                <StatCard
+                  title="Potential Cost Savings"
+                  value={`$${Math.round(potentialSavings).toLocaleString()}`}
+                  icon={<TrendingDown className="h-5 w-5" />}
+                  description={`${unusedLicenses} unused licenses across all apps`}
+                />
+              )}
+
+              {!showUsageFeatures && (
+                <StatCard
+                  title="Upcoming Renewals"
+                  value={`${mockSaasData.filter(saas => 
+                    saas.renewalDate !== "N/A" && 
+                    new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
+                  ).length}`}
+                  icon={<Calendar className="h-5 w-5" />}
+                  description="Coming up in the next 90 days"
+                />
+              )}
             </div>
             
             <div className="md:col-span-3">
@@ -102,7 +139,11 @@ const Dashboard = () => {
             <div className="flex items-center justify-between">
               <h2 className="text-xl font-semibold">SaaS Applications</h2>
             </div>
-            <SaasTable data={mockSaasData} onRowClick={handleRowClick} />
+            <SaasTable 
+              data={mockSaasData} 
+              onRowClick={handleRowClick} 
+              showUsage={showUsageFeatures}
+            />
           </div>
         </main>
       </div>

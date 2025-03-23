@@ -64,71 +64,50 @@ const Dashboard = () => {
   const paymentsCount = 3;
   const terminationDeadlines = 2;
 
-  // Generate cards based on feature flag
-  const dashboardCards = () => {
-    const cards = [];
-    
-    // Total Annual SaaS Spend card is always shown
-    cards.push(
+  // Generate all dashboard cards in a unified array
+  const allCards = [];
+  
+  // Total Annual SaaS Spend card is always shown
+  allCards.push(
+    <StatCard
+      key="total-spend"
+      title="Total Annual SaaS Spend"
+      value={`$${(totalSpend).toLocaleString()}`}
+      icon={<DollarSign className="h-4 w-4" />}
+      trend={{ value: 12, isPositive: false }}
+      description="12% increase from last year"
+      className="h-full"
+    />
+  );
+  
+  // Add additional cards if usage features are enabled
+  if (showUsageFeatures) {
+    allCards.push(
       <StatCard
-        key="total-spend"
-        title="Total Annual SaaS Spend"
-        value={`$${(totalSpend).toLocaleString()}`}
-        icon={<DollarSign className="h-4 w-4" />}
-        trend={{ value: 12, isPositive: false }}
-        description="12% increase from last year"
-        className="h-auto py-4"
-      />
+        key="license-utilization"
+        title="License Utilization"
+        value={`${overallUtilization}%`}
+        icon={<Users className="h-5 w-5" />}
+        description={`${activeUsers} active of ${totalLicenses} total licenses`}
+        className="h-full"
+      >
+        <div className="mt-2">
+          <Progress value={overallUtilization} className="h-2" />
+        </div>
+      </StatCard>
     );
     
-    // Add additional cards if usage features are enabled
-    if (showUsageFeatures) {
-      cards.push(
-        <StatCard
-          key="license-utilization"
-          title="License Utilization"
-          value={`${overallUtilization}%`}
-          icon={<Users className="h-5 w-5" />}
-          description={`${activeUsers} active of ${totalLicenses} total licenses`}
-          className="relative"
-        >
-          <div className="mt-2">
-            <Progress value={overallUtilization} className="h-2" />
-          </div>
-        </StatCard>
-      );
-      
-      cards.push(
-        <StatCard
-          key="potential-savings"
-          title="Potential Cost Savings"
-          value={`$${Math.round(potentialSavings).toLocaleString()}`}
-          icon={<TrendingDown className="h-5 w-5" />}
-          description={`${unusedLicenses} unused licenses across all apps`}
-        />
-      );
-    }
-    
-    return cards;
-  };
-
-  // Get the cards to display
-  const cards = dashboardCards();
-  
-  // Determine grid columns based on number of cards
-  const gridColsClass = () => {
-    // For responsive design:
-    // 1 column on small screens, 
-    // 2 columns on medium screens if 2 or 4 cards, 
-    // 3 columns on medium screens if 3 or 6 cards
-    if (cards.length === 1) {
-      return "grid-cols-1";
-    } else if (cards.length % 3 === 0) {
-      return "grid-cols-1 md:grid-cols-3";
-    } else {
-      return "grid-cols-1 md:grid-cols-2";
-    }
-  };
+    allCards.push(
+      <StatCard
+        key="potential-savings"
+        title="Potential Cost Savings"
+        value={`$${Math.round(potentialSavings).toLocaleString()}`}
+        icon={<TrendingDown className="h-5 w-5" />}
+        description={`${unusedLicenses} unused licenses across all apps`}
+        className="h-full"
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen flex">
@@ -140,15 +119,17 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          {/* Unified grid layout for dashboard cards */}
+          {/* Unified grid layout for ALL dashboard cards */}
           <div className="grid gap-6">
-            <div className={`grid ${gridColsClass()} gap-6`}>
-              {cards}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* First row: Stat cards */}
+              {allCards.map((card, index) => (
+                <div key={index}>{card}</div>
+              ))}
+              
+              {/* This approach ensures automatic layout based on number of cards */}
+              <RenewalCalendar saasData={mockSaasData} />
             </div>
-          </div>
-            
-          <div className="md:col-span-3">
-            <RenewalCalendar saasData={mockSaasData} />
           </div>
 
           <div className="space-y-4">

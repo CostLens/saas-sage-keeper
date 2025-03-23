@@ -21,8 +21,8 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
   const { terminationsData } = getUpcomingTerminations(saasData);
 
   return (
-    <div className="flex gap-4 w-full">
-      {/* Renewals Card */}
+    <>
+      {/* Each card takes up one column in the grid */}
       <RenewalCard 
         renewals={renewals}
         upcomingRenewalAmount={upcomingRenewalAmount}
@@ -38,6 +38,6 @@ export function RenewalCalendar({ saasData }: RenewalCalendarProps) {
       <TerminationsCard 
         terminationsData={terminationsData}
       />
-    </div>
+    </>
   );
 }

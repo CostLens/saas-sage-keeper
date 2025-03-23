@@ -17,7 +17,7 @@ import {
   FileText,
   CheckCircle,
   AlertCircle,
-  ArrowRightLeft
+  Activity
 } from "lucide-react";
 
 interface SaasDetailModalProps {
@@ -43,31 +43,21 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
     }).format(amount);
   };
 
-  const utilizationStatus = (status: string) => {
-    switch (status) {
-      case "Underutilized":
-        return (
-          <Badge variant="outline" className="text-amber-500 border-amber-200 bg-amber-50 dark:bg-amber-950 dark:border-amber-800">
-            <AlertCircle className="h-3 w-3 mr-1" />
-            {status}
-          </Badge>
-        );
-      case "Optimal":
-        return (
-          <Badge variant="outline" className="text-green-500 border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
-            <CheckCircle className="h-3 w-3 mr-1" />
-            {status}
-          </Badge>
-        );
-      case "Overutilized":
-        return (
-          <Badge variant="outline" className="text-red-500 border-red-200 bg-red-50 dark:bg-red-950 dark:border-red-800">
-            <AlertCircle className="h-3 w-3 mr-1" />
-            {status}
-          </Badge>
-        );
-      default:
-        return <Badge variant="outline">{status}</Badge>;
+  const getStatusBadge = (active: boolean) => {
+    if (active) {
+      return (
+        <Badge variant="outline" className="text-green-500 border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Active
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge variant="outline" className="text-red-500 border-red-200 bg-red-50 dark:bg-red-950 dark:border-red-800">
+          <AlertCircle className="h-3 w-3 mr-1" />
+          Decommissioned
+        </Badge>
+      );
     }
   };
 
@@ -106,11 +96,11 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
             
             <div className="bg-muted/30 p-4 rounded-lg flex flex-col">
               <div className="text-xs text-muted-foreground mb-1 flex items-center">
-                <ArrowRightLeft className="h-3 w-3 mr-1" />
+                <Activity className="h-3 w-3 mr-1" />
                 Status
               </div>
               <div className="font-medium">
-                {utilizationStatus(saas.usage.status)}
+                {getStatusBadge(saas.active)}
               </div>
             </div>
           </div>

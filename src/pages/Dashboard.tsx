@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -108,26 +109,6 @@ const Dashboard = () => {
     );
   }
 
-  // Get renewal calendar components
-  const renewalComponents = (
-    <RenewalCalendar saasData={mockSaasData} />
-  );
-
-  // Calculate how many cards per row
-  const totalCardCount = allCards.length + 1; // +1 for the renewal calendar section
-  const cardsPerRow = Math.ceil(totalCardCount / 2); // Distribute cards evenly across 2 rows
-  
-  // Split the cards into rows
-  const firstRowCards = allCards.slice(0, cardsPerRow);
-  const secondRowCards = [...allCards.slice(cardsPerRow)];
-
-  // If renewal calendar needs to be in second row
-  if (firstRowCards.length === cardsPerRow) {
-    secondRowCards.push(renewalComponents);
-  } else {
-    firstRowCards.push(renewalComponents);
-  }
-
   return (
     <div className="min-h-screen flex">
       <Sidebar />
@@ -138,23 +119,17 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          {/* Unified grid layout with balanced rows */}
+          {/* Unified grid layout for ALL dashboard cards */}
           <div className="grid gap-6">
-            {/* First row */}
-            <div className={`grid grid-cols-1 md:grid-cols-${firstRowCards.length} gap-6`}>
-              {firstRowCards.map((card, index) => (
-                <div key={`first-row-${index}`} className="flex-1">{card}</div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* First row: Stat cards */}
+              {allCards.map((card, index) => (
+                <div key={index}>{card}</div>
               ))}
+              
+              {/* This approach ensures automatic layout based on number of cards */}
+              <RenewalCalendar saasData={mockSaasData} />
             </div>
-            
-            {/* Second row - only render if there are cards */}
-            {secondRowCards.length > 0 && (
-              <div className={`grid grid-cols-1 md:grid-cols-${secondRowCards.length} gap-6`}>
-                {secondRowCards.map((card, index) => (
-                  <div key={`second-row-${index}`} className="flex-1">{card}</div>
-                ))}
-              </div>
-            )}
           </div>
 
           <div className="space-y-4">

@@ -74,8 +74,8 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
           </div>
 
-          <div className="grid grid-cols-1 gap-6">
-            {showUsageFeatures ? (
+          {showUsageFeatures ? (
+            <div className="grid grid-cols-1 gap-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 <StatCard
                   title="Total Annual SaaS Spend"
@@ -105,17 +105,19 @@ const Dashboard = () => {
                   description={`${unusedLicenses} unused licenses across all apps`}
                 />
               </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
-                <StatCard
-                  title="Total Annual SaaS Spend"
-                  value={`$${(totalSpend).toLocaleString()}`}
-                  icon={<DollarSign className="h-4 w-4" />}
-                  trend={{ value: 12, isPositive: false }}
-                />
-              </div>
-            )}
-          </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <StatCard
+                title="Total Annual SaaS Spend"
+                value={`$${(totalSpend).toLocaleString()}`}
+                icon={<DollarSign className="h-4 w-4" />}
+                trend={{ value: 12, isPositive: false }}
+                className="h-auto w-full"
+              />
+              <div className="md:col-span-2"></div>
+            </div>
+          )}
             
           <div className="md:col-span-3">
             <RenewalCalendar saasData={mockSaasData} />

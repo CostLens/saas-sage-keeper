@@ -1,22 +1,9 @@
 
 import React, { useState } from "react";
 import { SaaSData } from "@/lib/mockData";
-import { format } from "date-fns";
-import { FileText, ChevronDown, ChevronRight, Download } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { ContractInfo } from "./contract/ContractInfo";
+import { ContractsByYear } from "./contract/ContractsByYear";
+import { AssociatedDocuments } from "./contract/AssociatedDocuments";
 
 interface ContractTabProps {
   saas: SaaSData;
@@ -105,153 +92,24 @@ export function ContractTab({ saas }: ContractTabProps) {
 
   return (
     <div className="space-y-6">
-      <div className="bg-muted/30 rounded-lg p-6">
-        <h3 className="text-lg font-medium mb-4">Current Contract Information</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div>
-            <h4 className="text-sm font-medium text-muted-foreground">Contract Signed</h4>
-            <p className="font-medium">{format(new Date(saas.contract.signedDate), "MMMM d, yyyy")}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-muted-foreground">Term</h4>
-            <p className="font-medium">{saas.contract.term}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-muted-foreground">Auto-Renewal</h4>
-            <p className="font-medium">{saas.contract.autoRenewal ? "Yes" : "No"}</p>
-          </div>
-          <div>
-            <h4 className="text-sm font-medium text-muted-foreground">Cancellation Deadline</h4>
-            <p className="font-medium">
-              {saas.contract.cancellationDeadline 
-                ? format(new Date(saas.contract.cancellationDeadline), "MMMM d, yyyy")
-                : "N/A"}
-            </p>
-          </div>
-        </div>
-      </div>
+      {/* Current Contract Information */}
+      <ContractInfo 
+        signedDate={saas.contract.signedDate}
+        term={saas.contract.term}
+        autoRenewal={saas.contract.autoRenewal}
+        cancellationDeadline={saas.contract.cancellationDeadline}
+      />
       
-      <div className="bg-muted/30 rounded-lg p-6">
-        <h3 className="text-lg font-medium mb-4">Contract History</h3>
-        <div className="space-y-6">
-          {Object.keys(contractsByYear)
-            .sort((a, b) => parseInt(a) - parseInt(b)) // Sort years in ascending order
-            .map(year => (
-              <div key={year} className="space-y-4">
-                <h4 className="font-medium text-lg">{year}</h4>
-                {contractsByYear[parseInt(year)].map(contract => (
-                  <Collapsible 
-                    key={contract.id}
-                    open={openContracts.includes(contract.id)}
-                    onOpenChange={() => toggleContract(contract.id)}
-                    className="border rounded-md"
-                  >
-                    <CollapsibleTrigger asChild>
-                      <div className="flex items-center justify-between p-4 cursor-pointer hover:bg-muted/50">
-                        <div className="flex items-center gap-3">
-                          <div className="p-2 bg-background rounded-md">
-                            <FileText className={`h-5 w-5 ${contract.isOriginal ? 'text-emerald-500' : 'text-primary'}`} />
-                          </div>
-                          <div>
-                            <div className="font-medium flex items-center gap-2">
-                              {contract.title}
-                              {contract.isOriginal ? (
-                                <span className="text-xs bg-emerald-100 text-emerald-800 px-1.5 py-0.5 rounded dark:bg-emerald-900 dark:text-emerald-200">
-                                  Original
-                                </span>
-                              ) : (
-                                <span className="text-xs bg-blue-100 text-blue-800 px-1.5 py-0.5 rounded dark:bg-blue-900 dark:text-blue-200">
-                                  Renewal
-                                </span>
-                              )}
-                            </div>
-                            <div className="text-xs text-muted-foreground">{contract.dateRange}</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                            <Download className="h-4 w-4" />
-                          </Button>
-                          {openContracts.includes(contract.id) ? (
-                            <ChevronDown className="h-5 w-5 text-muted-foreground" />
-                          ) : (
-                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                          )}
-                        </div>
-                      </div>
-                    </CollapsibleTrigger>
-                    <CollapsibleContent>
-                      <div className="p-4 border-t">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 pb-4 border-b">
-                          <div>
-                            <h4 className="text-sm font-medium text-muted-foreground">Contract Signed</h4>
-                            <p className="font-medium">{format(new Date(contract.signedDate), "MMMM d, yyyy")}</p>
-                          </div>
-                          <div>
-                            <h4 className="text-sm font-medium text-muted-foreground">Term</h4>
-                            <p className="font-medium">{contract.term}</p>
-                          </div>
-                        </div>
-                        
-                        <h4 className="font-medium mb-3">Associated Invoices</h4>
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Invoice</TableHead>
-                              <TableHead>Date</TableHead>
-                              <TableHead>Amount</TableHead>
-                              <TableHead className="text-right">Actions</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {contract.invoices.map(invoice => (
-                              <TableRow key={invoice.id}>
-                                <TableCell>{invoice.title}</TableCell>
-                                <TableCell>{format(new Date(invoice.date), "MMM d, yyyy")}</TableCell>
-                                <TableCell>{formatCurrency(invoice.amount)}</TableCell>
-                                <TableCell className="text-right">
-                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                    <Download className="h-4 w-4" />
-                                  </Button>
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
-                    </CollapsibleContent>
-                  </Collapsible>
-                ))}
-              </div>
-            ))}
-        </div>
-      </div>
+      {/* Contract History */}
+      <ContractsByYear 
+        contractsByYear={contractsByYear}
+        openContracts={openContracts}
+        toggleContract={toggleContract}
+        formatCurrency={formatCurrency}
+      />
       
-      <div className="bg-muted/30 rounded-lg p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium">Associated Documents</h3>
-        </div>
-        <div className="space-y-3">
-          <div className="flex items-center justify-between p-3 rounded-md bg-background/50 hover:bg-background/80 transition-colors cursor-pointer border">
-            <div className="flex items-center gap-3">
-              <FileText className="h-5 w-5 text-primary" />
-              <div>
-                <p className="font-medium">{saas.name} Contract</p>
-                <p className="text-xs text-muted-foreground">PDF • 1.2MB</p>
-              </div>
-            </div>
-          </div>
-          <div className="flex items-center justify-between p-3 rounded-md bg-background/50 hover:bg-background/80 transition-colors cursor-pointer border">
-            <div className="flex items-center gap-3">
-              <FileText className="h-5 w-5 text-primary" />
-              <div>
-                <p className="font-medium">Latest Invoice</p>
-                <p className="text-xs text-muted-foreground">PDF • 450KB</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Associated Documents */}
+      <AssociatedDocuments saasName={saas.name} />
     </div>
   );
 }

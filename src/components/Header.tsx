@@ -80,7 +80,7 @@ export function Header({ className }: HeaderProps) {
     >
       <div className="md:hidden">
         <Link to="/" className="flex items-center gap-2">
-          <img src="/logo.png" alt="XpendIQ Logo" className="w-7 h-7" />
+          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="XpendIQ Logo" className="w-7 h-7" />
           <span className="font-semibold text-lg tracking-tight">XpendIQ</span>
         </Link>
       </div>

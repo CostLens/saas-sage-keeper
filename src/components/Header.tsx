@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -79,11 +80,9 @@ export function Header({ className }: HeaderProps) {
     >
       <div className="md:hidden">
         <Link to="/" className="flex items-center gap-2">
-          <img 
-            src="/logo.png" 
-            alt="XpendIQ Logo" 
-            className="w-7 h-7" 
-          />
+          <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-7 h-7 flex items-center justify-center">
+            <span className="font-bold text-white text-base">IQ</span>
+          </div>
           <span className="font-semibold text-lg tracking-tight">XpendIQ</span>
         </Link>
       </div>

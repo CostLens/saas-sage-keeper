@@ -7,11 +7,13 @@ import { DocumentViewModal } from "@/components/contracts/DocumentViewModal";
 import { ContractsLayout } from "@/components/contracts/ContractsLayout";
 import { ContractsFilter } from "@/components/contracts/ContractsFilter";
 import { ContractsContent } from "@/components/contracts/ContractsContent";
+import { DocumentUploadDialog } from "@/components/contracts/DocumentUploadDialog";
 
 const ContractsRepository = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDocument, setSelectedDocument] = useState<ContractDocument | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [selectedSaas, setSelectedSaas] = useState<string | null>(null);
   
   // Fetch SaaS applications from Supabase
@@ -60,7 +62,8 @@ const ContractsRepository = () => {
     <ContractsLayout>
       <ContractsFilter 
         searchTerm={searchTerm} 
-        setSearchTerm={setSearchTerm} 
+        setSearchTerm={setSearchTerm}
+        onUploadClick={() => setIsUploadDialogOpen(true)} 
       />
       
       <ContractsContent 
@@ -74,6 +77,12 @@ const ContractsRepository = () => {
         onOpenChange={setIsViewModalOpen}
         document={selectedDocument}
         onDocumentClick={handleDocumentClick}
+      />
+
+      {/* Document Upload Dialog */}
+      <DocumentUploadDialog
+        open={isUploadDialogOpen}
+        onOpenChange={setIsUploadDialogOpen}
       />
     </ContractsLayout>
   );

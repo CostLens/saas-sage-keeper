@@ -84,12 +84,20 @@ const Sidebar = ({ className }: SidebarProps) => {
       <div className="flex h-16 items-center border-b px-4 justify-between">
         {!isCollapsed && (
           <div className="flex items-center gap-2">
-            <img src={`${import.meta.env.BASE_URL}logo.png`} alt="XpendIQ Logo" className="w-8 h-8" />
+            <img 
+              src="/lovable-uploads/1d1ca676-8468-4759-ac5f-3792df75599e.png" 
+              alt="XpendIQ Logo" 
+              className="w-8 h-8" 
+            />
             <span className="font-bold text-xl tracking-tight">XpendIQ</span>
           </div>
         )}
         {isCollapsed && (
-          <img src={`${import.meta.env.BASE_URL}logo.png`} alt="XpendIQ Logo" className="w-8 h-8 mx-auto" />
+          <img 
+            src="/lovable-uploads/1d1ca676-8468-4759-ac5f-3792df75599e.png" 
+            alt="XpendIQ Logo" 
+            className="w-8 h-8 mx-auto" 
+          />
         )}
         <Button 
           variant="ghost" 

@@ -2,6 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
 import { 
   TrendingUp, 
   BarChart, 
@@ -33,9 +34,11 @@ const Index = () => {
                   <ListChecks className="h-5 w-5" />
                   Join Waiting List
                 </Button>
-                <Button size="lg" variant="outline" className="gap-2">
-                  <User className="h-5 w-5" />
-                  Sign In
+                <Button size="lg" variant="outline" className="gap-2" asChild>
+                  <Link to="/dashboard">
+                    <User className="h-5 w-5" />
+                    Sign In
+                  </Link>
                 </Button>
               </div>
             </div>
@@ -232,9 +235,11 @@ const Index = () => {
                 <ListChecks className="h-5 w-5" />
                 Join Waiting List
               </Button>
-              <Button size="lg" variant="outline" className="gap-2">
-                <User className="h-5 w-5" />
-                Sign In
+              <Button size="lg" variant="outline" className="gap-2" asChild>
+                <Link to="/dashboard">
+                  <User className="h-5 w-5" />
+                  Sign In
+                </Link>
               </Button>
             </div>
           </div>

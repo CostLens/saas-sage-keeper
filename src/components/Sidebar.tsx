@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { NavLink } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
   LayoutDashboard, 
@@ -12,7 +12,8 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  Gauge
+  Gauge,
+  Home
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -63,7 +64,7 @@ const Sidebar = ({ className }: SidebarProps) => {
 
   // Dynamic navigation based on feature flag
   const navigation = [
-    { name: "Dashboard", href: "/", icon: LayoutDashboard },
+    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
     { name: "Contracts", href: "/contracts", icon: FileText },
   ];
@@ -89,17 +90,19 @@ const Sidebar = ({ className }: SidebarProps) => {
     >
       <div className="flex h-16 items-center border-b px-4 justify-between">
         {!isCollapsed && (
-          <div className="flex items-center gap-2">
+          <Link to="/" className="flex items-center gap-2">
             <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
               <span className="font-bold text-white text-xl">IQ</span>
             </div>
             <span className="font-bold text-xl tracking-tight">XpendIQ</span>
-          </div>
+          </Link>
         )}
         {isCollapsed && (
-          <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center mx-auto">
-            <span className="font-bold text-white text-xl">IQ</span>
-          </div>
+          <Link to="/" className="mx-auto">
+            <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
+              <span className="font-bold text-white text-xl">IQ</span>
+            </div>
+          </Link>
         )}
         <Button 
           variant="ghost" 
@@ -113,11 +116,26 @@ const Sidebar = ({ className }: SidebarProps) => {
 
       <div className="flex-1 overflow-auto py-4 bg-background">
         <nav className="grid gap-1 px-2">
+          <NavLink
+            to="/"
+            className={({ isActive }) =>
+              cn(
+                "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+                isActive
+                  ? "bg-primary/10 text-primary"
+                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+              )
+            }
+          >
+            <Home className="h-5 w-5" />
+            {!isCollapsed && <span>Home</span>}
+          </NavLink>
+          
           {navigation.map((item) => (
             <NavLink
               key={item.name}
               to={item.href}
-              end={item.href === "/"}
+              end={item.href === "/dashboard"}
               className={({ isActive }) =>
                 cn(
                   "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",

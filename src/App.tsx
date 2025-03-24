@@ -13,6 +13,7 @@ import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 import Usage from "./pages/Usage";
+import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -44,14 +45,15 @@ const App = () => {
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Index />} />
+            <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/spend-trends" element={<SpendTrends />} />
             <Route path="/contracts" element={<ContractsRepository />} />
             <Route path="/ai-assistant" element={<AIAssistant />} />
             {showUsageFeatures ? (
               <Route path="/usage" element={<Usage />} />
             ) : (
-              <Route path="/usage" element={<Navigate to="/" replace />} />
+              <Route path="/usage" element={<Navigate to="/dashboard" replace />} />
             )}
             <Route path="/settings" element={<Settings />} />
             <Route path="/help" element={<Help />} />

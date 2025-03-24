@@ -1,11 +1,11 @@
 
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="6" fill="url(#gradient)" />
-  <text x="16" y="22" font-family="Arial, sans-serif" font-size="16" font-weight="bold" fill="white" text-anchor="middle">IQ</text>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="32" height="32" rx="6" fill="url(#paint0_linear)" />
+  <path d="M11.2 21V11.68H13.456V19.2H17.664V21H11.2ZM21.6384 21L18.1504 11.68H20.6304L22.7584 18.24L24.8864 11.68H27.3664L23.8784 21H21.6384Z" fill="white"/>
   <defs>
-    <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#4ade80" />
-      <stop offset="1" stop-color="#3b82f6" />
+    <linearGradient id="paint0_linear" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4ADE80"/>
+      <stop offset="1" stop-color="#3B82F6"/>
     </linearGradient>
   </defs>
 </svg>

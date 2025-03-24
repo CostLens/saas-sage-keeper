@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import { Bell, Home } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -87,8 +87,13 @@ export function Header({ className }: HeaderProps) {
         </Link>
       </div>
 
-      <div className="hidden md:block">
-        {/* Empty div to maintain flex layout */}
+      <div className="hidden md:flex items-center gap-2">
+        <Button variant="ghost" size="sm" asChild>
+          <Link to="/" className="flex items-center gap-2">
+            <Home className="h-4 w-4" />
+            <span>Home</span>
+          </Link>
+        </Button>
       </div>
 
       <div className="flex items-center gap-4">
@@ -173,7 +178,9 @@ export function Header({ className }: HeaderProps) {
               <Link to="/settings">Settings</Link>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Log out</DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link to="/">Log out</Link>
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

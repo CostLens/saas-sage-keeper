@@ -3,74 +3,98 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
 
 export function GeneralSettingsTab() {
   return (
     <div className="space-y-6">
-      {/* Personal Details */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-lg font-medium">Personal Details</h3>
-          <p className="text-sm text-muted-foreground">
-            Update your personal information
-          </p>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" defaultValue="Kanav" />
+      <Card>
+        <CardHeader>
+          <CardTitle>Account Information</CardTitle>
+          <CardDescription>Update your account details and preferences.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input id="name" placeholder="Your name" defaultValue="Kanav Hasija" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="email">Email Address</Label>
+              <Input id="email" type="email" placeholder="Your email" defaultValue="kanav.hasija@gmail.com" />
+            </div>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" defaultValue="Hasija" />
+            <Label htmlFor="company">Company</Label>
+            <Input id="company" placeholder="Your company" defaultValue="Innovate Inc." />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="workEmail">Work Email</Label>
-            <Input
-              id="workEmail"
-              type="email"
-              defaultValue="kanav.hasija@innovaccer.com"
-            />
+            <Label htmlFor="role">Role</Label>
+            <Select defaultValue="admin">
+              <SelectTrigger id="role">
+                <SelectValue placeholder="Select role" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="admin">Administrator</SelectItem>
+                <SelectItem value="manager">Manager</SelectItem>
+                <SelectItem value="user">Standard User</SelectItem>
+                <SelectItem value="viewer">Viewer</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="team">Team</Label>
-            <Input id="team" defaultValue="Product" />
-          </div>
-        </div>
-        <Button type="submit">Save Personal Details</Button>
-      </div>
+        </CardContent>
+        <CardFooter className="flex justify-end space-x-2">
+          <Button variant="outline">Cancel</Button>
+          <Button>Save Changes</Button>
+        </CardFooter>
+      </Card>
 
-      <Separator className="my-6" />
-
-      {/* Company Details */}
-      <div className="space-y-4">
-        <div>
-          <h3 className="text-lg font-medium">Company Details</h3>
-          <p className="text-sm text-muted-foreground">
-            Manage your company profile and information
-          </p>
-        </div>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <div className="space-y-2">
-            <Label htmlFor="companyName">Company Name</Label>
-            <Input id="companyName" defaultValue="Acme Corp" />
+      <Card>
+        <CardHeader>
+          <CardTitle>Preferences</CardTitle>
+          <CardDescription>Manage how the application works for you.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-base">Dark Mode</Label>
+              <p className="text-sm text-muted-foreground">
+                Toggle between light and dark mode.
+              </p>
+            </div>
+            <Switch defaultChecked />
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <Label className="text-base">Email Notifications</Label>
+              <p className="text-sm text-muted-foreground">
+                Receive email notifications for important events.
+              </p>
+            </div>
+            <Switch defaultChecked />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="companyWebsite">Company Website</Label>
-            <Input id="companyWebsite" defaultValue="https://acme.com" />
+            <Label htmlFor="language">Language</Label>
+            <Select defaultValue="en">
+              <SelectTrigger id="language">
+                <SelectValue placeholder="Select language" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">English</SelectItem>
+                <SelectItem value="fr">French</SelectItem>
+                <SelectItem value="de">German</SelectItem>
+                <SelectItem value="es">Spanish</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="industry">Industry</Label>
-            <Input id="industry" defaultValue="Technology" />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="location">Location</Label>
-            <Input id="location" defaultValue="San Francisco, CA" />
-          </div>
-        </div>
-        <Button type="submit">Save Company Details</Button>
-      </div>
+        </CardContent>
+        <CardFooter className="flex justify-end space-x-2">
+          <Button variant="outline">Reset to Defaults</Button>
+          <Button>Save Preferences</Button>
+        </CardFooter>
+      </Card>
     </div>
   );
 }

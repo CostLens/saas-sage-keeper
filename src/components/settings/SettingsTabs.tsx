@@ -41,34 +41,34 @@ export function SettingsTabs() {
     <Tabs 
       value={activeTab} 
       onValueChange={handleTabChange}
-      className="space-y-6"
+      className="space-y-6 w-full"
     >
       <div className="border-b sticky top-0 bg-background z-10 pb-0">
         <TabNavigation />
       </div>
 
-      <div className="pt-2">
-        <TabsContent value="general" className="mt-0 animate-fade-in">
+      <div className="pt-2 w-full">
+        <TabsContent value="general" className="mt-0 animate-fade-in w-full">
           <GeneralSettingsTab />
         </TabsContent>
 
-        <TabsContent value="features" className="mt-0 animate-fade-in">
+        <TabsContent value="features" className="mt-0 animate-fade-in w-full">
           <FeatureFlagsTab />
         </TabsContent>
 
-        <TabsContent value="subscription" className="mt-0 animate-fade-in">
+        <TabsContent value="subscription" className="mt-0 animate-fade-in w-full">
           <SubscriptionTab />
         </TabsContent>
 
-        <TabsContent value="integrations" className="mt-0 animate-fade-in">
+        <TabsContent value="integrations" className="mt-0 animate-fade-in w-full">
           <IntegrationsTab />
         </TabsContent>
 
-        <TabsContent value="notifications" className="mt-0 animate-fade-in">
+        <TabsContent value="notifications" className="mt-0 animate-fade-in w-full">
           <NotificationsTab />
         </TabsContent>
 
-        <TabsContent value="support" className="mt-0 animate-fade-in">
+        <TabsContent value="support" className="mt-0 animate-fade-in w-full">
           <SupportTab />
         </TabsContent>
       </div>

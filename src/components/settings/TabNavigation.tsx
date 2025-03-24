@@ -23,17 +23,16 @@ export function TabNavigation() {
   ];
 
   return (
-    <div className="overflow-x-auto pb-2">
-      <TabsList className="w-full flex flex-nowrap md:w-auto">
+    <div className="w-full overflow-x-auto pb-2">
+      <TabsList className="w-full flex flex-nowrap justify-start gap-1">
         {tabs.map((tab) => (
           <TabsTrigger 
             key={tab.value} 
             value={tab.value}
-            className="flex items-center gap-2 whitespace-nowrap"
+            className="flex items-center gap-2 whitespace-nowrap px-4"
           >
-            {isMobile ? tab.icon : null}
-            {!isMobile && tab.label}
-            {isMobile && <span className="sr-only">{tab.label}</span>}
+            {tab.icon}
+            <span className={isMobile ? "sr-only" : ""}>{tab.label}</span>
           </TabsTrigger>
         ))}
       </TabsList>

@@ -8,11 +8,9 @@ import { SubscriptionTab } from "./SubscriptionTab";
 import { IntegrationsTab } from "./IntegrationsTab";
 import { NotificationsTab } from "./NotificationsTab";
 import { SupportTab } from "./SupportTab";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export function SettingsTabs() {
   const [activeTab, setActiveTab] = useState("general");
-  const isMobile = useIsMobile();
 
   // Handle URL hash for direct linking to tabs
   useEffect(() => {
@@ -43,33 +41,37 @@ export function SettingsTabs() {
     <Tabs 
       value={activeTab} 
       onValueChange={handleTabChange}
-      className="space-y-4"
+      className="space-y-6"
     >
-      <TabNavigation />
+      <div className="border-b sticky top-0 bg-background z-10 pb-0">
+        <TabNavigation />
+      </div>
 
-      <TabsContent value="general" className="mt-0 animate-fade-in">
-        <GeneralSettingsTab />
-      </TabsContent>
+      <div className="pt-2">
+        <TabsContent value="general" className="mt-0 animate-fade-in">
+          <GeneralSettingsTab />
+        </TabsContent>
 
-      <TabsContent value="features" className="mt-0 animate-fade-in">
-        <FeatureFlagsTab />
-      </TabsContent>
+        <TabsContent value="features" className="mt-0 animate-fade-in">
+          <FeatureFlagsTab />
+        </TabsContent>
 
-      <TabsContent value="subscription" className="mt-0 animate-fade-in">
-        <SubscriptionTab />
-      </TabsContent>
+        <TabsContent value="subscription" className="mt-0 animate-fade-in">
+          <SubscriptionTab />
+        </TabsContent>
 
-      <TabsContent value="integrations" className="mt-0 animate-fade-in">
-        <IntegrationsTab />
-      </TabsContent>
+        <TabsContent value="integrations" className="mt-0 animate-fade-in">
+          <IntegrationsTab />
+        </TabsContent>
 
-      <TabsContent value="notifications" className="mt-0 animate-fade-in">
-        <NotificationsTab />
-      </TabsContent>
+        <TabsContent value="notifications" className="mt-0 animate-fade-in">
+          <NotificationsTab />
+        </TabsContent>
 
-      <TabsContent value="support" className="mt-0 animate-fade-in">
-        <SupportTab />
-      </TabsContent>
+        <TabsContent value="support" className="mt-0 animate-fade-in">
+          <SupportTab />
+        </TabsContent>
+      </div>
     </Tabs>
   );
 }

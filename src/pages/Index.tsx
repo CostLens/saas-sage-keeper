@@ -9,8 +9,20 @@ import {
   CalendarDays, 
   Link as LinkIcon, 
   ListChecks, 
-  User 
+  User,
+  LayoutDashboard,
+  PieChart,
+  LineChart,
+  Table
 } from "lucide-react";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { 
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious
+} from "@/components/ui/carousel";
 
 const Index = () => {
   return (
@@ -27,7 +39,7 @@ const Index = () => {
                 Intelligent SaaS Expense Management
               </h1>
               <p className="text-xl text-muted-foreground">
-                Save up to 30% on your SaaS spending with AI-driven insights, real-time monitoring, and intelligent recommendations.
+                Optimize your SaaS spending with data-driven insights, comprehensive monitoring, and practical recommendations that help you make informed decisions.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 pt-4">
                 <Button size="lg" className="gap-2">
@@ -44,17 +56,84 @@ const Index = () => {
             </div>
             <div className="lg:w-1/2">
               <div className="glass-panel p-6 rounded-xl">
-                <div className="aspect-[16/9] rounded-lg bg-gradient-to-br from-blue-500/10 to-green-500/10 border border-white/10 flex items-center justify-center">
-                  <div className="w-3/4 bg-white dark:bg-black/60 rounded-lg p-4 shadow-lg">
-                    <div className="h-4 w-1/2 bg-primary/20 rounded mb-3"></div>
-                    <div className="h-24 bg-gradient-to-r from-green-400/30 to-blue-500/30 rounded mb-3"></div>
-                    <div className="flex gap-3">
-                      <div className="h-10 w-16 bg-primary/20 rounded"></div>
-                      <div className="h-10 w-16 bg-primary/20 rounded"></div>
-                      <div className="h-10 w-16 bg-primary/20 rounded"></div>
+                <AspectRatio ratio={16/9} className="bg-background rounded-lg overflow-hidden border">
+                  <div className="w-full h-full relative p-4">
+                    {/* Dashboard mockup */}
+                    <div className="absolute top-0 left-0 w-full h-8 bg-muted flex items-center px-4">
+                      <div className="w-3 h-3 rounded-full bg-red-400 mr-2"></div>
+                      <div className="w-3 h-3 rounded-full bg-yellow-400 mr-2"></div>
+                      <div className="w-3 h-3 rounded-full bg-green-400 mr-2"></div>
+                      <div className="h-4 w-40 bg-muted-foreground/20 rounded ml-4"></div>
+                    </div>
+                    
+                    <div className="pt-10 grid grid-cols-12 gap-4 h-full">
+                      {/* Sidebar */}
+                      <div className="col-span-3 bg-secondary/30 rounded-lg p-3">
+                        <div className="h-6 w-24 bg-primary/20 rounded mb-6"></div>
+                        <div className="space-y-3">
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 rounded-full bg-primary/40"></div>
+                            <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 rounded-full bg-primary/40"></div>
+                            <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 rounded-full bg-primary/40"></div>
+                            <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <div className="w-4 h-4 rounded-full bg-primary/40"></div>
+                            <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {/* Main content */}
+                      <div className="col-span-9 p-3">
+                        <div className="h-8 w-full flex justify-between mb-4">
+                          <div className="h-full w-40 bg-muted-foreground/20 rounded"></div>
+                          <div className="h-full w-20 bg-primary/20 rounded"></div>
+                        </div>
+                        
+                        <div className="grid grid-cols-3 gap-4 mb-4">
+                          <div className="bg-muted rounded-lg p-3">
+                            <div className="h-3 w-12 bg-muted-foreground/20 rounded mb-2"></div>
+                            <div className="h-8 w-16 bg-primary/30 rounded mb-1"></div>
+                            <div className="h-2 w-20 bg-muted-foreground/20 rounded"></div>
+                          </div>
+                          <div className="bg-muted rounded-lg p-3">
+                            <div className="h-3 w-12 bg-muted-foreground/20 rounded mb-2"></div>
+                            <div className="h-8 w-16 bg-green-500/30 rounded mb-1"></div>
+                            <div className="h-2 w-20 bg-muted-foreground/20 rounded"></div>
+                          </div>
+                          <div className="bg-muted rounded-lg p-3">
+                            <div className="h-3 w-12 bg-muted-foreground/20 rounded mb-2"></div>
+                            <div className="h-8 w-16 bg-amber-500/30 rounded mb-1"></div>
+                            <div className="h-2 w-20 bg-muted-foreground/20 rounded"></div>
+                          </div>
+                        </div>
+                        
+                        <div className="grid grid-cols-2 gap-4">
+                          <div className="bg-muted rounded-lg p-3">
+                            <div className="h-3 w-full bg-gradient-to-r from-primary/30 to-primary/10 rounded mb-3"></div>
+                            <div className="h-3 w-5/6 bg-gradient-to-r from-primary/30 to-primary/10 rounded mb-3"></div>
+                            <div className="h-3 w-2/3 bg-gradient-to-r from-primary/30 to-primary/10 rounded mb-3"></div>
+                            <div className="h-3 w-1/2 bg-gradient-to-r from-primary/30 to-primary/10 rounded"></div>
+                          </div>
+                          <div className="bg-muted rounded-lg p-3">
+                            <div className="grid grid-cols-3 gap-1 h-full">
+                              <div className="bg-green-500/20 rounded-sm"></div>
+                              <div className="bg-blue-500/20 rounded-sm"></div>
+                              <div className="bg-amber-500/20 rounded-sm"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
+                </AspectRatio>
               </div>
             </div>
           </div>
@@ -77,7 +156,7 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-semibold mb-3">Hidden Costs</h3>
               <p className="text-muted-foreground">
-                Organizations typically waste 30% of their SaaS budget on unused licenses, forgotten subscriptions, and redundant tools.
+                Organizations often have underutilized licenses, forgotten subscriptions, and redundant tools that contribute to inefficient spending.
               </p>
             </div>
             <div className="bg-background rounded-xl p-6 shadow-sm border">
@@ -86,7 +165,7 @@ const Index = () => {
               </div>
               <h3 className="text-xl font-semibold mb-3">Limited Visibility</h3>
               <p className="text-muted-foreground">
-                Without a centralized system, it's nearly impossible to track spending patterns and identify optimization opportunities.
+                Without a centralized system, it's challenging to track spending patterns and identify optimization opportunities.
               </p>
             </div>
             <div className="bg-background rounded-xl p-6 shadow-sm border">
@@ -108,18 +187,217 @@ const Index = () => {
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold mb-4">How XpendIQ Works</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Our AI-powered platform streamlines SaaS management through intelligent automation and deep insights.
+              Our platform streamlines SaaS management through intelligent automation and practical insights.
             </p>
           </div>
+          
+          <div className="mb-16">
+            <Carousel className="max-w-4xl mx-auto">
+              <CarouselContent>
+                <CarouselItem>
+                  <AspectRatio ratio={16/9} className="bg-background rounded-lg overflow-hidden border">
+                    <div className="w-full h-full p-4">
+                      <div className="h-8 w-full bg-muted flex items-center px-4 rounded-t-lg mb-4">
+                        <div className="h-4 w-24 bg-primary/20 rounded"></div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div className="flex flex-col space-y-2">
+                          <div className="h-6 w-36 bg-muted-foreground/20 rounded"></div>
+                          <div className="h-24 bg-muted rounded p-3">
+                            <div className="flex justify-between items-center mb-3">
+                              <div className="h-3 w-16 bg-muted-foreground/20 rounded"></div>
+                              <div className="h-6 w-6 rounded-full bg-primary/20"></div>
+                            </div>
+                            <div className="h-4 w-36 bg-muted-foreground/20 rounded mb-2"></div>
+                            <div className="h-4 w-24 bg-muted-foreground/20 rounded"></div>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col space-y-2">
+                          <div className="h-6 w-36 bg-muted-foreground/20 rounded"></div>
+                          <div className="h-24 bg-muted rounded p-3">
+                            <div className="flex justify-between items-center mb-3">
+                              <div className="h-3 w-16 bg-muted-foreground/20 rounded"></div>
+                              <div className="h-6 w-6 rounded-full bg-green-500/20"></div>
+                            </div>
+                            <div className="h-4 w-36 bg-muted-foreground/20 rounded mb-2"></div>
+                            <div className="h-4 w-24 bg-muted-foreground/20 rounded"></div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="h-40 bg-muted rounded p-3">
+                        <div className="h-6 w-48 bg-muted-foreground/20 rounded mb-4"></div>
+                        <div className="h-24 w-full flex items-end justify-between px-4">
+                          <div className="h-12 w-12 bg-primary/20 rounded"></div>
+                          <div className="h-16 w-12 bg-primary/30 rounded"></div>
+                          <div className="h-20 w-12 bg-primary/40 rounded"></div>
+                          <div className="h-14 w-12 bg-primary/30 rounded"></div>
+                          <div className="h-10 w-12 bg-primary/20 rounded"></div>
+                          <div className="h-18 w-12 bg-primary/50 rounded"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-3 left-3 bg-white/80 dark:bg-black/80 px-3 py-1 rounded text-sm font-medium">
+                      Dashboard Overview
+                    </div>
+                  </AspectRatio>
+                </CarouselItem>
+                
+                <CarouselItem>
+                  <AspectRatio ratio={16/9} className="bg-background rounded-lg overflow-hidden border">
+                    <div className="w-full h-full p-4">
+                      <div className="h-8 w-full bg-muted flex items-center px-4 rounded-t-lg mb-4">
+                        <div className="h-4 w-40 bg-muted-foreground/20 rounded"></div>
+                      </div>
+                      
+                      <div className="h-[calc(100%-48px)] overflow-hidden">
+                        <div className="flex items-center justify-between mb-4">
+                          <div className="h-8 w-48 bg-muted-foreground/20 rounded"></div>
+                          <div className="h-8 w-24 bg-primary/20 rounded"></div>
+                        </div>
+                        
+                        <div className="h-full w-full bg-muted rounded p-3">
+                          <div className="grid grid-cols-5 gap-4 mb-3">
+                            <div className="h-6 bg-muted-foreground/10 rounded"></div>
+                            <div className="h-6 bg-muted-foreground/10 rounded"></div>
+                            <div className="h-6 bg-muted-foreground/10 rounded"></div>
+                            <div className="h-6 bg-muted-foreground/10 rounded"></div>
+                            <div className="h-6 bg-muted-foreground/10 rounded"></div>
+                          </div>
+                          
+                          {/* Table rows */}
+                          {[1, 2, 3, 4].map(i => (
+                            <div key={i} className="grid grid-cols-5 gap-4 mb-3">
+                              <div className="h-10 bg-background rounded flex items-center p-2">
+                                <div className="h-6 w-6 rounded-full bg-muted-foreground/20 mr-2"></div>
+                                <div className="h-4 w-16 bg-muted-foreground/20 rounded"></div>
+                              </div>
+                              <div className="h-10 bg-background rounded p-2">
+                                <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                              </div>
+                              <div className="h-10 bg-background rounded p-2">
+                                <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                              </div>
+                              <div className="h-10 bg-background rounded p-2">
+                                <div className="h-4 w-full bg-muted-foreground/20 rounded"></div>
+                              </div>
+                              <div className="h-10 bg-background rounded p-2">
+                                <div className="h-6 w-6 bg-muted-foreground/20 rounded-full mx-auto"></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-3 left-3 bg-white/80 dark:bg-black/80 px-3 py-1 rounded text-sm font-medium">
+                      Contract Management
+                    </div>
+                  </AspectRatio>
+                </CarouselItem>
+                
+                <CarouselItem>
+                  <AspectRatio ratio={16/9} className="bg-background rounded-lg overflow-hidden border">
+                    <div className="w-full h-full p-4">
+                      <div className="h-8 w-full bg-muted flex items-center px-4 rounded-t-lg mb-4">
+                        <div className="h-4 w-32 bg-muted-foreground/20 rounded"></div>
+                      </div>
+                      
+                      <div className="grid grid-cols-3 gap-4 mb-4">
+                        <div className="bg-muted rounded p-3">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="h-4 w-20 bg-muted-foreground/20 rounded"></div>
+                            <div className="h-6 w-6 rounded-full flex items-center justify-center bg-primary/10">
+                              <div className="h-3 w-3 rounded-full bg-primary/40"></div>
+                            </div>
+                          </div>
+                          <div className="h-6 w-16 bg-muted-foreground/30 rounded mb-1"></div>
+                          <div className="h-3 w-12 bg-muted-foreground/20 rounded"></div>
+                        </div>
+                        
+                        <div className="bg-muted rounded p-3">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="h-4 w-20 bg-muted-foreground/20 rounded"></div>
+                            <div className="h-6 w-6 rounded-full flex items-center justify-center bg-green-500/10">
+                              <div className="h-3 w-3 rounded-full bg-green-500/40"></div>
+                            </div>
+                          </div>
+                          <div className="h-6 w-16 bg-muted-foreground/30 rounded mb-1"></div>
+                          <div className="h-3 w-12 bg-muted-foreground/20 rounded"></div>
+                        </div>
+                        
+                        <div className="bg-muted rounded p-3">
+                          <div className="flex justify-between items-center mb-2">
+                            <div className="h-4 w-20 bg-muted-foreground/20 rounded"></div>
+                            <div className="h-6 w-6 rounded-full flex items-center justify-center bg-amber-500/10">
+                              <div className="h-3 w-3 rounded-full bg-amber-500/40"></div>
+                            </div>
+                          </div>
+                          <div className="h-6 w-16 bg-muted-foreground/30 rounded mb-1"></div>
+                          <div className="h-3 w-12 bg-muted-foreground/20 rounded"></div>
+                        </div>
+                      </div>
+                      
+                      <div className="h-[calc(100%-132px)] grid grid-cols-2 gap-4">
+                        <div className="bg-muted rounded p-3">
+                          <div className="h-5 w-40 bg-muted-foreground/20 rounded mb-3"></div>
+                          <div className="h-[calc(100%-28px)] w-full flex justify-center items-center">
+                            <div className="h-32 w-32 rounded-full border-8 border-primary/30 flex items-center justify-center">
+                              <div className="h-24 w-24 rounded-full border-8 border-green-500/30 flex items-center justify-center">
+                                <div className="h-16 w-16 rounded-full border-8 border-amber-500/30"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-muted rounded p-3">
+                          <div className="h-5 w-32 bg-muted-foreground/20 rounded mb-3"></div>
+                          <div className="space-y-3">
+                            <div className="flex items-center">
+                              <div className="h-4 w-4 rounded-full bg-primary/40 mr-2"></div>
+                              <div className="h-4 w-24 bg-muted-foreground/20 rounded mr-2"></div>
+                              <div className="h-2 w-full bg-muted-foreground/10 rounded"></div>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="h-4 w-4 rounded-full bg-green-500/40 mr-2"></div>
+                              <div className="h-4 w-20 bg-muted-foreground/20 rounded mr-2"></div>
+                              <div className="h-2 w-2/3 bg-muted-foreground/10 rounded"></div>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="h-4 w-4 rounded-full bg-amber-500/40 mr-2"></div>
+                              <div className="h-4 w-28 bg-muted-foreground/20 rounded mr-2"></div>
+                              <div className="h-2 w-1/3 bg-muted-foreground/10 rounded"></div>
+                            </div>
+                            <div className="flex items-center">
+                              <div className="h-4 w-4 rounded-full bg-blue-500/40 mr-2"></div>
+                              <div className="h-4 w-16 bg-muted-foreground/20 rounded mr-2"></div>
+                              <div className="h-2 w-1/4 bg-muted-foreground/10 rounded"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-3 left-3 bg-white/80 dark:bg-black/80 px-3 py-1 rounded text-sm font-medium">
+                      Spend Analytics
+                    </div>
+                  </AspectRatio>
+                </CarouselItem>
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </div>
+
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="order-2 md:order-1">
               <div className="space-y-8">
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <TrendingUp className="h-5 w-5 text-primary" />
+                    <LayoutDashboard className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">AI-Powered Analytics</h3>
+                    <h3 className="text-xl font-semibold mb-2">Comprehensive Dashboard</h3>
                     <p className="text-muted-foreground">
                       Get actionable insights into your SaaS spending patterns and identify opportunities for optimization.
                     </p>
@@ -138,12 +416,12 @@ const Index = () => {
                 </div>
                 <div className="flex gap-4">
                   <div className="flex-shrink-0 h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <LinkIcon className="h-5 w-5 text-primary" />
+                    <Table className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Seamless Integrations</h3>
+                    <h3 className="text-xl font-semibold mb-2">Contract Repository</h3>
                     <p className="text-muted-foreground">
-                      Connect with your financial tools and email platforms to automatically track contracts and expenses.
+                      Centralize all your SaaS contracts in one place for easy access and management.
                     </p>
                   </div>
                 </div>
@@ -152,14 +430,50 @@ const Index = () => {
             <div className="order-1 md:order-2">
               <div className="rounded-xl overflow-hidden shadow-lg border">
                 <div className="bg-gradient-to-r from-green-400/10 to-blue-500/10 p-6">
-                  <div className="h-64 bg-white dark:bg-black/60 rounded-lg p-4 shadow-lg">
-                    <div className="h-4 w-1/3 bg-primary/20 rounded mb-3"></div>
-                    <div className="space-y-3">
-                      <div className="h-16 bg-gradient-to-r from-green-400/30 to-blue-500/30 rounded"></div>
-                      <div className="h-16 bg-gradient-to-r from-blue-500/30 to-green-400/30 rounded"></div>
-                      <div className="h-16 bg-gradient-to-r from-green-400/30 to-blue-500/30 rounded"></div>
+                  <AspectRatio ratio={4/3} className="bg-background rounded-lg overflow-hidden border">
+                    <div className="w-full h-full p-4">
+                      <div className="h-6 w-48 bg-muted-foreground/20 rounded mb-6"></div>
+                      
+                      <div className="grid grid-cols-3 gap-3 mb-6">
+                        <div className="bg-muted rounded p-2">
+                          <div className="h-4 w-16 bg-muted-foreground/30 rounded mb-2"></div>
+                          <div className="h-8 flex items-end justify-center">
+                            <LineChart className="h-8 w-8 text-primary/60" />
+                          </div>
+                        </div>
+                        <div className="bg-muted rounded p-2">
+                          <div className="h-4 w-16 bg-muted-foreground/30 rounded mb-2"></div>
+                          <div className="h-8 flex items-end justify-center">
+                            <BarChart className="h-8 w-8 text-green-500/60" />
+                          </div>
+                        </div>
+                        <div className="bg-muted rounded p-2">
+                          <div className="h-4 w-16 bg-muted-foreground/30 rounded mb-2"></div>
+                          <div className="h-8 flex items-end justify-center">
+                            <PieChart className="h-8 w-8 text-amber-500/60" />
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        <div className="h-8 bg-muted rounded p-2 flex items-center">
+                          <div className="h-4 w-4 rounded-full bg-primary/30 mr-3"></div>
+                          <div className="h-3 w-40 bg-muted-foreground/20 rounded"></div>
+                          <div className="ml-auto h-3 w-16 bg-muted-foreground/20 rounded"></div>
+                        </div>
+                        <div className="h-8 bg-muted rounded p-2 flex items-center">
+                          <div className="h-4 w-4 rounded-full bg-green-500/30 mr-3"></div>
+                          <div className="h-3 w-32 bg-muted-foreground/20 rounded"></div>
+                          <div className="ml-auto h-3 w-16 bg-muted-foreground/20 rounded"></div>
+                        </div>
+                        <div className="h-8 bg-muted rounded p-2 flex items-center">
+                          <div className="h-4 w-4 rounded-full bg-blue-500/30 mr-3"></div>
+                          <div className="h-3 w-36 bg-muted-foreground/20 rounded"></div>
+                          <div className="ml-auto h-3 w-16 bg-muted-foreground/20 rounded"></div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  </AspectRatio>
                 </div>
               </div>
             </div>
@@ -267,3 +581,4 @@ const Index = () => {
 };
 
 export default Index;
+

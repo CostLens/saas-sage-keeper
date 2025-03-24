@@ -47,6 +47,59 @@ export type Database = {
           },
         ]
       }
+      hrms_users: {
+        Row: {
+          created_at: string
+          department: string
+          email: string
+          employee_id: string
+          exit_date: string | null
+          full_name: string
+          id: string
+          join_date: string
+          manager_id: string | null
+          position: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          department: string
+          email: string
+          employee_id: string
+          exit_date?: string | null
+          full_name: string
+          id?: string
+          join_date: string
+          manager_id?: string | null
+          position: string
+          status: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          department?: string
+          email?: string
+          employee_id?: string
+          exit_date?: string | null
+          full_name?: string
+          id?: string
+          join_date?: string
+          manager_id?: string | null
+          position?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "hrms_users_manager_id_fkey"
+            columns: ["manager_id"]
+            isOneToOne: false
+            referencedRelation: "hrms_users"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invoices: {
         Row: {
           amount: number
@@ -264,6 +317,63 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: "usage_statistics_saas_id_fkey"
+            columns: ["saas_id"]
+            isOneToOne: false
+            referencedRelation: "saas_applications"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_onboarding_tasks: {
+        Row: {
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string
+          employee_id: string
+          id: string
+          notes: string | null
+          priority: string
+          saas_id: string
+          saas_name: string
+          status: string
+          task_type: string
+        }
+        Insert: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          employee_id: string
+          id?: string
+          notes?: string | null
+          priority: string
+          saas_id: string
+          saas_name: string
+          status: string
+          task_type: string
+        }
+        Update: {
+          assigned_to?: string | null
+          completed_at?: string | null
+          created_at?: string
+          employee_id?: string
+          id?: string
+          notes?: string | null
+          priority?: string
+          saas_id?: string
+          saas_name?: string
+          status?: string
+          task_type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_onboarding_tasks_employee_id_fkey"
+            columns: ["employee_id"]
+            isOneToOne: false
+            referencedRelation: "hrms_users"
+            referencedColumns: ["employee_id"]
+          },
+          {
+            foreignKeyName: "user_onboarding_tasks_saas_id_fkey"
             columns: ["saas_id"]
             isOneToOne: false
             referencedRelation: "saas_applications"

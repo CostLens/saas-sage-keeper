@@ -10,7 +10,8 @@ import {
   Bot,
   Settings,
   HelpCircle,
-  BarChart3
+  BarChart3,
+  UserCog
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -50,7 +51,7 @@ export function SidebarLinks({ collapsed, showUsageFeatures }: SidebarLinksProps
     {
       name: "User Management",
       href: "/user-management",
-      icon: <Users className="h-5 w-5" />,
+      icon: <UserCog className="h-5 w-5" />,
       active: location.pathname === "/user-management",
     },
     {

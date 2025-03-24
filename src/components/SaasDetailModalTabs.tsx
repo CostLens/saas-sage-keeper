@@ -10,7 +10,6 @@ export function SaasDetailModalTabs({ saas, activeTab }: SaasDetailModalTabsProp
   switch(activeTab) {
     case "users":
       return <UserActivityTab saas={saas} />;
-    // Other cases remain the same
     default:
       return (
         <div className="text-center py-8">

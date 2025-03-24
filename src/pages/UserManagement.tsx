@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -29,73 +29,63 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, XCircle, Clock, AlertCircle } from "lucide-react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { getHrmsUsers, getUserOnboardingTasks, createOnboardingTask, updateTaskStatus } from "@/lib/hrmsService";
+import { mockSaasData } from "@/lib/mockData";
+import { toast } from "@/components/ui/use-toast";
+import { OnboardingTask } from "@/types/hrms";
 
 const UserManagement = () => {
+  const queryClient = useQueryClient();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     return localStorage.getItem("sidebar-collapsed") === "true";
   });
   const [activeTab, setActiveTab] = useState("onboarding");
   const [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
-
-  // This would be fetched from your HRMS and SaaS integrations in a real app
-  const mockOnboardingTasks = [
-    {
-      id: "1",
-      employeeId: "emp001",
-      employeeName: "Jane Cooper",
-      employeeEmail: "jane@example.com",
-      saasName: "Salesforce",
-      taskType: "onboarding",
-      status: "completed",
-      createdAt: "2023-04-10T09:30:00Z",
-      completedAt: "2023-04-12T14:20:00Z",
-      assignedTo: "IT Admin",
-      priority: "high",
+  const [searchTerm, setSearchTerm] = useState("");
+  
+  // Fetch HRMS users and tasks
+  const { data: hrmsUsers = [], isLoading: isLoadingUsers } = useQuery({
+    queryKey: ["hrmsUsers"],
+    queryFn: getHrmsUsers
+  });
+  
+  const { data: onboardingTasks = [], isLoading: isLoadingTasks } = useQuery({
+    queryKey: ["onboardingTasks"],
+    queryFn: async () => {
+      // In a real app, you'd fetch all tasks or paginate them
+      // Here we're just getting tasks for the first user as a demonstration
+      if (hrmsUsers.length > 0) {
+        return await getUserOnboardingTasks(hrmsUsers[0].employee_id);
+      }
+      return [];
     },
-    {
-      id: "2",
-      employeeId: "emp002",
-      employeeName: "Alex Johnson",
-      employeeEmail: "alex@example.com",
-      saasName: "Slack",
-      taskType: "onboarding",
-      status: "in_progress",
-      createdAt: "2023-04-15T10:30:00Z",
-      completedAt: null,
-      assignedTo: "IT Admin",
-      priority: "medium",
-    },
-    {
-      id: "3",
-      employeeId: "emp003",
-      employeeName: "Michael Brown",
-      employeeEmail: "michael@example.com",
-      saasName: "Microsoft 365",
-      taskType: "offboarding",
-      status: "pending",
-      createdAt: "2023-04-18T11:30:00Z",
-      completedAt: null,
-      assignedTo: null,
-      priority: "high",
-    },
-  ];
+    enabled: hrmsUsers.length > 0
+  });
 
-  const mockSaasTools = [
-    { id: "1", name: "Salesforce" },
-    { id: "2", name: "Microsoft 365" },
-    { id: "3", name: "Slack" },
-    { id: "4", name: "Asana" },
-    { id: "5", name: "Zoom" },
-    { id: "6", name: "Notion" },
-  ];
+  // Mutations for creating and updating tasks
+  const createTaskMutation = useMutation({
+    mutationFn: createOnboardingTask,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["onboardingTasks"] });
+      toast({
+        title: "Task created",
+        description: "The onboarding task has been created successfully.",
+      });
+    }
+  });
 
-  const mockEmployees = [
-    { id: "emp001", name: "Jane Cooper", email: "jane@example.com", status: "active" },
-    { id: "emp002", name: "Alex Johnson", email: "alex@example.com", status: "active" },
-    { id: "emp003", name: "Michael Brown", email: "michael@example.com", status: "terminated" },
-    { id: "emp004", name: "Sarah Williams", email: "sarah@example.com", status: "active" },
-    { id: "emp005", name: "David Miller", email: "david@example.com", status: "on_leave" },
-  ];
+  const updateTaskMutation = useMutation({
+    mutationFn: ({id, status}: {id: string, status: string}) => 
+      updateTaskStatus(id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["onboardingTasks"] });
+      toast({
+        title: "Task updated",
+        description: "The task status has been updated successfully.",
+      });
+    }
+  });
 
   const formSchema = z.object({
     employeeId: z.string().min(1, { message: "Please select an employee" }),
@@ -114,11 +104,55 @@ const UserManagement = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
-    // Here you would call the API to create a new task
-    setIsNewTaskOpen(false);
-    form.reset();
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    try {
+      const selectedEmployee = hrmsUsers.find(user => user.employee_id === values.employeeId);
+      const selectedSaas = mockSaasData.find(saas => saas.id === values.saasId);
+      
+      if (!selectedEmployee || !selectedSaas) {
+        toast({
+          title: "Error",
+          description: "Selected employee or SaaS tool not found.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      const newTask = {
+        employee_id: selectedEmployee.employee_id,
+        saas_id: selectedSaas.id,
+        saas_name: selectedSaas.name,
+        task_type: values.taskType,
+        status: "pending",
+        priority: values.priority,
+        notes: values.notes || null,
+        assigned_to: null
+      };
+      
+      await createTaskMutation.mutateAsync(newTask);
+      setIsNewTaskOpen(false);
+      form.reset();
+    } catch (error) {
+      console.error("Error creating task:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create the task. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleUpdateTaskStatus = async (taskId: string, newStatus: string) => {
+    try {
+      await updateTaskMutation.mutateAsync({ id: taskId, status: newStatus });
+    } catch (error) {
+      console.error("Error updating task status:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update task status. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   const getStatusBadge = (status: string) => {
@@ -156,7 +190,7 @@ const UserManagement = () => {
     }
   };
 
-  React.useEffect(() => {
+  useEffect(() => {
     const handleStorageChange = () => {
       setSidebarCollapsed(localStorage.getItem("sidebar-collapsed") === "true");
     };
@@ -173,9 +207,37 @@ const UserManagement = () => {
     };
   }, []);
 
-  const filteredTasks = mockOnboardingTasks.filter(
-    task => activeTab === "all" || task.taskType === activeTab
+  // Filter tasks based on active tab and search term
+  const filteredTasks = onboardingTasks.filter(
+    (task: OnboardingTask) => {
+      const matchesTab = activeTab === "all" || task.task_type === activeTab;
+      const matchesSearch = searchTerm === "" || 
+        task.saas_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        hrmsUsers.find(u => u.employee_id === task.employee_id)?.full_name.toLowerCase().includes(searchTerm.toLowerCase());
+      
+      return matchesTab && matchesSearch;
+    }
   );
+
+  if (isLoadingUsers || isLoadingTasks) {
+    return (
+      <div className="min-h-screen flex flex-col md:flex-row">
+        <Sidebar />
+        <div 
+          className={`flex-1 flex flex-col transition-all duration-300 ${
+            sidebarCollapsed ? 'ml-0 md:ml-16' : 'ml-0 md:ml-64'
+          }`}
+        >
+          <Header />
+          <main className="flex-1 p-6">
+            <div className="flex items-center justify-center h-full">
+              <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-primary"></div>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
@@ -218,9 +280,9 @@ const UserManagement = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {mockEmployees.map(employee => (
-                                <SelectItem key={employee.id} value={employee.id}>
-                                  {employee.name} ({employee.email})
+                              {hrmsUsers.map(employee => (
+                                <SelectItem key={employee.employee_id} value={employee.employee_id}>
+                                  {employee.full_name} ({employee.email})
                                 </SelectItem>
                               ))}
                             </SelectContent>
@@ -244,7 +306,7 @@ const UserManagement = () => {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              {mockSaasTools.map(tool => (
+                              {mockSaasData.map(tool => (
                                 <SelectItem key={tool.id} value={tool.id}>
                                   {tool.name}
                                 </SelectItem>
@@ -311,7 +373,9 @@ const UserManagement = () => {
                       )}
                     />
                     <DialogFooter>
-                      <Button type="submit">Create Task</Button>
+                      <Button type="submit" disabled={createTaskMutation.isPending}>
+                        {createTaskMutation.isPending ? "Creating..." : "Create Task"}
+                      </Button>
                     </DialogFooter>
                   </form>
                 </Form>
@@ -347,7 +411,8 @@ const UserManagement = () => {
                           type="search" 
                           placeholder="Search tasks..." 
                           className="flex-1"
-                          rightIcon={<Search className="h-4 w-4" />}
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
                         />
                         <Button variant="outline" size="icon">
                           <Filter className="h-4 w-4" />
@@ -356,165 +421,252 @@ const UserManagement = () => {
                     </div>
 
                     <TabsContent value="all" className="space-y-4">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Employee</TableHead>
-                            <TableHead>SaaS Tool</TableHead>
-                            <TableHead>Type</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Priority</TableHead>
-                            <TableHead>Created</TableHead>
-                            <TableHead>Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredTasks.map(task => (
-                            <TableRow key={task.id}>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <Avatar className="h-8 w-8">
-                                    <AvatarFallback>{task.employeeName.substring(0, 2)}</AvatarFallback>
-                                  </Avatar>
-                                  <div>
-                                    <div className="font-medium">{task.employeeName}</div>
-                                    <div className="text-xs text-muted-foreground">{task.employeeEmail}</div>
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>{task.saasName}</TableCell>
-                              <TableCell>
-                                <Badge variant={task.taskType === "onboarding" ? "default" : "destructive"}>
-                                  {task.taskType === "onboarding" ? "Onboarding" : "Offboarding"}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{getStatusBadge(task.status)}</TableCell>
-                              <TableCell>
-                                <Badge 
-                                  variant="outline" 
-                                  className={
-                                    task.priority === "high" 
-                                      ? "bg-red-50 text-red-700 border-red-200" 
-                                      : task.priority === "medium" 
-                                        ? "bg-amber-50 text-amber-700 border-amber-200" 
-                                        : "bg-green-50 text-green-700 border-green-200"
-                                  }
-                                >
-                                  {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell>
-                              <TableCell>
-                                <Button variant="ghost" size="sm">Update</Button>
-                              </TableCell>
+                      <div className="rounded-md border overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Employee</TableHead>
+                              <TableHead>SaaS Tool</TableHead>
+                              <TableHead>Type</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Priority</TableHead>
+                              <TableHead>Created</TableHead>
+                              <TableHead>Actions</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredTasks.length > 0 ? (
+                              filteredTasks.map((task: OnboardingTask) => {
+                                const employee = hrmsUsers.find(u => u.employee_id === task.employee_id);
+                                return (
+                                  <TableRow key={task.id}>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Avatar className="h-8 w-8">
+                                          <AvatarFallback>
+                                            {employee?.full_name.substring(0, 2) || "??"}
+                                          </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                          <div className="font-medium">{employee?.full_name || "Unknown"}</div>
+                                          <div className="text-xs text-muted-foreground">{employee?.email || "No email"}</div>
+                                        </div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>{task.saas_name}</TableCell>
+                                    <TableCell>
+                                      <Badge variant={task.task_type === "onboarding" ? "default" : "destructive"}>
+                                        {task.task_type === "onboarding" ? "Onboarding" : "Offboarding"}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell>{getStatusBadge(task.status)}</TableCell>
+                                    <TableCell>
+                                      <Badge 
+                                        variant="outline" 
+                                        className={
+                                          task.priority === "high" 
+                                            ? "bg-red-50 text-red-700 border-red-200" 
+                                            : task.priority === "medium" 
+                                              ? "bg-amber-50 text-amber-700 border-amber-200" 
+                                              : "bg-green-50 text-green-700 border-green-200"
+                                        }
+                                      >
+                                        {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell>{new Date(task.created_at).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                      <Select
+                                        defaultValue={task.status}
+                                        onValueChange={(value) => handleUpdateTaskStatus(task.id, value)}
+                                        disabled={updateTaskMutation.isPending}
+                                      >
+                                        <SelectTrigger className="h-8 w-28">
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectItem value="pending">Pending</SelectItem>
+                                          <SelectItem value="in_progress">In Progress</SelectItem>
+                                          <SelectItem value="completed">Completed</SelectItem>
+                                          <SelectItem value="failed">Failed</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              })
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={7} className="text-center py-4 text-muted-foreground">
+                                  No tasks found. Create a new task to get started.
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
                     </TabsContent>
 
                     <TabsContent value="onboarding" className="space-y-4">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Employee</TableHead>
-                            <TableHead>SaaS Tool</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Priority</TableHead>
-                            <TableHead>Created</TableHead>
-                            <TableHead>Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredTasks.map(task => (
-                            <TableRow key={task.id}>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <Avatar className="h-8 w-8">
-                                    <AvatarFallback>{task.employeeName.substring(0, 2)}</AvatarFallback>
-                                  </Avatar>
-                                  <div>
-                                    <div className="font-medium">{task.employeeName}</div>
-                                    <div className="text-xs text-muted-foreground">{task.employeeEmail}</div>
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>{task.saasName}</TableCell>
-                              <TableCell>{getStatusBadge(task.status)}</TableCell>
-                              <TableCell>
-                                <Badge 
-                                  variant="outline" 
-                                  className={
-                                    task.priority === "high" 
-                                      ? "bg-red-50 text-red-700 border-red-200" 
-                                      : task.priority === "medium" 
-                                        ? "bg-amber-50 text-amber-700 border-amber-200" 
-                                        : "bg-green-50 text-green-700 border-green-200"
-                                  }
-                                >
-                                  {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell>
-                              <TableCell>
-                                <Button variant="ghost" size="sm">Update</Button>
-                              </TableCell>
+                      <div className="rounded-md border overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Employee</TableHead>
+                              <TableHead>SaaS Tool</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Priority</TableHead>
+                              <TableHead>Created</TableHead>
+                              <TableHead>Actions</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredTasks.length > 0 ? (
+                              filteredTasks.map((task: OnboardingTask) => {
+                                const employee = hrmsUsers.find(u => u.employee_id === task.employee_id);
+                                return (
+                                  <TableRow key={task.id}>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Avatar className="h-8 w-8">
+                                          <AvatarFallback>
+                                            {employee?.full_name.substring(0, 2) || "??"}
+                                          </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                          <div className="font-medium">{employee?.full_name || "Unknown"}</div>
+                                          <div className="text-xs text-muted-foreground">{employee?.email || "No email"}</div>
+                                        </div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>{task.saas_name}</TableCell>
+                                    <TableCell>{getStatusBadge(task.status)}</TableCell>
+                                    <TableCell>
+                                      <Badge 
+                                        variant="outline" 
+                                        className={
+                                          task.priority === "high" 
+                                            ? "bg-red-50 text-red-700 border-red-200" 
+                                            : task.priority === "medium" 
+                                              ? "bg-amber-50 text-amber-700 border-amber-200" 
+                                              : "bg-green-50 text-green-700 border-green-200"
+                                        }
+                                      >
+                                        {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell>{new Date(task.created_at).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                      <Select
+                                        defaultValue={task.status}
+                                        onValueChange={(value) => handleUpdateTaskStatus(task.id, value)}
+                                        disabled={updateTaskMutation.isPending}
+                                      >
+                                        <SelectTrigger className="h-8 w-28">
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectItem value="pending">Pending</SelectItem>
+                                          <SelectItem value="in_progress">In Progress</SelectItem>
+                                          <SelectItem value="completed">Completed</SelectItem>
+                                          <SelectItem value="failed">Failed</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              })
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={6} className="text-center py-4 text-muted-foreground">
+                                  No onboarding tasks found. Create a new task to get started.
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
                     </TabsContent>
 
                     <TabsContent value="offboarding" className="space-y-4">
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Employee</TableHead>
-                            <TableHead>SaaS Tool</TableHead>
-                            <TableHead>Status</TableHead>
-                            <TableHead>Priority</TableHead>
-                            <TableHead>Created</TableHead>
-                            <TableHead>Actions</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {filteredTasks.map(task => (
-                            <TableRow key={task.id}>
-                              <TableCell>
-                                <div className="flex items-center gap-2">
-                                  <Avatar className="h-8 w-8">
-                                    <AvatarFallback>{task.employeeName.substring(0, 2)}</AvatarFallback>
-                                  </Avatar>
-                                  <div>
-                                    <div className="font-medium">{task.employeeName}</div>
-                                    <div className="text-xs text-muted-foreground">{task.employeeEmail}</div>
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell>{task.saasName}</TableCell>
-                              <TableCell>{getStatusBadge(task.status)}</TableCell>
-                              <TableCell>
-                                <Badge 
-                                  variant="outline" 
-                                  className={
-                                    task.priority === "high" 
-                                      ? "bg-red-50 text-red-700 border-red-200" 
-                                      : task.priority === "medium" 
-                                        ? "bg-amber-50 text-amber-700 border-amber-200" 
-                                        : "bg-green-50 text-green-700 border-green-200"
-                                  }
-                                >
-                                  {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
-                                </Badge>
-                              </TableCell>
-                              <TableCell>{new Date(task.createdAt).toLocaleDateString()}</TableCell>
-                              <TableCell>
-                                <Button variant="ghost" size="sm">Update</Button>
-                              </TableCell>
+                      <div className="rounded-md border overflow-hidden">
+                        <Table>
+                          <TableHeader>
+                            <TableRow>
+                              <TableHead>Employee</TableHead>
+                              <TableHead>SaaS Tool</TableHead>
+                              <TableHead>Status</TableHead>
+                              <TableHead>Priority</TableHead>
+                              <TableHead>Created</TableHead>
+                              <TableHead>Actions</TableHead>
                             </TableRow>
-                          ))}
-                        </TableBody>
-                      </Table>
+                          </TableHeader>
+                          <TableBody>
+                            {filteredTasks.length > 0 ? (
+                              filteredTasks.map((task: OnboardingTask) => {
+                                const employee = hrmsUsers.find(u => u.employee_id === task.employee_id);
+                                return (
+                                  <TableRow key={task.id}>
+                                    <TableCell>
+                                      <div className="flex items-center gap-2">
+                                        <Avatar className="h-8 w-8">
+                                          <AvatarFallback>
+                                            {employee?.full_name.substring(0, 2) || "??"}
+                                          </AvatarFallback>
+                                        </Avatar>
+                                        <div>
+                                          <div className="font-medium">{employee?.full_name || "Unknown"}</div>
+                                          <div className="text-xs text-muted-foreground">{employee?.email || "No email"}</div>
+                                        </div>
+                                      </div>
+                                    </TableCell>
+                                    <TableCell>{task.saas_name}</TableCell>
+                                    <TableCell>{getStatusBadge(task.status)}</TableCell>
+                                    <TableCell>
+                                      <Badge 
+                                        variant="outline" 
+                                        className={
+                                          task.priority === "high" 
+                                            ? "bg-red-50 text-red-700 border-red-200" 
+                                            : task.priority === "medium" 
+                                              ? "bg-amber-50 text-amber-700 border-amber-200" 
+                                              : "bg-green-50 text-green-700 border-green-200"
+                                        }
+                                      >
+                                        {task.priority.charAt(0).toUpperCase() + task.priority.slice(1)}
+                                      </Badge>
+                                    </TableCell>
+                                    <TableCell>{new Date(task.created_at).toLocaleDateString()}</TableCell>
+                                    <TableCell>
+                                      <Select
+                                        defaultValue={task.status}
+                                        onValueChange={(value) => handleUpdateTaskStatus(task.id, value)}
+                                        disabled={updateTaskMutation.isPending}
+                                      >
+                                        <SelectTrigger className="h-8 w-28">
+                                          <SelectValue />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectItem value="pending">Pending</SelectItem>
+                                          <SelectItem value="in_progress">In Progress</SelectItem>
+                                          <SelectItem value="completed">Completed</SelectItem>
+                                          <SelectItem value="failed">Failed</SelectItem>
+                                        </SelectContent>
+                                      </Select>
+                                    </TableCell>
+                                  </TableRow>
+                                );
+                              })
+                            ) : (
+                              <TableRow>
+                                <TableCell colSpan={6} className="text-center py-4 text-muted-foreground">
+                                  No offboarding tasks found. Create a new task to get started.
+                                </TableCell>
+                              </TableRow>
+                            )}
+                          </TableBody>
+                        </Table>
+                      </div>
                     </TabsContent>
                   </Tabs>
                 </div>

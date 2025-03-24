@@ -11,6 +11,15 @@ const validateEmployeeStatus = (status: string): 'active' | 'terminated' | 'on_l
   return 'active';
 };
 
+// Helper function to validate task type
+const validateTaskType = (type: string): 'onboarding' | 'offboarding' => {
+  if (type === 'onboarding' || type === 'offboarding') {
+    return type;
+  }
+  console.warn(`Invalid task type value: ${type}, defaulting to 'onboarding'`);
+  return 'onboarding';
+};
+
 // Fetch users from HRMS integration
 export const getHrmsUsers = async (): Promise<HrmsUser[]> => {
   const { data, error } = await supabase
@@ -61,7 +70,11 @@ export const getUserOnboardingTasks = async (employeeId: string): Promise<Onboar
     throw error;
   }
   
-  return data || [];
+  // Validate task_type to make sure it matches the required type
+  return (data || []).map(task => ({
+    ...task,
+    task_type: validateTaskType(task.task_type)
+  }));
 };
 
 // Create a new onboarding/offboarding task

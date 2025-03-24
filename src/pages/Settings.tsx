@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -6,7 +5,7 @@ import { Switch } from "@/components/ui/switch";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Mail } from "lucide-react";
+import { Mail, Users } from "lucide-react";
 import { 
   Dialog, 
   DialogContent, 
@@ -30,12 +29,19 @@ const Settings = () => {
   });
   const [gmailConnected, setGmailConnected] = useState(false);
   const [quickbooksConnected, setQuickbooksConnected] = useState(false);
+  const [zohoConnected, setZohoConnected] = useState(() => {
+    const savedZohoConnected = localStorage.getItem("zoho-connected");
+    return savedZohoConnected === "true";
+  });
   const [gmailDialogOpen, setGmailDialogOpen] = useState(false);
   const [quickbooksDialogOpen, setQuickbooksDialogOpen] = useState(false);
+  const [zohoDialogOpen, setZohoDialogOpen] = useState(false);
   const [gmailEmail, setGmailEmail] = useState("");
   const [gmailPassword, setGmailPassword] = useState("");
   const [quickbooksUsername, setQuickbooksUsername] = useState("");
   const [quickbooksPassword, setQuickbooksPassword] = useState("");
+  const [zohoUsername, setZohoUsername] = useState("");
+  const [zohoPassword, setZohoPassword] = useState("");
   const { toast } = useToast();
   const isMobile = useIsMobile();
 
@@ -73,6 +79,11 @@ const Settings = () => {
     if (savedQuickbooksConnected !== null) {
       setQuickbooksConnected(savedQuickbooksConnected === "true");
     }
+    
+    const savedZohoConnected = localStorage.getItem("zoho-connected");
+    if (savedZohoConnected !== null) {
+      setZohoConnected(savedZohoConnected === "true");
+    }
   }, []);
 
   useEffect(() => {
@@ -87,6 +98,10 @@ const Settings = () => {
   useEffect(() => {
     localStorage.setItem("quickbooks-connected", quickbooksConnected.toString());
   }, [quickbooksConnected]);
+  
+  useEffect(() => {
+    localStorage.setItem("zoho-connected", zohoConnected.toString());
+  }, [zohoConnected]);
 
   const handleSaveSettings = () => {
     toast({
@@ -134,6 +149,27 @@ const Settings = () => {
     toast({
       title: "QuickBooks disconnected",
       description: "Your QuickBooks account has been disconnected.",
+    });
+  };
+
+  const handleConnectZoho = () => {
+    setZohoDialogOpen(true);
+  };
+  
+  const handleZohoLogin = () => {
+    setZohoDialogOpen(false);
+    setZohoConnected(true);
+    toast({
+      title: "Zoho HRMS connected",
+      description: "Your Zoho HRMS account has been connected successfully.",
+    });
+  };
+  
+  const handleDisconnectZoho = () => {
+    setZohoConnected(false);
+    toast({
+      title: "Zoho HRMS disconnected",
+      description: "Your Zoho HRMS account has been disconnected.",
     });
   };
 
@@ -232,6 +268,30 @@ const Settings = () => {
                         size="sm"
                       >
                         {quickbooksConnected ? "Disconnect" : "Connect"}
+                      </Button>
+                    </div>
+
+                    {/* New Zoho HRMS Integration */}
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="h-10 w-10 rounded-md bg-blue-100 flex items-center justify-center">
+                          <Users className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-medium">Zoho HRMS</h3>
+                          <p className="text-xs text-muted-foreground">
+                            {zohoConnected 
+                              ? "Connected to Zoho HRMS" 
+                              : "Connect to import employee data and manage user access"}
+                          </p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant={zohoConnected ? "outline" : "default"}
+                        onClick={zohoConnected ? handleDisconnectZoho : handleConnectZoho}
+                        size="sm"
+                      >
+                        {zohoConnected ? "Disconnect" : "Connect"}
                       </Button>
                     </div>
                   </div>
@@ -394,6 +454,47 @@ const Settings = () => {
               Cancel
             </Button>
             <Button onClick={handleQuickbooksLogin}>
+              Login & Connect
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Zoho HRMS Login Dialog */}
+      <Dialog open={zohoDialogOpen} onOpenChange={setZohoDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Connect to Zoho HRMS</DialogTitle>
+            <DialogDescription>
+              Enter your Zoho HRMS credentials to connect your account
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid gap-2">
+              <Label htmlFor="zoho-username">Username</Label>
+              <Input
+                id="zoho-username"
+                value={zohoUsername}
+                onChange={(e) => setZohoUsername(e.target.value)}
+                placeholder="Your Zoho username"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="zoho-password">Password</Label>
+              <Input
+                id="zoho-password"
+                type="password"
+                value={zohoPassword}
+                onChange={(e) => setZohoPassword(e.target.value)}
+                placeholder="••••••••"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setZohoDialogOpen(false)}>
+              Cancel
+            </Button>
+            <Button onClick={handleZohoLogin}>
               Login & Connect
             </Button>
           </DialogFooter>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink, Link } from "react-router-dom";
@@ -12,8 +11,7 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  Gauge,
-  Home
+  Gauge
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -116,21 +114,6 @@ const Sidebar = ({ className }: SidebarProps) => {
 
       <div className="flex-1 overflow-auto py-4 bg-background">
         <nav className="grid gap-1 px-2">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              cn(
-                "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                isActive
-                  ? "bg-primary/10 text-primary"
-                  : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-              )
-            }
-          >
-            <Home className="h-5 w-5" />
-            {!isCollapsed && <span>Home</span>}
-          </NavLink>
-          
           {navigation.map((item) => (
             <NavLink
               key={item.name}

@@ -1,104 +1,66 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
-import { SaasTable } from "@/components/SaasTable";
-import { mockObligations, ObligationData } from "@/lib/mockData";
-import { ObligationsTable } from "@/components/ObligationsTable";
 import { SaasDetail } from "@/components/SaasDetail";
-import { mockSaaSData, SaaSData } from "@/lib/mockData";
-import { useToast } from "@/components/ui/use-toast";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { generateSpendByCategory } from "@/lib/mockData";
-import { OverviewChart } from "@/components/OverviewChart";
-import { useQuery } from "@tanstack/react-query";
-import { getSaasApplications } from "@/lib/supabaseService";
+import { Button } from "@/components/ui/button";
+import { mockSaaSData } from "@/lib/mockData";
 
 const UserManagement = () => {
-  const [selectedSaaS, setSelectedSaaS] = useState<SaaSData | null>(null);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-    const saved = localStorage.getItem("sidebar-collapsed");
-    return saved ? JSON.parse(saved) : false;
+    return localStorage.getItem("sidebar-collapsed") === "true";
   });
-  const { toast } = useToast();
-
-  // Fetch SaaS applications from Supabase
-  const { data: saasApplications, isLoading } = useQuery({
-    queryKey: ['saasApplications'],
-    queryFn: getSaasApplications,
-  });
-
-  // Listen for sidebar state changes
+  
+  const [selectedSaas, setSelectedSaas] = useState<string | null>(null);
+  
   useEffect(() => {
     const handleSidebarChange = (event: CustomEvent) => {
       setIsSidebarCollapsed(event.detail.isCollapsed);
     };
 
     window.addEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
-
+    
     return () => {
       window.removeEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
     };
   }, []);
 
-  const handleRowClick = (saas: SaaSData) => {
-    setSelectedSaaS(saas);
-  };
-
-  const handleCloseDetail = () => {
-    setSelectedSaaS(null);
-  };
-
-  const spendByCategory = generateSpendByCategory();
+  const selectedSaasData = selectedSaas
+    ? mockSaaSData.find(saas => saas.id === selectedSaas)
+    : null;
 
   return (
-    <div className="min-h-screen flex">
+    <div className="flex h-screen w-full overflow-hidden">
       <Sidebar />
-      <div className={`flex-1 flex flex-col ${isSidebarCollapsed ? 'ml-16' : 'ml-64'} transition-all duration-300`}>
+      <div className={`flex-1 flex flex-col overflow-hidden transition-all duration-300 ${isSidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
         <Header />
-        <main className="flex-1 p-6 space-y-8 animate-fade-in">
-          {selectedSaaS ? (
-            <SaasDetail saas={selectedSaaS} onClose={handleCloseDetail} />
-          ) : (
-            <>
-              <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold tracking-tight">SaaS Management</h1>
+        <main className="flex-1 overflow-auto">
+          <div className="container mx-auto p-6 space-y-6">
+            <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
+            
+            {selectedSaasData ? (
+              <SaasDetail 
+                saas={selectedSaasData} 
+                onClose={() => setSelectedSaas(null)} 
+              />
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {mockSaaSData.map(saas => (
+                  <Button
+                    key={saas.id}
+                    variant="outline"
+                    className="h-auto py-6 flex flex-col items-start"
+                    onClick={() => setSelectedSaas(saas.id)}
+                  >
+                    <h3 className="text-lg font-semibold">{saas.name}</h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {saas.users.active} active users
+                    </p>
+                  </Button>
+                ))}
               </div>
-              <SaasTable data={mockSaaSData} onRowClick={handleRowClick} />
-
-              <Accordion type="single" collapsible className="w-full">
-                <AccordionItem value="item-1">
-                  <AccordionTrigger>Team spend by category</AccordionTrigger>
-                  <AccordionContent>
-                    <OverviewChart data={spendByCategory} />
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-
-              <Card className="glass-panel">
-                <CardHeader>
-                  <CardTitle>Obligations</CardTitle>
-                  <CardDescription>
-                    Here are the list of obligations that needs to be taken care
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <ObligationsTable data={mockObligations} />
-                </CardContent>
-              </Card>
-            </>
-          )}
+            )}
+          </div>
         </main>
       </div>
     </div>

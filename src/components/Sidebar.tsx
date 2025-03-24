@@ -118,7 +118,7 @@ const Sidebar = ({ className }: SidebarProps) => {
       items.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
     }
     
-    items.push({ name: "Contracts", href: "/contracts", icon: FileText });
+    items.push({ name: "Repository", href: "/contracts", icon: FileText });
     
     return items;
   };

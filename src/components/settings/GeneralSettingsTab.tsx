@@ -30,7 +30,7 @@ export function GeneralSettingsTab() {
             <Input
               id="workEmail"
               type="email"
-              defaultValue="kanav.hasija@innovaccer.com"
+              defaultValue="kanav.hasija@gmail.com"
             />
           </div>
           <div className="space-y-2">

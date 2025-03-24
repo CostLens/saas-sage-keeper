@@ -40,7 +40,7 @@ const ContractsRepository = () => {
       documents: ContractDocument[] 
     }> = {};
     
-    mockContracts.forEach(doc => {
+    filteredDocuments.forEach(doc => {
       if (!result[doc.saasId]) {
         result[doc.saasId] = {
           saasName: doc.saasName,

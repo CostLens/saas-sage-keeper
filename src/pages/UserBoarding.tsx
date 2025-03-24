@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -160,6 +161,7 @@ const UserBoarding = () => {
   const [deBoardDialogOpen, setDeBoardDialogOpen] = useState(false);
   const [selectedToolsToRemove, setSelectedToolsToRemove] = useState<string[]>([]);
   const [autoOffboardDialogOpen, setAutoOffboardDialogOpen] = useState(false);
+  const [automationEnabled, setAutomationEnabled] = useState(false);
   const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-boarding-features");
     return savedValue === "true"; // Default to false if null or anything other than "true"
@@ -259,6 +261,7 @@ const UserBoarding = () => {
 
   // Handle automatic offboarding setup
   const handleAutoOffboardSetup = () => {
+    setAutomationEnabled(true);
     toast.success("Automatic offboarding has been set up for terminated employees");
     setAutoOffboardDialogOpen(false);
   };
@@ -627,13 +630,6 @@ const UserBoarding = () => {
                     </label>
                   </div>
                   
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="auto-offboard-leave" />
-                    <label htmlFor="auto-offboard-leave" className="text-sm font-medium">
-                      Automatically offboard employees on extended leave
-                    </label>
-                  </div>
-                  
                   <div className="space-y-2 pt-2">
                     <Label>Offboarding delay:</Label>
                     <select className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
@@ -650,6 +646,24 @@ const UserBoarding = () => {
                     <Label>Notification recipients:</Label>
                     <Input placeholder="Email addresses (separated by commas)" />
                     <p className="text-xs text-muted-foreground">Who should be notified when automatic offboarding occurs</p>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2 pt-4">
+                    <div className="flex-1">
+                      <h3 className="text-sm font-medium">Automation Status</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {automationEnabled ? "Automatic offboarding is enabled" : "Automatic offboarding is disabled"}
+                      </p>
+                    </div>
+                    <div className="flex items-center space-x-1">
+                      <span className={`inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full ${
+                        automationEnabled 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-gray-100 text-gray-800'
+                      }`}>
+                        {automationEnabled ? 'Enabled' : 'Disabled'}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>

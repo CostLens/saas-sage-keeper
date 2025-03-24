@@ -13,14 +13,17 @@ import {
   ChevronLeft,
   ChevronRight,
   Gauge,
-  Search
+  Coins
 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface SidebarProps {
   className?: string;
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
+  const isMobile = useIsMobile();
+  
   // Use localStorage to persist the collapsed state
   const [isCollapsed, setIsCollapsed] = useState(() => {
     const saved = localStorage.getItem("sidebar-collapsed");
@@ -28,13 +31,15 @@ const Sidebar = ({ className }: SidebarProps) => {
   });
   
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    return localStorage.getItem("show-usage-features") === "true"; // Default to false if not set
+    const savedValue = localStorage.getItem("show-usage-features");
+    return savedValue === "true"; // Default to false if null or anything other than "true"
   });
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
     const handleStorageChange = () => {
-      setShowUsageFeatures(localStorage.getItem("show-usage-features") === "true");
+      const savedValue = localStorage.getItem("show-usage-features");
+      setShowUsageFeatures(savedValue === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -61,15 +66,13 @@ const Sidebar = ({ className }: SidebarProps) => {
   const navigation = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
+    { name: "Contracts", href: "/contracts", icon: FileText },
   ];
   
   // Add Usage tab only if feature flag is enabled
   if (showUsageFeatures) {
     navigation.push({ name: "Usage", href: "/usage", icon: Gauge });
   }
-  
-  // Add Contracts after Usage
-  navigation.push({ name: "Contracts", href: "/contracts", icon: FileText });
 
   const secondaryNavigation = [
     { name: "Settings", href: "/settings", icon: Settings },
@@ -80,22 +83,23 @@ const Sidebar = ({ className }: SidebarProps) => {
     <aside
       className={cn(
         "fixed inset-y-0 left-0 z-20 flex flex-col border-r bg-background/80 backdrop-blur-sm transition-all duration-300",
-        isCollapsed ? "w-16" : "w-64",
+        isCollapsed ? "w-16" : isMobile ? "w-full" : "w-64",
+        isMobile && !isCollapsed ? "translate-x-0" : isMobile && isCollapsed ? "-translate-x-full" : "",
         className
       )}
     >
       <div className="flex h-16 items-center border-b px-4 justify-between">
         {!isCollapsed && (
           <div className="flex items-center gap-2">
-            <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
-              <span className="font-bold text-white text-xl">IQ</span>
+            <div className="rounded-full bg-green-600 p-1">
+              <Coins className="h-6 w-6 text-white" />
             </div>
-            <span className="font-bold text-xl tracking-tight">XpendIQ</span>
+            <span className="font-bold text-xl tracking-tight">ExpenseIQ</span>
           </div>
         )}
         {isCollapsed && (
-          <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 mx-auto w-8 h-8 flex items-center justify-center">
-            <span className="font-bold text-white text-xl">IQ</span>
+          <div className="rounded-full bg-green-600 p-1 mx-auto">
+            <Coins className="h-6 w-6 text-white" />
           </div>
         )}
         <Button 
@@ -164,5 +168,4 @@ const Sidebar = ({ className }: SidebarProps) => {
   );
 };
 
-// Export the isCollapsed state for use in other components
 export { Sidebar };

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell, Search } from "lucide-react";
+import { Bell, Coins } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -80,10 +80,10 @@ export function Header({ className }: HeaderProps) {
     >
       <div className="md:hidden">
         <Link to="/" className="flex items-center gap-2">
-          <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-7 h-7 flex items-center justify-center">
-            <span className="font-bold text-white text-base">IQ</span>
+          <div className="rounded-full bg-green-600 p-1">
+            <Coins className="h-5 w-5 text-white" />
           </div>
-          <span className="font-semibold text-lg tracking-tight">XpendIQ</span>
+          <span className="font-semibold text-lg tracking-tight">ExpenseIQ</span>
         </Link>
       </div>
 

@@ -7,13 +7,15 @@ import {
   TrendingUp, 
   BarChart, 
   CalendarDays, 
-  Link as LinkIcon, 
   ListChecks, 
   User,
   LayoutDashboard,
   PieChart,
   LineChart,
-  Table
+  Table,
+  Bot,
+  Cpu,
+  Sparkles
 } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { 
@@ -27,6 +29,32 @@ import {
 const Index = () => {
   return (
     <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="bg-gradient-to-r from-green-400 to-blue-500 h-8 w-8 rounded-lg flex items-center justify-center">
+                <span className="font-bold text-white text-sm">IQ</span>
+              </div>
+              <span className="font-bold text-xl">XpendIQ</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/dashboard">
+                  <User className="h-4 w-4 mr-1" />
+                  Sign In
+                </Link>
+              </Button>
+              <Button size="sm" className="gap-2">
+                <ListChecks className="h-4 w-4" />
+                Join Waiting List
+              </Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
       {/* Hero Section - Promise of the Product */}
       <section className="relative pt-16 md:pt-24 pb-10 md:pb-16">
         <div className="container mx-auto px-4 md:px-6">
@@ -181,13 +209,55 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Solution Approach Section */}
+      {/* AI-Powered Platform Section */}
+      <section className="py-12 md:py-20 bg-gradient-to-r from-green-400/5 to-blue-500/5">
+        <div className="container mx-auto px-4 md:px-6">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">AI-Powered Intelligence</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              Our platform leverages advanced AI and autonomous agents to transform your SaaS management experience.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            <div className="bg-background rounded-xl p-6 shadow-sm border">
+              <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
+                <Bot className="h-6 w-6 text-purple-500" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Intelligent Agents</h3>
+              <p className="text-muted-foreground">
+                Autonomous agents scan your SaaS ecosystem, identify optimization opportunities, and proactively alert you about critical events.
+              </p>
+            </div>
+            <div className="bg-background rounded-xl p-6 shadow-sm border">
+              <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
+                <Cpu className="h-6 w-6 text-blue-500" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Predictive Analytics</h3>
+              <p className="text-muted-foreground">
+                Our AI models analyze spending patterns to forecast future costs and identify potential savings opportunities before they arise.
+              </p>
+            </div>
+            <div className="bg-background rounded-xl p-6 shadow-sm border">
+              <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                <Sparkles className="h-6 w-6 text-green-500" />
+              </div>
+              <h3 className="text-xl font-semibold mb-3">Smart Recommendations</h3>
+              <p className="text-muted-foreground">
+                Receive personalized recommendations based on your specific usage patterns and business requirements.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Solution Approach Section with Dashboard and Usage Screens */}
       <section className="py-12 md:py-20">
         <div className="container mx-auto px-4 md:px-6">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">How XpendIQ Works</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">See XpendIQ in Action</h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-              Our platform streamlines SaaS management through intelligent automation and practical insights.
+              Explore our intuitive dashboards and powerful analytics tools designed to give you complete control over your SaaS spending.
             </p>
           </div>
           
@@ -383,6 +453,87 @@ const Index = () => {
                     </div>
                   </AspectRatio>
                 </CarouselItem>
+
+                <CarouselItem>
+                  <AspectRatio ratio={16/9} className="bg-background rounded-lg overflow-hidden border">
+                    <div className="w-full h-full p-4">
+                      <div className="h-8 w-full bg-muted flex items-center px-4 rounded-t-lg mb-4">
+                        <div className="h-4 w-36 bg-muted-foreground/20 rounded"></div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-6 mb-4">
+                        <div className="bg-muted rounded-lg p-3">
+                          <div className="flex justify-between items-center mb-3">
+                            <div className="h-5 w-32 bg-muted-foreground/20 rounded"></div>
+                            <div className="h-6 w-6 rounded-full bg-purple-500/20 flex items-center justify-center">
+                              <Bot className="h-3 w-3 text-purple-500" />
+                            </div>
+                          </div>
+                          <div className="space-y-2 mb-2">
+                            <div className="h-4 w-full bg-muted-foreground/10 rounded"></div>
+                            <div className="h-4 w-5/6 bg-muted-foreground/10 rounded"></div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="h-7 bg-background rounded flex items-center justify-center">
+                              <div className="h-3 w-12 bg-primary/30 rounded"></div>
+                            </div>
+                            <div className="h-7 bg-background rounded flex items-center justify-center">
+                              <div className="h-3 w-16 bg-muted-foreground/20 rounded"></div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="bg-muted rounded-lg p-3">
+                          <div className="flex justify-between items-center mb-3">
+                            <div className="h-5 w-32 bg-muted-foreground/20 rounded"></div>
+                            <div className="h-6 w-6 rounded-full bg-green-500/20 flex items-center justify-center">
+                              <Sparkles className="h-3 w-3 text-green-500" />
+                            </div>
+                          </div>
+                          <div className="space-y-2 mb-2">
+                            <div className="h-4 w-full bg-muted-foreground/10 rounded"></div>
+                            <div className="h-4 w-5/6 bg-muted-foreground/10 rounded"></div>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2">
+                            <div className="h-7 bg-background rounded flex items-center justify-center">
+                              <div className="h-3 w-12 bg-primary/30 rounded"></div>
+                            </div>
+                            <div className="h-7 bg-background rounded flex items-center justify-center">
+                              <div className="h-3 w-16 bg-muted-foreground/20 rounded"></div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <div className="bg-muted rounded-lg p-3 h-[calc(100%-124px)]">
+                        <div className="flex justify-between items-center mb-3">
+                          <div className="h-5 w-48 bg-muted-foreground/20 rounded"></div>
+                          <div className="h-6 w-24 bg-primary/20 rounded"></div>
+                        </div>
+                        
+                        <div className="space-y-3 mt-4">
+                          {[1, 2, 3].map(i => (
+                            <div key={i} className="bg-background rounded-lg p-3 flex items-center">
+                              <div className="h-8 w-8 rounded-full bg-muted-foreground/20 mr-3 flex items-center justify-center">
+                                <Cpu className="h-4 w-4 text-primary/50" />
+                              </div>
+                              <div className="flex-1">
+                                <div className="h-4 w-36 bg-muted-foreground/20 rounded mb-1"></div>
+                                <div className="h-3 w-full bg-muted-foreground/10 rounded"></div>
+                              </div>
+                              <div className="h-7 w-20 bg-primary/10 rounded-full ml-3 flex items-center justify-center">
+                                <div className="h-3 w-12 bg-primary/30 rounded"></div>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-3 left-3 bg-white/80 dark:bg-black/80 px-3 py-1 rounded text-sm font-medium">
+                      AI Assistant Dashboard
+                    </div>
+                  </AspectRatio>
+                </CarouselItem>
               </CarouselContent>
               <CarouselPrevious />
               <CarouselNext />
@@ -531,30 +682,6 @@ const Index = () => {
               <p className="text-xs text-muted-foreground text-center mt-4">
                 By joining, you agree to our Terms of Service and Privacy Policy. We'll never share your information.
               </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="py-12 md:py-20">
-        <div className="container mx-auto px-4 md:px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Transform Your SaaS Spending?</h2>
-            <p className="text-xl text-muted-foreground mb-8">
-              Join the growing list of companies optimizing their SaaS investments. Limited slots available for early access demos.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="gap-2">
-                <ListChecks className="h-5 w-5" />
-                Join Waiting List
-              </Button>
-              <Button size="lg" variant="outline" className="gap-2" asChild>
-                <Link to="/dashboard">
-                  <User className="h-5 w-5" />
-                  Sign In
-                </Link>
-              </Button>
             </div>
           </div>
         </div>

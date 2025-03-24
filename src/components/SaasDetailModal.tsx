@@ -1,3 +1,4 @@
+
 import React from "react";
 import {
   Dialog,
@@ -17,8 +18,10 @@ import {
   FileText,
   CheckCircle,
   AlertCircle,
-  Activity
+  Activity,
+  Users as UsersIcon
 } from "lucide-react";
+import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@/components/ui/table";
 
 interface SaasDetailModalProps {
   saas: SaaSData | null;
@@ -26,12 +29,40 @@ interface SaasDetailModalProps {
   onOpenChange: (open: boolean) => void;
 }
 
+// Generate mock user data
+const generateMockUsers = (saasId: string, totalUsers: number) => {
+  const users = [];
+  const roles = ["Admin", "Editor", "Viewer", "User"];
+  const departments = ["Marketing", "Sales", "Engineering", "Product", "Finance", "HR"];
+  
+  for (let i = 0; i < totalUsers; i++) {
+    const isActive7d = Math.random() > 0.3;
+    const isActive30d = isActive7d || Math.random() > 0.5;
+    
+    users.push({
+      id: `user-${saasId}-${i}`,
+      name: `User ${i + 1}`,
+      email: `user${i + 1}@example.com`,
+      role: roles[Math.floor(Math.random() * roles.length)],
+      department: departments[Math.floor(Math.random() * departments.length)],
+      lastLogin: new Date(Date.now() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000)),
+      isActive7d,
+      isActive30d
+    });
+  }
+  
+  return users;
+};
+
 export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalProps) {
   if (!saas) return null;
 
   // Generate chart data
   const paymentData = generatePaymentTrendData(saas.id);
   const usageData = generateUsageTrendData(saas.id);
+  
+  // Generate user data
+  const userData = generateMockUsers(saas.id, saas.usage.activeUsers);
 
   // Format currency
   const formatCurrency = (amount: number) => {
@@ -56,6 +87,24 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
         <Badge variant="outline" className="text-red-500 border-red-200 bg-red-50 dark:bg-red-950 dark:border-red-800">
           <AlertCircle className="h-3 w-3 mr-1" />
           Decommissioned
+        </Badge>
+      );
+    }
+  };
+
+  const getActivityBadge = (isActive: boolean) => {
+    if (isActive) {
+      return (
+        <Badge variant="outline" className="text-green-500 border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800">
+          <CheckCircle className="h-3 w-3 mr-1" />
+          Active
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge variant="outline" className="text-red-500 border-red-200 bg-red-50 dark:bg-red-950 dark:border-red-800">
+          <AlertCircle className="h-3 w-3 mr-1" />
+          Inactive
         </Badge>
       );
     }
@@ -107,10 +156,11 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
 
           {/* Tabs for different data views */}
           <Tabs defaultValue="analytics" className="w-full">
-            <TabsList className="grid grid-cols-3 mb-6">
+            <TabsList className="grid grid-cols-4 mb-6">
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="contract">Contract Details</TabsTrigger>
               <TabsTrigger value="payments">Payment History</TabsTrigger>
+              <TabsTrigger value="users">Users</TabsTrigger>
             </TabsList>
             
             <TabsContent value="analytics" className="space-y-6">
@@ -211,6 +261,47 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
                       <Badge variant="outline" className="text-green-500">Paid</Badge>
                     </div>
                   ))}
+                </div>
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="users" className="space-y-4">
+              <div className="bg-muted/30 rounded-lg p-6">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <UsersIcon className="h-5 w-5 text-primary" />
+                    <h3 className="text-lg font-medium">Licensed Users</h3>
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    {saas.usage.activeUsers} users
+                  </div>
+                </div>
+                
+                <div className="overflow-auto max-h-[400px] border rounded-md">
+                  <Table>
+                    <TableHeader className="bg-muted/50 sticky top-0">
+                      <TableRow>
+                        <TableHead className="w-[180px]">Name</TableHead>
+                        <TableHead>Department</TableHead>
+                        <TableHead>Role</TableHead>
+                        <TableHead>Last Login</TableHead>
+                        <TableHead>Active (7d)</TableHead>
+                        <TableHead>Active (30d)</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {userData.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell className="font-medium">{user.name}</TableCell>
+                          <TableCell>{user.department}</TableCell>
+                          <TableCell>{user.role}</TableCell>
+                          <TableCell>{format(user.lastLogin, "MMM d, yyyy")}</TableCell>
+                          <TableCell>{getActivityBadge(user.isActive7d)}</TableCell>
+                          <TableCell>{getActivityBadge(user.isActive30d)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </div>
               </div>
             </TabsContent>

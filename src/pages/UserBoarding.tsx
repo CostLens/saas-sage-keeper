@@ -597,9 +597,9 @@ const UserBoarding = () => {
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h3 className="text-sm font-medium">Automation Status</h3>
+                      <h3 className="text-sm font-medium">Enable Automation</h3>
                       <p className="text-xs text-muted-foreground">
-                        {automationEnabled ? "Automatic offboarding is enabled" : "Automatic offboarding is disabled"}
+                        Turn on automatic offboarding when employees leave
                       </p>
                     </div>
                     <Switch 
@@ -607,20 +607,6 @@ const UserBoarding = () => {
                       onCheckedChange={setAutomationEnabled}
                       id="automation-toggle"
                     />
-                  </div>
-                  
-                  <div className="flex items-center space-x-2 mt-4">
-                    <Checkbox 
-                      id="auto-offboard-terminated" 
-                      defaultChecked 
-                      disabled={!automationEnabled}
-                    />
-                    <label 
-                      htmlFor="auto-offboard-terminated" 
-                      className={`text-sm font-medium ${!automationEnabled ? 'text-muted-foreground' : ''}`}
-                    >
-                      Automatically offboard terminated employees
-                    </label>
                   </div>
                   
                   <div className="space-y-2 pt-2">
@@ -645,24 +631,6 @@ const UserBoarding = () => {
                       disabled={!automationEnabled}
                     />
                     <p className="text-xs text-muted-foreground">Who should be notified when automatic offboarding occurs</p>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2 pt-4">
-                    <div className="flex-1">
-                      <h3 className="text-sm font-medium">Current Status</h3>
-                      <p className="text-xs text-muted-foreground">
-                        {automationEnabled ? "Automatic offboarding is enabled" : "Automatic offboarding is disabled"}
-                      </p>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <span className={`inline-flex items-center px-2.5 py-0.5 text-xs font-semibold rounded-full ${
-                        automationEnabled 
-                          ? 'bg-green-100 text-green-800' 
-                          : 'bg-gray-100 text-gray-800'
-                      }`}>
-                        {automationEnabled ? 'Enabled' : 'Disabled'}
-                      </span>
-                    </div>
                   </div>
                 </div>
               </div>

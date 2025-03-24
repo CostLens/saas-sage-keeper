@@ -1,26 +1,18 @@
 
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
-import { NavLink, Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
 import { 
   LayoutDashboard, 
   TrendingUp, 
   FileText,
   Settings, 
   HelpCircle,
-  ChevronLeft,
-  ChevronRight,
   Gauge,
   UserCog
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-  TooltipProvider,
-} from "@/components/ui/tooltip";
+import { SidebarHeader } from "./sidebar/SidebarHeader";
+import { NavSection } from "./sidebar/NavSection";
 
 interface SidebarProps {
   className?: string;
@@ -37,12 +29,12 @@ const Sidebar = ({ className }: SidebarProps) => {
   
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-usage-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
+    return savedValue === "true";
   });
 
   const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-boarding-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
+    return savedValue === "true";
   });
 
   // Listen for storage changes to update UI accordingly
@@ -76,24 +68,25 @@ const Sidebar = ({ className }: SidebarProps) => {
     setIsCollapsed(prev => !prev);
   };
 
-  // Dynamic navigation based on feature flag
-  const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
-  ];
-  
-  // Add Usage tab only if feature flag is enabled
-  if (showUsageFeatures) {
-    navigation.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });
-  }
-  
-  // Add User Boarding only if boarding flag is enabled
-  if (showBoardingFeatures) {
-    navigation.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
-  }
-  
-  // Add Contracts after Usage
-  navigation.push({ name: "Contracts", href: "/contracts", icon: FileText });
+  // Build navigation items based on feature flags
+  const getPrimaryNavItems = () => {
+    const items = [
+      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
+      { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
+    ];
+    
+    if (showUsageFeatures) {
+      items.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });
+    }
+    
+    if (showBoardingFeatures) {
+      items.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
+    }
+    
+    items.push({ name: "Contracts", href: "/contracts", icon: FileText });
+    
+    return items;
+  };
 
   const secondaryNavigation = [
     { name: "Settings", href: "/settings", icon: Settings },
@@ -109,103 +102,22 @@ const Sidebar = ({ className }: SidebarProps) => {
         className
       )}
     >
-      <div className="flex h-16 items-center border-b px-4 justify-between">
-        {!isCollapsed && (
-          <Link to="/dashboard" className="flex items-center gap-2">
-            <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
-              <span className="font-bold text-white text-xl">IQ</span>
-            </div>
-            <span className="font-bold text-xl tracking-tight">XpendIQ</span>
-          </Link>
-        )}
-        {isCollapsed && (
-          <Link to="/dashboard" className="mx-auto">
-            <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
-              <span className="font-bold text-white text-xl">IQ</span>
-            </div>
-          </Link>
-        )}
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={toggleCollapse}
-          className={isCollapsed ? "mx-auto" : "ml-auto"}
-        >
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-        </Button>
-      </div>
+      <SidebarHeader 
+        isCollapsed={isCollapsed} 
+        toggleCollapse={toggleCollapse} 
+      />
 
       <div className="flex-1 overflow-auto py-4 bg-background">
-        <nav className="grid gap-1 px-2">
-          <TooltipProvider>
-            {navigation.map((item) => (
-              <Tooltip key={item.name}>
-                <TooltipTrigger asChild>
-                  <NavLink
-                    to={item.href}
-                    end={item.href === "/dashboard"}
-                    className={({ isActive }) =>
-                      cn(
-                        "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                        isActive
-                          ? "bg-primary/10 text-primary"
-                          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                      )
-                    }
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {!isCollapsed && <span>{item.name}</span>}
-                  </NavLink>
-                </TooltipTrigger>
-                {isCollapsed && (
-                  <TooltipContent side="right">
-                    {item.name}
-                  </TooltipContent>
-                )}
-              </Tooltip>
-            ))}
-          </TooltipProvider>
-        </nav>
-
-        <div className="mt-6">
-          <div className="px-4 py-2">
-            {!isCollapsed && (
-              <h2 className="text-xs font-semibold text-muted-foreground">
-                SUPPORT & SETTINGS
-              </h2>
-            )}
-          </div>
-          <nav className="grid gap-1 px-2">
-            <TooltipProvider>
-              {secondaryNavigation.map((item) => (
-                <Tooltip key={item.name}>
-                  <TooltipTrigger asChild>
-                    <NavLink
-                      to={item.href}
-                      end
-                      className={({ isActive }) =>
-                        cn(
-                          "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                          isActive
-                            ? "bg-primary/10 text-primary"
-                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                        )
-                      }
-                    >
-                      <item.icon className="h-5 w-5" />
-                      {!isCollapsed && <span>{item.name}</span>}
-                    </NavLink>
-                  </TooltipTrigger>
-                  {isCollapsed && (
-                    <TooltipContent side="right">
-                      {item.name}
-                    </TooltipContent>
-                  )}
-                </Tooltip>
-              ))}
-            </TooltipProvider>
-          </nav>
-        </div>
+        <NavSection 
+          items={getPrimaryNavItems()} 
+          isCollapsed={isCollapsed} 
+        />
+        
+        <NavSection 
+          title="SUPPORT & SETTINGS"
+          items={secondaryNavigation} 
+          isCollapsed={isCollapsed} 
+        />
       </div>
     </aside>
   );

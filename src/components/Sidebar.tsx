@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink, Link } from "react-router-dom";
@@ -14,6 +15,12 @@ import {
   UserCog
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 interface SidebarProps {
   className?: string;
@@ -130,24 +137,34 @@ const Sidebar = ({ className }: SidebarProps) => {
 
       <div className="flex-1 overflow-auto py-4 bg-background">
         <nav className="grid gap-1 px-2">
-          {navigation.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.href}
-              end={item.href === "/dashboard"}
-              className={({ isActive }) =>
-                cn(
-                  "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                  isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                )
-              }
-            >
-              <item.icon className="h-5 w-5" />
-              {!isCollapsed && <span>{item.name}</span>}
-            </NavLink>
-          ))}
+          <TooltipProvider>
+            {navigation.map((item) => (
+              <Tooltip key={item.name}>
+                <TooltipTrigger asChild>
+                  <NavLink
+                    to={item.href}
+                    end={item.href === "/dashboard"}
+                    className={({ isActive }) =>
+                      cn(
+                        "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+                        isActive
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                      )
+                    }
+                  >
+                    <item.icon className="h-5 w-5" />
+                    {!isCollapsed && <span>{item.name}</span>}
+                  </NavLink>
+                </TooltipTrigger>
+                {isCollapsed && (
+                  <TooltipContent side="right">
+                    {item.name}
+                  </TooltipContent>
+                )}
+              </Tooltip>
+            ))}
+          </TooltipProvider>
         </nav>
 
         <div className="mt-6">
@@ -159,24 +176,34 @@ const Sidebar = ({ className }: SidebarProps) => {
             )}
           </div>
           <nav className="grid gap-1 px-2">
-            {secondaryNavigation.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.href}
-                end
-                className={({ isActive }) =>
-                  cn(
-                    "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                  )
-                }
-              >
-                <item.icon className="h-5 w-5" />
-                {!isCollapsed && <span>{item.name}</span>}
-              </NavLink>
-            ))}
+            <TooltipProvider>
+              {secondaryNavigation.map((item) => (
+                <Tooltip key={item.name}>
+                  <TooltipTrigger asChild>
+                    <NavLink
+                      to={item.href}
+                      end
+                      className={({ isActive }) =>
+                        cn(
+                          "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+                          isActive
+                            ? "bg-primary/10 text-primary"
+                            : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
+                        )
+                      }
+                    >
+                      <item.icon className="h-5 w-5" />
+                      {!isCollapsed && <span>{item.name}</span>}
+                    </NavLink>
+                  </TooltipTrigger>
+                  {isCollapsed && (
+                    <TooltipContent side="right">
+                      {item.name}
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              ))}
+            </TooltipProvider>
           </nav>
         </div>
       </div>

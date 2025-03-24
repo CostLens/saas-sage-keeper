@@ -8,7 +8,7 @@ const Settings = () => {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-hidden pt-16">
         <Header />
         <main className="flex-1 overflow-auto">
           <div className="container mx-auto p-6 space-y-8">

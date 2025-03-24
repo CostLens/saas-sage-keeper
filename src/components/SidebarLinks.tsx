@@ -13,6 +13,12 @@ import {
   BarChart3,
   UserCog
 } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipProvider,
+} from "@/components/ui/tooltip";
 
 interface SidebarLinksProps {
   collapsed: boolean;
@@ -80,20 +86,30 @@ export function SidebarLinks({ collapsed, showUsageFeatures, showBoardingFeature
     <div className="space-y-1">
       {links.map((link) => 
         (link.show === undefined || link.show) && (
-          <Link
-            key={link.href}
-            to={link.href}
-            className={cn(
-              "flex items-center py-2 px-3 text-sm font-medium rounded-md transition-colors",
-              collapsed ? "justify-center" : "",
-              link.active 
-                ? "bg-primary text-primary-foreground" 
-                : "text-muted-foreground hover:text-foreground hover:bg-accent"
-            )}
-          >
-            {link.icon}
-            {!collapsed && <span className="ml-3">{link.name}</span>}
-          </Link>
+          <TooltipProvider key={link.href} delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  to={link.href}
+                  className={cn(
+                    "flex items-center py-2 px-3 text-sm font-medium rounded-md transition-colors",
+                    collapsed ? "justify-center" : "",
+                    link.active 
+                      ? "bg-primary text-primary-foreground" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  )}
+                >
+                  {link.icon}
+                  {!collapsed && <span className="ml-3">{link.name}</span>}
+                </Link>
+              </TooltipTrigger>
+              {collapsed && (
+                <TooltipContent side="right">
+                  {link.name}
+                </TooltipContent>
+              )}
+            </Tooltip>
+          </TooltipProvider>
         )
       )}
     </div>

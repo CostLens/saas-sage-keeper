@@ -6,7 +6,6 @@ import { FeatureFlagsTab } from "./FeatureFlagsTab";
 import { SubscriptionTab } from "./SubscriptionTab";
 import { IntegrationsTab } from "./IntegrationsTab";
 import { NotificationsTab } from "./NotificationsTab";
-import { SecurityTab } from "./SecurityTab";
 import { SupportTab } from "./SupportTab";
 
 export function SettingsTabs() {
@@ -19,36 +18,31 @@ export function SettingsTabs() {
           <TabsTrigger value="subscription">Subscription</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="security">Security</TabsTrigger>
           <TabsTrigger value="support">Support</TabsTrigger>
         </TabsList>
       </div>
 
-      <TabsContent value="general">
+      <TabsContent value="general" className="mt-0">
         <GeneralSettingsTab />
       </TabsContent>
 
-      <TabsContent value="features">
+      <TabsContent value="features" className="mt-0">
         <FeatureFlagsTab />
       </TabsContent>
 
-      <TabsContent value="subscription">
+      <TabsContent value="subscription" className="mt-0">
         <SubscriptionTab />
       </TabsContent>
 
-      <TabsContent value="integrations">
+      <TabsContent value="integrations" className="mt-0">
         <IntegrationsTab />
       </TabsContent>
 
-      <TabsContent value="notifications">
+      <TabsContent value="notifications" className="mt-0">
         <NotificationsTab />
       </TabsContent>
 
-      <TabsContent value="security">
-        <SecurityTab />
-      </TabsContent>
-
-      <TabsContent value="support">
+      <TabsContent value="support" className="mt-0">
         <SupportTab />
       </TabsContent>
     </Tabs>

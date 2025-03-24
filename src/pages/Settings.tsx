@@ -52,11 +52,11 @@ const Settings = () => {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar />
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col overflow-hidden">
         <Header />
-        <main className="flex-1 p-6 space-y-8 animate-fade-in overflow-auto">
+        <main className="flex-1 p-6 space-y-8 overflow-auto">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           </div>

@@ -28,12 +28,10 @@ const Dashboard = () => {
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
-    window.addEventListener('sidebarStateChanged', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
-      window.removeEventListener('sidebarStateChanged', handleStorageChange);
     };
   }, []);
 

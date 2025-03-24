@@ -3,44 +3,17 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Switch } from "@/components/ui/switch";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { RefreshCw, Download, Zap } from "lucide-react";
 import { toast } from "sonner";
-import { 
-  Search, 
-  UserPlus, 
-  UserMinus, 
-  Filter, 
-  MoreHorizontal, 
-  Download,
-  RefreshCw,
-  Check,
-  X,
-  Zap
-} from "lucide-react";
 import { mockSaaSData } from "@/lib/mockData";
 import { getHrmsUsers } from "@/lib/hrmsService";
 import { HrmsUser } from "@/types/hrms";
 import { useQuery } from "@tanstack/react-query";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { UserBoardingTable } from "@/components/user-boarding/UserBoardingTable";
+import { UserBoardingFilters } from "@/components/user-boarding/UserBoardingFilters";
+import { OnboardingDialog } from "@/components/user-boarding/OnboardingDialog";
+import { DeBoardingDialog } from "@/components/user-boarding/DeBoardingDialog";
+import { AutoOffboardingDialog } from "@/components/user-boarding/AutoOffboardingDialog";
 
 const mockUserToolMappings = [
   { userId: "EMP001", toolIds: ["1", "3", "5"] },
@@ -214,57 +187,6 @@ const UserBoarding = () => {
     };
   }, []);
 
-  const getUserTools = (userId: string) => {
-    const mapping = mockUserToolMappings.find(m => m.userId === userId);
-    if (!mapping) return [];
-    return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
-  };
-
-  const handleOnboardUser = () => {
-    if (!selectedUser || selectedTools.length === 0) {
-      toast.error("Please select a user and at least one SaaS tool");
-      return;
-    }
-
-    toast.success(`${selectedUser.full_name} has been onboarded to ${selectedTools.length} tools`);
-    setOnboardDialogOpen(false);
-    setSelectedUser(null);
-    setSelectedTools([]);
-  };
-
-  const handleDeBoardUser = () => {
-    if (!selectedUser || selectedToolsToRemove.length === 0) {
-      toast.error("Please select a user and at least one SaaS tool to remove");
-      return;
-    }
-
-    toast.success(`${selectedUser.full_name} has been de-boarded from ${selectedToolsToRemove.length} tools`);
-    setDeBoardDialogOpen(false);
-    setSelectedUser(null);
-    setSelectedToolsToRemove([]);
-  };
-
-  const handleAutoOffboardSetup = () => {
-    toast.success(`Automatic offboarding has been ${automationEnabled ? 'enabled' : 'disabled'}`);
-    setAutoOffboardDialogOpen(false);
-  };
-
-  const toggleToolSelection = (toolId: string) => {
-    if (selectedTools.includes(toolId)) {
-      setSelectedTools(selectedTools.filter(id => id !== toolId));
-    } else {
-      setSelectedTools([...selectedTools, toolId]);
-    }
-  };
-
-  const toggleToolToRemove = (toolId: string) => {
-    if (selectedToolsToRemove.includes(toolId)) {
-      setSelectedToolsToRemove(selectedToolsToRemove.filter(id => id !== toolId));
-    } else {
-      setSelectedToolsToRemove([...selectedToolsToRemove, toolId]);
-    }
-  };
-
   const exportUsersData = () => {
     if (!filteredUsers || filteredUsers.length === 0) {
       toast.error("No data to export");
@@ -299,6 +221,41 @@ const UserBoarding = () => {
     document.body.removeChild(link);
     
     toast.success("Data exported successfully");
+  };
+
+  const getUserTools = (userId: string) => {
+    const mapping = mockUserToolMappings.find(m => m.userId === userId);
+    if (!mapping) return [];
+    return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
+  };
+
+  const handleOnboardUser = () => {
+    if (!selectedUser || selectedTools.length === 0) {
+      toast.error("Please select a user and at least one SaaS tool");
+      return;
+    }
+
+    toast.success(`${selectedUser.full_name} has been onboarded to ${selectedTools.length} tools`);
+    setOnboardDialogOpen(false);
+    setSelectedUser(null);
+    setSelectedTools([]);
+  };
+
+  const handleDeBoardUser = () => {
+    if (!selectedUser || selectedToolsToRemove.length === 0) {
+      toast.error("Please select a user and at least one SaaS tool to remove");
+      return;
+    }
+
+    toast.success(`${selectedUser.full_name} has been de-boarded from ${selectedToolsToRemove.length} tools`);
+    setDeBoardDialogOpen(false);
+    setSelectedUser(null);
+    setSelectedToolsToRemove([]);
+  };
+
+  const handleAutoOffboardSetup = () => {
+    toast.success(`Automatic offboarding has been ${automationEnabled ? 'enabled' : 'disabled'}`);
+    setAutoOffboardDialogOpen(false);
   };
 
   if (!showBoardingFeatures) {
@@ -358,289 +315,68 @@ const UserBoarding = () => {
             </div>
           </div>
           
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-                <div className="relative flex-1">
-                  <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    placeholder="Search users..."
-                    className="pl-8"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center space-x-2">
-                    <Label htmlFor="department" className="min-w-[80px]">Department:</Label>
-                    <select 
-                      id="department"
-                      className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      value={selectedDepartment}
-                      onChange={(e) => setSelectedDepartment(e.target.value)}
-                    >
-                      <option value="">All</option>
-                      {departments.map(dept => (
-                        <option key={dept} value={dept}>{dept}</option>
-                      ))}
-                    </select>
-                  </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Label htmlFor="showOffboarded">Show Offboarded:</Label>
-                    <Switch 
-                      id="showOffboarded" 
-                      checked={showOffboardedUsers}
-                      onCheckedChange={setShowOffboardedUsers}
-                    />
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <UserBoardingFilters
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            selectedDepartment={selectedDepartment}
+            setSelectedDepartment={setSelectedDepartment}
+            showOffboardedUsers={showOffboardedUsers}
+            setShowOffboardedUsers={setShowOffboardedUsers}
+            departments={departments}
+          />
           
           <Card>
             <CardHeader className="pb-2">
               <CardTitle>Users & SaaS Tool Access</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Employee ID</TableHead>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Department</TableHead>
-                    <TableHead>Position</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>SaaS Tools</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {isLoadingUsers ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">Loading...</TableCell>
-                    </TableRow>
-                  ) : filteredUsers?.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center">No users found</TableCell>
-                    </TableRow>
-                  ) : (
-                    filteredUsers?.map(user => {
-                      const userTools = getUserTools(user.employee_id);
-                      return (
-                        <TableRow key={user.employee_id}>
-                          <TableCell className="font-medium">{user.employee_id}</TableCell>
-                          <TableCell>{user.full_name}</TableCell>
-                          <TableCell>{user.department}</TableCell>
-                          <TableCell>{user.position}</TableCell>
-                          <TableCell>
-                            <span className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold ${
-                              user.status === 'active' 
-                                ? 'bg-green-100 text-green-800' 
-                                : user.status === 'terminated' 
-                                ? 'bg-red-100 text-red-800'
-                                : 'bg-amber-100 text-amber-800'
-                            }`}>
-                              {user.status}
-                            </span>
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex flex-wrap gap-1">
-                              {userTools.length > 0 ? (
-                                userTools.map(tool => (
-                                  <span 
-                                    key={tool.id} 
-                                    className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800"
-                                  >
-                                    {tool.name}
-                                  </span>
-                                ))
-                              ) : (
-                                <span className="text-sm text-muted-foreground">No tools assigned</span>
-                              )}
-                            </div>
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <div className="flex justify-end gap-2">
-                              <Button 
-                                variant="outline" 
-                                size="sm"
-                                onClick={() => {
-                                  setSelectedUser(user);
-                                  setSelectedTools([]);
-                                  setOnboardDialogOpen(true);
-                                }}
-                              >
-                                <UserPlus className="h-4 w-4 mr-1" />
-                                Onboard
-                              </Button>
-                              {userTools.length > 0 && (
-                                <Button 
-                                  variant="outline" 
-                                  size="sm"
-                                  onClick={() => {
-                                    setSelectedUser(user);
-                                    setSelectedToolsToRemove([]);
-                                    setDeBoardDialogOpen(true);
-                                  }}
-                                >
-                                  <UserMinus className="h-4 w-4 mr-1" />
-                                  Offboard
-                                </Button>
-                              )}
-                            </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })
-                  )}
-                </TableBody>
-              </Table>
+              <UserBoardingTable
+                isLoadingUsers={isLoadingUsers}
+                filteredUsers={filteredUsers}
+                mockUserToolMappings={mockUserToolMappings}
+                mockSaaSData={mockSaaSData}
+                onOpenOnboard={(user) => {
+                  setSelectedUser(user);
+                  setSelectedTools([]);
+                  setOnboardDialogOpen(true);
+                }}
+                onOpenOffboard={(user) => {
+                  setSelectedUser(user);
+                  setSelectedToolsToRemove([]);
+                  setDeBoardDialogOpen(true);
+                }}
+              />
             </CardContent>
           </Card>
           
-          <Dialog open={onboardDialogOpen} onOpenChange={setOnboardDialogOpen}>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Onboard User to SaaS Tools</DialogTitle>
-                <DialogDescription>
-                  {selectedUser ? `Select the SaaS tools to provide to ${selectedUser.full_name}` : 'Select the tools to provide'}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                  <Label>Select SaaS Tools</Label>
-                  <div className="grid grid-cols-2 gap-4 max-h-[200px] overflow-y-auto">
-                    {mockSaaSData.map(tool => (
-                      <div key={tool.id} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={`tool-${tool.id}`} 
-                          checked={selectedTools.includes(tool.id)}
-                          onCheckedChange={() => toggleToolSelection(tool.id)}
-                        />
-                        <label 
-                          htmlFor={`tool-${tool.id}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {tool.name}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-              
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setOnboardDialogOpen(false)}>Cancel</Button>
-                <Button onClick={handleOnboardUser}>Onboard User</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <OnboardingDialog
+            dialogOpen={onboardDialogOpen}
+            setDialogOpen={setOnboardDialogOpen}
+            selectedUser={selectedUser}
+            selectedTools={selectedTools}
+            setSelectedTools={setSelectedTools}
+            mockSaaSData={mockSaaSData}
+            onConfirm={handleOnboardUser}
+          />
           
-          <Dialog open={deBoardDialogOpen} onOpenChange={setDeBoardDialogOpen}>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>De-Board User from SaaS Tools</DialogTitle>
-                <DialogDescription>
-                  {selectedUser ? `Select the SaaS tools to remove from ${selectedUser.full_name}` : 'Select the tools to remove'}
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="grid gap-4 py-4">
-                <div className="space-y-2">
-                  <Label>Select SaaS Tools</Label>
-                  <div className="grid grid-cols-2 gap-4 max-h-[200px] overflow-y-auto">
-                    {selectedUser && getUserTools(selectedUser.employee_id).map(tool => (
-                      <div key={tool.id} className="flex items-center space-x-2">
-                        <Checkbox 
-                          id={`remove-tool-${tool.id}`} 
-                          checked={selectedToolsToRemove.includes(tool.id)}
-                          onCheckedChange={() => toggleToolToRemove(tool.id)}
-                        />
-                        <label 
-                          htmlFor={`remove-tool-${tool.id}`}
-                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                        >
-                          {tool.name}
-                        </label>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="deboardReason">Reason (Optional)</Label>
-                  <Input id="deboardReason" placeholder="Reason for removing access..." />
-                </div>
-              </div>
-              
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setDeBoardDialogOpen(false)}>Cancel</Button>
-                <Button variant="destructive" onClick={handleDeBoardUser}>Remove Access</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <DeBoardingDialog
+            dialogOpen={deBoardDialogOpen}
+            setDialogOpen={setDeBoardDialogOpen}
+            selectedUser={selectedUser}
+            selectedToolsToRemove={selectedToolsToRemove}
+            setSelectedToolsToRemove={setSelectedToolsToRemove}
+            mockUserToolMappings={mockUserToolMappings}
+            mockSaaSData={mockSaaSData}
+            onConfirm={handleDeBoardUser}
+          />
           
-          <Dialog open={autoOffboardDialogOpen} onOpenChange={setAutoOffboardDialogOpen}>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Setup Automatic Offboarding</DialogTitle>
-                <DialogDescription>
-                  Configure automated offboarding for employees who leave the organization
-                </DialogDescription>
-              </DialogHeader>
-              
-              <div className="grid gap-4 py-4">
-                <div className="space-y-3">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-sm font-medium">Enable Automation</h3>
-                      <p className="text-xs text-muted-foreground">
-                        Turn on automatic offboarding when employees leave
-                      </p>
-                    </div>
-                    <Switch 
-                      checked={automationEnabled}
-                      onCheckedChange={setAutomationEnabled}
-                      id="automation-toggle"
-                    />
-                  </div>
-                  
-                  <div className="space-y-2 pt-2">
-                    <Label className={!automationEnabled ? 'text-muted-foreground' : ''}>Offboarding delay:</Label>
-                    <select 
-                      className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                      disabled={!automationEnabled}
-                    >
-                      <option value="0">Immediately</option>
-                      <option value="1">After 1 day</option>
-                      <option value="7">After 7 days</option>
-                      <option value="14">After 14 days</option>
-                      <option value="30">After 30 days</option>
-                    </select>
-                    <p className="text-xs text-muted-foreground">Time to wait after employee status change before removing access</p>
-                  </div>
-                  
-                  <div className="space-y-2 pt-2">
-                    <Label className={!automationEnabled ? 'text-muted-foreground' : ''}>Notification recipients:</Label>
-                    <Input 
-                      placeholder="Email addresses (separated by commas)" 
-                      disabled={!automationEnabled}
-                    />
-                    <p className="text-xs text-muted-foreground">Who should be notified when automatic offboarding occurs</p>
-                  </div>
-                </div>
-              </div>
-              
-              <DialogFooter>
-                <Button variant="outline" onClick={() => setAutoOffboardDialogOpen(false)}>Cancel</Button>
-                <Button onClick={handleAutoOffboardSetup}>Save Configuration</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+          <AutoOffboardingDialog
+            open={autoOffboardDialogOpen}
+            onOpenChange={setAutoOffboardDialogOpen}
+            automationEnabled={automationEnabled}
+            setAutomationEnabled={setAutomationEnabled}
+            onSave={handleAutoOffboardSetup}
+          />
         </main>
       </div>
     </div>

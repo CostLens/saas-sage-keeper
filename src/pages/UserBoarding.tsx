@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -43,7 +42,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 
-// Enhanced mock user-tool mappings with more dummy data
 const mockUserToolMappings = [
   { userId: "EMP001", toolIds: ["1", "3", "5"] },
   { userId: "EMP002", toolIds: ["2", "4"] },
@@ -57,7 +55,6 @@ const mockUserToolMappings = [
   { userId: "EMP010", toolIds: ["1", "2", "3", "4", "5"] },
 ];
 
-// Additional dummy HRMS users (will be merged with API data)
 const additionalUsers: HrmsUser[] = [
   {
     id: "dummy1",
@@ -166,27 +163,23 @@ const UserBoarding = () => {
     const savedValue = localStorage.getItem("show-boarding-features");
     return savedValue === "true"; // Default to false if null or anything other than "true"
   });
+  const [isOffboardingDisabled, setIsOffboardingDisabled] = useState(false);
 
-  // Fetch users data
   const { data: apiUsers, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
     queryKey: ["hrmsUsers"],
     queryFn: getHrmsUsers,
   });
   
-  // Combine API users with additional dummy users
   const hrmsUsers = React.useMemo(() => {
     if (!apiUsers) return additionalUsers;
     
-    // Create a Set of employee_ids from API users to avoid duplicates
     const existingIds = new Set(apiUsers.map(user => user.employee_id));
     
-    // Filter out dummy users that would duplicate API users
     const filteredDummyUsers = additionalUsers.filter(user => !existingIds.has(user.employee_id));
     
     return [...apiUsers, ...filteredDummyUsers];
   }, [apiUsers]);
   
-  // Filter users based on search, department, and status
   const filteredUsers = hrmsUsers?.filter(user => {
     const matchesSearch = 
       user.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -199,10 +192,8 @@ const UserBoarding = () => {
     return matchesSearch && matchesDepartment && matchesStatus;
   });
 
-  // Get unique departments for filter
   const departments = [...new Set(hrmsUsers?.map(user => user.department) || [])];
   
-  // Listen for sidebar state changes
   useEffect(() => {
     const handleSidebarChange = (event: CustomEvent) => {
       setIsSidebarCollapsed(event.detail.isCollapsed);
@@ -224,49 +215,42 @@ const UserBoarding = () => {
     };
   }, []);
 
-  // Helper function to get tools for a user
   const getUserTools = (userId: string) => {
     const mapping = mockUserToolMappings.find(m => m.userId === userId);
     if (!mapping) return [];
     return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
   };
 
-  // Handle user onboarding (to SaaS tools)
   const handleOnboardUser = () => {
     if (!selectedUser || selectedTools.length === 0) {
       toast.error("Please select a user and at least one SaaS tool");
       return;
     }
 
-    // In a real app, this would call an API to update the user-tool mappings
     toast.success(`${selectedUser.full_name} has been onboarded to ${selectedTools.length} tools`);
     setOnboardDialogOpen(false);
     setSelectedUser(null);
     setSelectedTools([]);
   };
 
-  // Handle user de-boarding (from SaaS tools)
   const handleDeBoardUser = () => {
     if (!selectedUser || selectedToolsToRemove.length === 0) {
       toast.error("Please select a user and at least one SaaS tool to remove");
       return;
     }
 
-    // In a real app, this would call an API to update the user-tool mappings
     toast.success(`${selectedUser.full_name} has been de-boarded from ${selectedToolsToRemove.length} tools`);
     setDeBoardDialogOpen(false);
     setSelectedUser(null);
     setSelectedToolsToRemove([]);
   };
 
-  // Handle automatic offboarding setup
   const handleAutoOffboardSetup = () => {
     setAutomationEnabled(true);
     toast.success("Automatic offboarding has been set up for terminated employees");
     setAutoOffboardDialogOpen(false);
   };
-  
-  // Handle tool selection for onboarding
+
   const toggleToolSelection = (toolId: string) => {
     if (selectedTools.includes(toolId)) {
       setSelectedTools(selectedTools.filter(id => id !== toolId));
@@ -275,7 +259,6 @@ const UserBoarding = () => {
     }
   };
 
-  // Handle tool selection for de-boarding
   const toggleToolToRemove = (toolId: string) => {
     if (selectedToolsToRemove.includes(toolId)) {
       setSelectedToolsToRemove(selectedToolsToRemove.filter(id => id !== toolId));
@@ -284,14 +267,12 @@ const UserBoarding = () => {
     }
   };
 
-  // Helper function to export users data as CSV
   const exportUsersData = () => {
     if (!filteredUsers || filteredUsers.length === 0) {
       toast.error("No data to export");
       return;
     }
 
-    // Create CSV content
     const headers = ["Employee ID", "Name", "Email", "Department", "Position", "Status", "SaaS Tools"];
     const csvContent = filteredUsers.map(user => {
       const tools = getUserTools(user.employee_id);
@@ -307,10 +288,8 @@ const UserBoarding = () => {
       ].join(",");
     });
 
-    // Combine headers and content
     const csv = [headers.join(","), ...csvContent].join("\n");
     
-    // Create download link
     const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -374,14 +353,21 @@ const UserBoarding = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setAutoOffboardDialogOpen(true)}
+                disabled={isOffboardingDisabled}
               >
                 <Zap className="h-4 w-4 mr-2" />
                 Setup Auto-Offboarding
               </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => setIsOffboardingDisabled(!isOffboardingDisabled)}
+              >
+                {isOffboardingDisabled ? 'Enable' : 'Disable'} Auto-Offboarding
+              </Button>
             </div>
           </div>
           
-          {/* Filters and search */}
           <Card>
             <CardContent className="p-4">
               <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
@@ -424,7 +410,6 @@ const UserBoarding = () => {
             </CardContent>
           </Card>
           
-          {/* Users Table */}
           <Card>
             <CardHeader className="pb-2">
               <CardTitle>Users & SaaS Tool Access</CardTitle>
@@ -526,7 +511,6 @@ const UserBoarding = () => {
             </CardContent>
           </Card>
           
-          {/* Onboard Dialog */}
           <Dialog open={onboardDialogOpen} onOpenChange={setOnboardDialogOpen}>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
@@ -566,7 +550,6 @@ const UserBoarding = () => {
             </DialogContent>
           </Dialog>
           
-          {/* De-Board Dialog */}
           <Dialog open={deBoardDialogOpen} onOpenChange={setDeBoardDialogOpen}>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>
@@ -578,7 +561,7 @@ const UserBoarding = () => {
               
               <div className="grid gap-4 py-4">
                 <div className="space-y-2">
-                  <Label>Remove Access to SaaS Tools</Label>
+                  <Label>Select SaaS Tools</Label>
                   <div className="grid grid-cols-2 gap-4 max-h-[200px] overflow-y-auto">
                     {selectedUser && getUserTools(selectedUser.employee_id).map(tool => (
                       <div key={tool.id} className="flex items-center space-x-2">
@@ -611,7 +594,6 @@ const UserBoarding = () => {
             </DialogContent>
           </Dialog>
           
-          {/* Auto-Offboarding Dialog */}
           <Dialog open={autoOffboardDialogOpen} onOpenChange={setAutoOffboardDialogOpen}>
             <DialogContent className="sm:max-w-[600px]">
               <DialogHeader>

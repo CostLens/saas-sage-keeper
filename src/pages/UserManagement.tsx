@@ -54,7 +54,7 @@ const UserManagement = () => {
                   >
                     <h3 className="text-lg font-semibold">{saas.name}</h3>
                     <p className="text-sm text-muted-foreground mt-1">
-                      {saas.users.active} active users
+                      {saas.usage.activeUsers} active users
                     </p>
                   </Button>
                 ))}

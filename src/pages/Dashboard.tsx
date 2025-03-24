@@ -148,7 +148,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
             <StatCard
               key="total-spend"
               title="Total Annual SaaS Spend"
@@ -159,7 +159,7 @@ const Dashboard = () => {
               className="h-full"
             />
             
-            {showUsageFeatures && (
+            {showUsageFeatures ? (
               <>
                 <StatCard
                   key="license-utilization"
@@ -183,11 +183,18 @@ const Dashboard = () => {
                   className="h-full"
                 />
               </>
+            ) : (
+              <>
+                <div className="h-full"></div>
+                <div className="h-full"></div>
+              </>
             )}
+            
+            <div className="h-full"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <Card className="glass-panel glass-panel-hover">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <Card className="glass-panel glass-panel-hover h-full">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center justify-between text-base">
                   <div className="flex items-center gap-2">
@@ -217,7 +224,7 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            <Card className="glass-panel glass-panel-hover">
+            <Card className="glass-panel glass-panel-hover h-full">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center justify-between text-base">
                   <div className="flex items-center gap-2">
@@ -246,10 +253,8 @@ const Dashboard = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            <Card className="glass-panel glass-panel-hover md:col-span-1">
+            <Card className="glass-panel glass-panel-hover h-full">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center justify-between text-base">
                   <div className="flex items-center gap-2">

@@ -22,9 +22,11 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { useToast } from "@/hooks/use-toast";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
+  const { toast } = useToast();
   const [selectedSaas, setSelectedSaas] = useState<SaaSData | null>(null);
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
@@ -80,10 +82,12 @@ const Dashboard = () => {
 
   const handleRefresh = () => {
     setLastRefreshed(new Date());
-    toast.success("Dashboard data refreshed");
+    toast({
+      title: "Dashboard data refreshed",
+      description: "All data has been updated to the latest values",
+    });
   };
 
-  // Get upcoming renewals
   const upcomingRenewals = mockSaasData
     .filter(saas => 
       saas.renewalDate !== "N/A" && 
@@ -96,7 +100,6 @@ const Dashboard = () => {
   
   const upcomingRenewalAmount = upcomingRenewals.reduce((sum, saas) => sum + saas.price, 0);
 
-  // Get upcoming payments
   const paymentsData = mockSaasData
     .filter(saas => saas.lastPayment && new Date(saas.lastPayment.date) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
     .slice(0, 3);
@@ -104,7 +107,6 @@ const Dashboard = () => {
   const paymentsAmount = paymentsData.reduce((sum, saas) => 
     sum + (saas.lastPayment ? saas.lastPayment.amount : 0), 0);
 
-  // Get upcoming termination deadlines
   const terminationsData = mockSaasData
     .filter(saas => 
       saas.contract && 
@@ -113,7 +115,6 @@ const Dashboard = () => {
     )
     .slice(0, 2);
 
-  // Days remaining helper function
   const getDaysRemaining = (date: Date): number => {
     const today = new Date();
     const diffTime = date.getTime() - today.getTime();
@@ -147,9 +148,7 @@ const Dashboard = () => {
             </div>
           </div>
 
-          {/* First Row: Stats Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {/* Total Annual SaaS Spend card is always shown */}
             <StatCard
               key="total-spend"
               title="Total Annual SaaS Spend"
@@ -160,7 +159,6 @@ const Dashboard = () => {
               className="h-full"
             />
             
-            {/* Additional cards if usage features are enabled */}
             {showUsageFeatures && (
               <>
                 <StatCard
@@ -188,9 +186,7 @@ const Dashboard = () => {
             )}
           </div>
 
-          {/* Second Row: Calendar Cards - Now in a unique layout */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-            {/* Upcoming Renewals Card */}
             <Card className="glass-panel glass-panel-hover">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center justify-between text-base">
@@ -221,7 +217,6 @@ const Dashboard = () => {
               </CardContent>
             </Card>
 
-            {/* Payments Due Card */}
             <Card className="glass-panel glass-panel-hover">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center justify-between text-base">
@@ -253,7 +248,6 @@ const Dashboard = () => {
             </Card>
           </div>
 
-          {/* Third Row: Termination Deadlines Card */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <Card className="glass-panel glass-panel-hover md:col-span-1">
               <CardHeader className="pb-2">

@@ -19,23 +19,23 @@ export function GeneralSettingsTab() {
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="firstName">First Name</Label>
-            <Input id="firstName" defaultValue="John" />
+            <Input id="firstName" defaultValue="Kanav" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="lastName">Last Name</Label>
-            <Input id="lastName" defaultValue="Doe" />
+            <Input id="lastName" defaultValue="Hasija" />
           </div>
           <div className="space-y-2">
             <Label htmlFor="workEmail">Work Email</Label>
             <Input
               id="workEmail"
               type="email"
-              defaultValue="john.doe@example.com"
+              defaultValue="kanav.hasija@innovaccer.com"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="team">Team</Label>
-            <Input id="team" defaultValue="Finance" />
+            <Input id="team" defaultValue="Product" />
           </div>
         </div>
         <Button type="submit">Save Personal Details</Button>

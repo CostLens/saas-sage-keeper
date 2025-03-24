@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
@@ -12,6 +12,20 @@ import {
 } from "@/components/ui/card";
 
 export function FeatureFlagsTab() {
+  // Set default values for feature flags when component mounts
+  useEffect(() => {
+    // Only set if they haven't been set yet
+    if (localStorage.getItem("show-usage-features") === null) {
+      localStorage.setItem("show-usage-features", "true");
+      window.dispatchEvent(new Event("usageFeaturesToggled"));
+    }
+    
+    if (localStorage.getItem("show-boarding-features") === null) {
+      localStorage.setItem("show-boarding-features", "true");
+      window.dispatchEvent(new Event("boardingFeaturesToggled"));
+    }
+  }, []);
+
   return (
     <Card>
       <CardHeader>
@@ -30,7 +44,7 @@ export function FeatureFlagsTab() {
           </div>
           <Switch
             id="usageFeatures"
-            defaultChecked={localStorage.getItem("show-usage-features") === "true"}
+            defaultChecked={localStorage.getItem("show-usage-features") !== "false"}
             onCheckedChange={(checked) => {
               localStorage.setItem("show-usage-features", checked.toString());
               window.dispatchEvent(new Event("usageFeaturesToggled"));
@@ -47,7 +61,7 @@ export function FeatureFlagsTab() {
           </div>
           <Switch
             id="boardingFeatures"
-            defaultChecked={localStorage.getItem("show-boarding-features") === "true"}
+            defaultChecked={localStorage.getItem("show-boarding-features") !== "false"}
             onCheckedChange={(checked) => {
               localStorage.setItem("show-boarding-features", checked.toString());
               window.dispatchEvent(new Event("boardingFeaturesToggled"));

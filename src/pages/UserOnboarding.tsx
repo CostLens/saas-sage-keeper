@@ -1,11 +1,10 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { mockSaasData } from "@/lib/mockData";
+import { mockSaaSData } from "@/lib/mockData";
 import { getHrmsUsers, getUserOnboardingTasks, createOnboardingTask, updateTaskStatus } from "@/lib/hrmsService";
 import { HrmsUser, OnboardingTask } from "@/types/hrms";
 import { RefreshCw } from "lucide-react";
@@ -77,7 +76,7 @@ const UserOnboarding = () => {
       if (!employee) throw new Error("Employee not found");
       
       for (const saasId of selectedSaasTools) {
-        const saas = mockSaasData.find(s => s.id === saasId);
+        const saas = mockSaaSData.find(s => s.id === saasId);
         if (!saas) continue;
         
         await createOnboardingTask({
@@ -155,7 +154,7 @@ const UserOnboarding = () => {
                 handleCreateTasks={handleCreateTasks}
                 filteredUsers={filteredUsers}
                 isLoadingUsers={isLoadingUsers}
-                saasData={mockSaasData}
+                saasData={mockSaaSData}
               />
             </div>
           </div>

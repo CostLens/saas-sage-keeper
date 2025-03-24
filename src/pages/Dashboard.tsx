@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/Sidebar";
 import { SaasTable } from "@/components/SaasTable";
 import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
-import { mockSaasData, mockObligations, SaaSData } from "@/lib/mockData";
+import { mockSaaSData, mockObligations, SaaSData } from "@/lib/mockData";
 import { DollarSign, Users, TrendingDown, Calendar, AlertTriangle, FileTerminal } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -59,14 +59,14 @@ const Dashboard = () => {
     };
   }, []);
 
-  const totalSpend = mockSaasData.reduce((sum, saas) => sum + saas.price, 0);
+  const totalSpend = mockSaaSData.reduce((sum, saas) => sum + saas.price, 0);
 
-  const totalLicenses = mockSaasData.reduce((sum, saas) => sum + (saas.usage.totalLicenses || 0), 0);
-  const activeUsers = mockSaasData.reduce((sum, saas) => sum + saas.usage.activeUsers, 0);
+  const totalLicenses = mockSaaSData.reduce((sum, saas) => sum + (saas.usage.totalLicenses || 0), 0);
+  const activeUsers = mockSaaSData.reduce((sum, saas) => sum + saas.usage.activeUsers, 0);
   const overallUtilization = totalLicenses > 0 ? Math.round((activeUsers / totalLicenses) * 100) : 0;
   
   const unusedLicenses = totalLicenses - activeUsers;
-  const potentialSavings = mockSaasData.reduce((sum, saas) => {
+  const potentialSavings = mockSaaSData.reduce((sum, saas) => {
     if (saas.pricingTerms === 'User-based' && saas.usage.totalLicenses) {
       const unusedInApp = saas.usage.totalLicenses - saas.usage.activeUsers;
       const costPerLicense = saas.price / saas.usage.totalLicenses;
@@ -88,7 +88,7 @@ const Dashboard = () => {
     });
   };
 
-  const upcomingRenewals = mockSaasData
+  const upcomingRenewals = mockSaaSData
     .filter(saas => 
       saas.renewalDate !== "N/A" && 
       new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
@@ -100,14 +100,14 @@ const Dashboard = () => {
   
   const upcomingRenewalAmount = upcomingRenewals.reduce((sum, saas) => sum + saas.price, 0);
 
-  const paymentsData = mockSaasData
+  const paymentsData = mockSaaSData
     .filter(saas => saas.lastPayment && new Date(saas.lastPayment.date) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
     .slice(0, 3);
   
   const paymentsAmount = paymentsData.reduce((sum, saas) => 
     sum + (saas.lastPayment ? saas.lastPayment.amount : 0), 0);
 
-  const terminationsData = mockSaasData
+  const terminationsData = mockSaaSData
     .filter(saas => 
       saas.contract && 
       saas.contract.cancellationDeadline && 
@@ -285,7 +285,7 @@ const Dashboard = () => {
               <h2 className="text-xl font-semibold">SaaS Applications</h2>
             </div>
             <SaasTable 
-              data={mockSaasData} 
+              data={mockSaaSData} 
               onRowClick={handleRowClick} 
               showUsage={showUsageFeatures}
             />

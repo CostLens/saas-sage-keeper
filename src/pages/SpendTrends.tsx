@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -38,7 +37,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mockSaasData, generateSpendByCategory } from "@/lib/mockData";
+import { mockSaaSData, generateSpendByCategory } from "@/lib/mockData";
 import SpendAnalyticsChart from "@/components/charts/SpendAnalyticsChart";
 
 const SpendTrends = () => {
@@ -62,10 +61,10 @@ const SpendTrends = () => {
   }, []);
 
   // Calculate total annual spend
-  const totalSpend = mockSaasData.reduce((acc, curr) => acc + curr.price, 0);
+  const totalSpend = mockSaaSData.reduce((acc, curr) => acc + curr.price, 0);
   
   // Generate data for the spend by tool chart
-  const spendByTool = mockSaasData.map(saas => ({
+  const spendByTool = mockSaaSData.map(saas => ({
     name: saas.name,
     value: saas.price
   })).sort((a, b) => b.value - a.value);
@@ -158,7 +157,7 @@ const SpendTrends = () => {
             
             <Card className="glass-panel glass-panel-hover">
               <CardHeader className="pb-2">
-                <CardTitle className="text-2xl">{formatCurrency(totalSpend / mockSaasData.length)}</CardTitle>
+                <CardTitle className="text-2xl">{formatCurrency(totalSpend / mockSaaSData.length)}</CardTitle>
                 <CardDescription>Average Cost per SaaS</CardDescription>
               </CardHeader>
               <CardContent>

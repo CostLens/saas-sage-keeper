@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -22,7 +21,7 @@ import {
   X,
   Zap
 } from "lucide-react";
-import { mockSaasData } from "@/lib/mockData";
+import { mockSaaSData } from "@/lib/mockData";
 import { getHrmsUsers } from "@/lib/hrmsService";
 import { HrmsUser } from "@/types/hrms";
 import { useQuery } from "@tanstack/react-query";
@@ -227,7 +226,7 @@ const UserBoarding = () => {
   const getUserTools = (userId: string) => {
     const mapping = mockUserToolMappings.find(m => m.userId === userId);
     if (!mapping) return [];
-    return mockSaasData.filter(tool => mapping.toolIds.includes(tool.id));
+    return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
   };
 
   // Handle user onboarding (to SaaS tools)
@@ -538,7 +537,7 @@ const UserBoarding = () => {
                 <div className="space-y-2">
                   <Label>Select SaaS Tools</Label>
                   <div className="grid grid-cols-2 gap-4 max-h-[200px] overflow-y-auto">
-                    {mockSaasData.map(tool => (
+                    {mockSaaSData.map(tool => (
                       <div key={tool.id} className="flex items-center space-x-2">
                         <Checkbox 
                           id={`tool-${tool.id}`} 

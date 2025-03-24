@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -44,7 +43,6 @@ const UserManagement = () => {
   const [isNewTaskOpen, setIsNewTaskOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   
-  // Fetch HRMS users and tasks
   const { data: hrmsUsers = [], isLoading: isLoadingUsers } = useQuery({
     queryKey: ["hrmsUsers"],
     queryFn: getHrmsUsers
@@ -53,8 +51,6 @@ const UserManagement = () => {
   const { data: onboardingTasks = [], isLoading: isLoadingTasks } = useQuery({
     queryKey: ["onboardingTasks"],
     queryFn: async () => {
-      // In a real app, you'd fetch all tasks or paginate them
-      // Here we're just getting tasks for the first user as a demonstration
       if (hrmsUsers.length > 0) {
         return await getUserOnboardingTasks(hrmsUsers[0].employee_id);
       }
@@ -63,7 +59,6 @@ const UserManagement = () => {
     enabled: hrmsUsers.length > 0
   });
 
-  // Mutations for creating and updating tasks
   const createTaskMutation = useMutation({
     mutationFn: createOnboardingTask,
     onSuccess: () => {
@@ -207,7 +202,6 @@ const UserManagement = () => {
     };
   }, []);
 
-  // Filter tasks based on active tab and search term
   const filteredTasks = onboardingTasks.filter(
     (task: OnboardingTask) => {
       const matchesTab = activeTab === "all" || task.task_type === activeTab;

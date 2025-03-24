@@ -1,8 +1,7 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
-import { mockSaaSData } from "@/lib/mockData";
+import { mockSaaSData } from "@/lib/mockData";  // Corrected import
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -82,7 +81,7 @@ const Usage = () => {
     });
   }, [timeRange]);
 
-  const filteredData = mockSaasData.filter(app => {
+  const filteredData = mockSaaSData.filter(app => {
     const matchesSearch = app.name.toLowerCase().includes(searchQuery.toLowerCase());
     
     if (filterCategory === "all") return matchesSearch;

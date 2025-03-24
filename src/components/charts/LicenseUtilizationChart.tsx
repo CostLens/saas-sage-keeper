@@ -1,4 +1,3 @@
-
 import React from "react";
 import { mockSaaSData } from "@/lib/mockData";
 import { 
@@ -37,7 +36,7 @@ const LicenseUtilizationChart = () => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
     return months.map(month => {
       // Base total value
-      const totalLicenses = mockSaasData.reduce(
+      const totalLicenses = mockSaaSData.reduce(
         (sum, app) => sum + (app.usage.totalLicenses || 0), 0
       );
       
@@ -60,8 +59,8 @@ const LicenseUtilizationChart = () => {
 
   // Generate overview data for pie chart
   const overviewData = [
-    { name: 'Active Licenses', value: mockSaasData.reduce((sum, app) => sum + app.usage.activeUsers, 0) },
-    { name: 'Unused Licenses', value: mockSaasData.reduce((sum, app) => sum + ((app.usage.totalLicenses || 0) - app.usage.activeUsers), 0) }
+    { name: 'Active Licenses', value: mockSaaSData.reduce((sum, app) => sum + app.usage.activeUsers, 0) },
+    { name: 'Unused Licenses', value: mockSaaSData.reduce((sum, app) => sum + ((app.usage.totalLicenses || 0) - app.usage.activeUsers), 0) }
   ];
 
   // Colors

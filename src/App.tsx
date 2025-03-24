@@ -14,7 +14,6 @@ import Settings from "./pages/Settings";
 import Help from "./pages/Help";
 import NotFound from "./pages/NotFound";
 import Usage from "./pages/Usage";
-import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import UserManagement from "./pages/UserManagement";
@@ -28,28 +27,18 @@ const App = () => {
     return savedValue === "true"; // Default to false if null or anything other than "true"
   });
 
-  const [showUserManagementFeatures, setShowUserManagementFeatures] = useState(() => {
-    const savedValue = localStorage.getItem("show-user-management-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
-  });
-
   useEffect(() => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
       setShowUsageFeatures(usageValue === "true");
-      
-      const userManagementValue = localStorage.getItem("show-user-management-features");
-      setShowUserManagementFeatures(userManagementValue === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
-    window.addEventListener('userManagementFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
-      window.removeEventListener('userManagementFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -61,7 +50,7 @@ const App = () => {
         <BrowserRouter>
           <BookDemoModalProvider>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Dashboard />} />
@@ -76,7 +65,7 @@ const App = () => {
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route path="/user-management" element={<UserManagement />} />
-              {showUserManagementFeatures ? (
+              {showUsageFeatures ? (
                 <Route path="/user-onboarding" element={<UserOnboarding />} />
               ) : (
                 <Route path="/user-onboarding" element={<Navigate to="/dashboard" replace />} />

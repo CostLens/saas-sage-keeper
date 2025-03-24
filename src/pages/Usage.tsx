@@ -56,7 +56,7 @@ const Usage = () => {
         <Header />
         <main className="flex-1 p-6 space-y-8 animate-fade-in">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight">License Usage Analysis</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Usage Analytics</h1>
           </div>
 
           {/* Overall usage stats */}

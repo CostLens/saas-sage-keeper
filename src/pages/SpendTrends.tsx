@@ -111,7 +111,7 @@ const SpendTrends = () => {
         <Header />
         <main className="flex-1 p-6 space-y-8 animate-fade-in">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight">Spend Trends</h1>
+            <h1 className="text-3xl font-bold tracking-tight">Spend Analytics</h1>
             <div className="flex gap-4">
               <Button variant="outline" className="gap-2">
                 <Calendar className="h-4 w-4" />

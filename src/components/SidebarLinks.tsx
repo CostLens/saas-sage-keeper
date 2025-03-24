@@ -50,7 +50,7 @@ export function SidebarLinks({ collapsed, showUsageFeatures }: SidebarLinksProps
       active: location.pathname === "/dashboard",
     },
     {
-      name: "Spend Trends",
+      name: "Spend Analytics",
       href: "/spend-trends",
       icon: <TrendingUp className="h-5 w-5" />,
       active: location.pathname === "/spend-trends",
@@ -79,7 +79,7 @@ export function SidebarLinks({ collapsed, showUsageFeatures }: SidebarLinksProps
       href: "/user-onboarding",
       icon: <UserPlus className="h-5 w-5" />,
       active: location.pathname === "/user-onboarding",
-      show: showUserManagementFeatures,
+      show: showUsageFeatures,
     },
     {
       name: "AI Assistant",

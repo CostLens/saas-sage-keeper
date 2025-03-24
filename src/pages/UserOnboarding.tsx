@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -43,13 +42,11 @@ const UserOnboarding = () => {
     enabled: !!selectedEmployee
   });
   
-  // Filter active users for onboarding, non-active for offboarding
   const filteredUsers = hrmsUsers?.filter(user => 
     (taskType === "onboarding" && user.status === "active") || 
     (taskType === "offboarding" && (user.status === "terminated" || user.status === "on_leave"))
   );
   
-  // Group tasks by status for better organization
   const pendingTasks = tasks?.filter(task => task.status === "pending" && task.task_type === taskType) || [];
   const inProgressTasks = tasks?.filter(task => task.status === "in_progress" && task.task_type === taskType) || [];
   const completedTasks = tasks?.filter(task => task.status === "completed" && task.task_type === taskType) || [];
@@ -89,11 +86,9 @@ const UserOnboarding = () => {
     }
     
     try {
-      // Get employee details
       const employee = hrmsUsers?.find(user => user.employee_id === selectedEmployee);
       if (!employee) throw new Error("Employee not found");
       
-      // Create tasks for each selected tool
       for (const saasId of selectedSaasTools) {
         const saas = mockSaasData.find(s => s.id === saasId);
         if (!saas) continue;
@@ -399,7 +394,7 @@ const UserOnboarding = () => {
                                   <h4 className="font-medium">{user?.full_name}</h4>
                                   <p className="text-sm text-muted-foreground">{task.saas_name}</p>
                                 </div>
-                                <Badge variant="success" className="bg-green-100 text-green-800 border-green-200">
+                                <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
                                   Completed
                                 </Badge>
                               </div>
@@ -623,7 +618,7 @@ const UserOnboarding = () => {
                                   <h4 className="font-medium">{user?.full_name}</h4>
                                   <p className="text-sm text-muted-foreground">{task.saas_name}</p>
                                 </div>
-                                <Badge variant="success" className="bg-green-100 text-green-800 border-green-200">
+                                <Badge variant="outline" className="bg-green-100 text-green-800 border-green-200">
                                   Completed
                                 </Badge>
                               </div>

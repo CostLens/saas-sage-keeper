@@ -9,29 +9,29 @@ interface SaasDetailModalTabsProps {
 }
 
 export function SaasDetailModalTabs({ saas, activeTab }: SaasDetailModalTabsProps) {
-  const [showUserManagementFeatures, setShowUserManagementFeatures] = useState(false);
+  const [showUsageFeatures, setShowUsageFeatures] = useState(false);
   
   useEffect(() => {
-    const savedValue = localStorage.getItem("show-user-management-features");
-    setShowUserManagementFeatures(savedValue === "true");
+    const savedValue = localStorage.getItem("show-usage-features");
+    setShowUsageFeatures(savedValue === "true");
     
     const handleStorageChange = () => {
-      const savedValue = localStorage.getItem("show-user-management-features");
-      setShowUserManagementFeatures(savedValue === "true");
+      const savedValue = localStorage.getItem("show-usage-features");
+      setShowUsageFeatures(savedValue === "true");
     };
     
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('userManagementFeaturesToggled', handleStorageChange);
+    window.addEventListener('usageFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('userManagementFeaturesToggled', handleStorageChange);
+      window.removeEventListener('usageFeaturesToggled', handleStorageChange);
     };
   }, []);
 
   switch(activeTab) {
     case "users":
-      return showUserManagementFeatures ? <UserActivityTab saas={saas} /> : (
+      return showUsageFeatures ? <UserActivityTab saas={saas} /> : (
         <div className="text-center py-8">
           <p className="text-muted-foreground">User management features are disabled</p>
         </div>

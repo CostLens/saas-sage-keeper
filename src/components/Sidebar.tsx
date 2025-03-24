@@ -63,12 +63,12 @@ const Sidebar = ({ className }: SidebarProps) => {
   // Dynamic navigation based on feature flag
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
+    { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
   ];
   
   // Add Usage tab only if feature flag is enabled
   if (showUsageFeatures) {
-    navigation.push({ name: "Usage", href: "/usage", icon: Gauge });
+    navigation.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });
   }
   
   // Add Contracts after Usage
@@ -90,7 +90,7 @@ const Sidebar = ({ className }: SidebarProps) => {
     >
       <div className="flex h-16 items-center border-b px-4 justify-between">
         {!isCollapsed && (
-          <Link to="/" className="flex items-center gap-2">
+          <Link to="/dashboard" className="flex items-center gap-2">
             <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
               <span className="font-bold text-white text-xl">IQ</span>
             </div>
@@ -98,7 +98,7 @@ const Sidebar = ({ className }: SidebarProps) => {
           </Link>
         )}
         {isCollapsed && (
-          <Link to="/" className="mx-auto">
+          <Link to="/dashboard" className="mx-auto">
             <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
               <span className="font-bold text-white text-xl">IQ</span>
             </div>

@@ -1,11 +1,13 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { User, Calendar } from "lucide-react";
+import { Calendar } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
+import { useBookDemoModal } from "@/hooks/useBookDemoModal";
 
 const HeroSection = () => {
+  const { openDemoModal } = useBookDemoModal();
+  
   return (
     <section className="relative pt-16 md:pt-24 pb-10 md:pb-16">
       <div className="container mx-auto px-4 md:px-6">
@@ -20,20 +22,6 @@ const HeroSection = () => {
             <p className="text-xl text-muted-foreground">
               Optimize your SaaS spending with data-driven insights, comprehensive monitoring, and practical recommendations that help you make informed decisions.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button size="lg" className="gap-2" asChild>
-                <Link to="/dashboard">
-                  <Calendar className="h-5 w-5" />
-                  Book a Demo
-                </Link>
-              </Button>
-              <Button size="lg" variant="outline" className="gap-2" asChild>
-                <Link to="/dashboard">
-                  <User className="h-5 w-5" />
-                  Sign In
-                </Link>
-              </Button>
-            </div>
           </div>
           <div className="lg:w-1/2">
             <div className="glass-panel p-6 rounded-xl">

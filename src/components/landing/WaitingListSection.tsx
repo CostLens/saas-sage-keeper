@@ -1,9 +1,11 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useBookDemoModal } from "@/hooks/useBookDemoModal";
 
 const WaitingListSection = () => {
+  const { openDemoModal } = useBookDemoModal();
+  
   return (
     <section className="py-12 md:py-20 bg-gradient-to-r from-green-400/10 to-blue-500/10">
       <div className="container mx-auto px-4 md:px-6">
@@ -44,13 +46,9 @@ const WaitingListSection = () => {
                 </li>
               </ul>
             </div>
-            <form className="space-y-4">
-              <Input type="email" placeholder="Enter your email" className="w-full" />
-              <Input type="text" placeholder="Company name" className="w-full" />
-              <Button className="w-full" size="lg">
-                Schedule Demo
-              </Button>
-            </form>
+            <Button className="w-full" size="lg" onClick={openDemoModal}>
+              Schedule Demo
+            </Button>
             <p className="text-xs text-muted-foreground text-center mt-4">
               By scheduling a demo, you agree to our Terms of Service and Privacy Policy. We'll never share your information.
             </p>

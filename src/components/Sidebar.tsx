@@ -11,7 +11,8 @@ import {
   HelpCircle,
   ChevronLeft,
   ChevronRight,
-  Gauge
+  Gauge,
+  UserCog
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -69,6 +70,7 @@ const Sidebar = ({ className }: SidebarProps) => {
   // Add Usage tab only if feature flag is enabled
   if (showUsageFeatures) {
     navigation.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });
+    navigation.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
   }
   
   // Add Contracts after Usage

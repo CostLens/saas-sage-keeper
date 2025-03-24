@@ -22,11 +22,6 @@ const Settings = () => {
     const savedValue = localStorage.getItem("show-usage-features");
     return savedValue === "true";
   });
-
-  const [showUserManagementFeatures, setShowUserManagementFeatures] = useState(() => {
-    const savedValue = localStorage.getItem("show-user-management-features");
-    return savedValue === "true";
-  });
   
   // Integration status
   const [integrations, setIntegrations] = useState({
@@ -46,6 +41,14 @@ const Settings = () => {
     country: "United States"
   });
 
+  // Personal details form
+  const [personalDetails, setPersonalDetails] = useState({
+    firstName: "John",
+    lastName: "Doe",
+    workEmail: "john.doe@acmecorp.com",
+    team: "Product Management"
+  });
+
   const toggleUsageFeatures = () => {
     const newValue = !showUsageFeatures;
     localStorage.setItem("show-usage-features", newValue.toString());
@@ -56,26 +59,25 @@ const Settings = () => {
     
     toast.success(`Usage features ${newValue ? 'enabled' : 'disabled'}`);
   };
-
-  const toggleUserManagementFeatures = () => {
-    const newValue = !showUserManagementFeatures;
-    localStorage.setItem("show-user-management-features", newValue.toString());
-    setShowUserManagementFeatures(newValue);
-    
-    // Dispatch custom event to notify other components
-    window.dispatchEvent(new Event('userManagementFeaturesToggled'));
-    
-    toast.success(`User management features ${newValue ? 'enabled' : 'disabled'}`);
-  };
   
   const handleCompanyDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCompanyDetails(prev => ({ ...prev, [name]: value }));
   };
+
+  const handlePersonalDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setPersonalDetails(prev => ({ ...prev, [name]: value }));
+  };
   
   const handleCompanyDetailsSave = () => {
     // Here you would normally save to an API
     toast.success("Company details saved successfully!");
+  };
+
+  const handlePersonalDetailsSave = () => {
+    // Here you would normally save to an API
+    toast.success("Personal details saved successfully!");
   };
   
   const handleConnect = (integration: string) => {
@@ -150,6 +152,63 @@ const Settings = () => {
             </TabsList>
             
             <TabsContent value="general" className="space-y-6">
+              {/* Personal Details Section */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Personal Details</CardTitle>
+                  <CardDescription>Update your personal information</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="firstName">First Name</Label>
+                      <Input 
+                        id="firstName" 
+                        name="firstName" 
+                        value={personalDetails.firstName} 
+                        onChange={handlePersonalDetailChange} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="lastName">Last Name</Label>
+                      <Input 
+                        id="lastName" 
+                        name="lastName" 
+                        value={personalDetails.lastName} 
+                        onChange={handlePersonalDetailChange} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="workEmail">Work Email</Label>
+                      <Input 
+                        id="workEmail" 
+                        name="workEmail" 
+                        type="email" 
+                        value={personalDetails.workEmail} 
+                        onChange={handlePersonalDetailChange} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="team">Team</Label>
+                      <Input 
+                        id="team" 
+                        name="team" 
+                        value={personalDetails.team} 
+                        onChange={handlePersonalDetailChange} 
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <Button onClick={handlePersonalDetailsSave}>Save Changes</Button>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Company Details Section */}
               <Card>
                 <CardHeader>
                   <CardTitle>Company Details</CardTitle>
@@ -426,55 +485,16 @@ const Settings = () => {
                   <CardDescription>Enable or disable specific features</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
-                  <div className="flex items-center justify-between border-b pb-4">
+                  <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-medium">Usage Analytics</h3>
                       <p className="text-sm text-muted-foreground">
-                        Enable usage analytics and license management features
+                        Enable usage analytics, user boarding and license management features
                       </p>
                     </div>
                     <Switch 
                       checked={showUsageFeatures} 
                       onCheckedChange={toggleUsageFeatures} 
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between border-b pb-4">
-                    <div>
-                      <h3 className="font-medium">User Management</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Enable user onboarding and offboarding management
-                      </p>
-                    </div>
-                    <Switch 
-                      checked={showUserManagementFeatures} 
-                      onCheckedChange={toggleUserManagementFeatures} 
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between border-b pb-4">
-                    <div>
-                      <h3 className="font-medium">Advanced Reporting</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Enable advanced reporting and analytics features
-                      </p>
-                    </div>
-                    <Switch 
-                      disabled 
-                      checked={false} 
-                    />
-                  </div>
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">Compliance Management</h3>
-                      <p className="text-sm text-muted-foreground">
-                        Enable compliance management and reporting features
-                      </p>
-                    </div>
-                    <Switch 
-                      disabled 
-                      checked={false} 
                     />
                   </div>
                 </CardContent>

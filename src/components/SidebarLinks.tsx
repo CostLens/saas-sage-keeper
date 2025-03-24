@@ -11,8 +11,7 @@ import {
   Settings,
   HelpCircle,
   BarChart3,
-  UserCog,
-  UserPlus
+  UserCog
 } from "lucide-react";
 
 interface SidebarLinksProps {
@@ -22,25 +21,6 @@ interface SidebarLinksProps {
 
 export function SidebarLinks({ collapsed, showUsageFeatures }: SidebarLinksProps) {
   const location = useLocation();
-  const [showUserManagementFeatures, setShowUserManagementFeatures] = React.useState(false);
-  
-  React.useEffect(() => {
-    const savedValue = localStorage.getItem("show-user-management-features");
-    setShowUserManagementFeatures(savedValue === "true");
-    
-    const handleStorageChange = () => {
-      const savedValue = localStorage.getItem("show-user-management-features");
-      setShowUserManagementFeatures(savedValue === "true");
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('userManagementFeaturesToggled', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('userManagementFeaturesToggled', handleStorageChange);
-    };
-  }, []);
   
   const links = [
     {
@@ -69,16 +49,10 @@ export function SidebarLinks({ collapsed, showUsageFeatures }: SidebarLinksProps
       active: location.pathname === "/contracts",
     },
     {
-      name: "User Management",
-      href: "/user-management",
+      name: "User Boarding",
+      href: "/user-boarding",
       icon: <UserCog className="h-5 w-5" />,
-      active: location.pathname === "/user-management",
-    },
-    {
-      name: "User Onboarding",
-      href: "/user-onboarding",
-      icon: <UserPlus className="h-5 w-5" />,
-      active: location.pathname === "/user-onboarding",
+      active: location.pathname === "/user-boarding",
       show: showUsageFeatures,
     },
     {

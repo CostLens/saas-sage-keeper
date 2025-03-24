@@ -28,7 +28,7 @@ import {
   Download, 
   Filter,
   TrendingUp, 
-  PieChart as PieChartIcon,
+  PieChartIcon,
   BarChart3
 } from "lucide-react";
 import { 
@@ -39,6 +39,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { mockSaasData, generateSpendByCategory } from "@/lib/mockData";
+import SpendAnalyticsChart from "@/components/charts/SpendAnalyticsChart";
 
 const SpendTrends = () => {
   // Track sidebar collapsed state
@@ -169,7 +170,10 @@ const SpendTrends = () => {
             </Card>
           </div>
 
-          {/* Trend Charts */}
+          {/* Cost vs Spend Chart */}
+          <SpendAnalyticsChart />
+
+          {/* Monthly Spend Chart */}
           <div className="grid grid-cols-1 gap-6">
             <TrendChart
               title="Monthly SaaS Spend"
@@ -286,55 +290,6 @@ const SpendTrends = () => {
               </CardContent>
             </Card>
           </div>
-
-          {/* Insights and Recommendations */}
-          <Card className="glass-panel">
-            <CardHeader>
-              <CardTitle>Spend Insights & Recommendations</CardTitle>
-              <CardDescription>
-                Actionable insights based on your SaaS spending patterns
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <div className="space-y-3">
-                <h3 className="font-medium text-lg">Upcoming Renewal Negotiations</h3>
-                <ul className="space-y-2">
-                  <li className="flex gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
-                    <div className="rounded-full h-6 w-6 bg-blue-500 text-white flex items-center justify-center mt-0.5">
-                      <Calendar className="h-3 w-3" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Salesforce renewal in 30 days</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Prepare for negotiation using utilization data. Consider moving to a different tier or reducing licenses.
-                      </p>
-                    </div>
-                  </li>
-                  <li className="flex gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800">
-                    <div className="rounded-full h-6 w-6 bg-blue-500 text-white flex items-center justify-center mt-0.5">
-                      <Calendar className="h-3 w-3" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Zoom renewal in 45 days</p>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        Current utilization is 42%. Request volume discount or move to a lower tier.
-                      </p>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              
-              <div className="space-y-3">
-                <h3 className="font-medium text-lg">Spend Trends Analysis</h3>
-                <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800">
-                  <p className="text-sm">
-                    SaaS spend increased by 12% YoY, primarily due to new additions in the design and marketing categories.
-                    Consider implementing a formal SaaS approval process to control future growth.
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </main>
       </div>
     </div>

@@ -54,13 +54,13 @@ const App = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/spend-trends" element={<SpendTrends />} />
-              <Route path="/contracts" element={<ContractsRepository />} />
-              <Route path="/ai-assistant" element={<AIAssistant />} />
               {showUsageFeatures ? (
                 <Route path="/usage" element={<Usage />} />
               ) : (
                 <Route path="/usage" element={<Navigate to="/dashboard" replace />} />
               )}
+              <Route path="/contracts" element={<ContractsRepository />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route path="*" element={<NotFound />} />

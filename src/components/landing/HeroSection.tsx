@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 
 const HeroSection = () => {
-  const { onOpen: openDemoModal } = useBookDemoModal();
+  const { openDemoModal } = useBookDemoModal();
 
   return (
     <section className="py-8 md:py-16 relative bg-gradient-to-b from-background to-background/80">
@@ -26,15 +26,6 @@ const HeroSection = () => {
               <p className="text-xl text-muted-foreground md:w-10/12 lg:w-full mx-auto lg:mx-0">
                 Optimize your SaaS spending with data-driven insights, comprehensive monitoring, and practical recommendations that help you make informed decisions.
               </p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-              <Button 
-                size="lg" 
-                className="gap-2"
-                onClick={openDemoModal}
-              >
-                Book a Demo <ArrowRight className="h-4 w-4" />
-              </Button>
             </div>
           </div>
           <div className="relative">

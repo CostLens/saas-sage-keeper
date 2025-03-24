@@ -1,309 +1,229 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { mockSaasData } from "@/lib/mockData";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { TrendChart } from "@/components/ui/trend-chart";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { 
-  Users, 
-  AlertTriangle, 
-  TrendingDown, 
-  ChevronDown, 
-  ChevronUp,
-  CheckCircle2,
-  AlertCircle
-} from "lucide-react";
+import { AlertCircle, CheckCircle, Users, AlertTriangle } from "lucide-react";
+import LicenseUtilizationChart from "@/components/charts/LicenseUtilizationChart";
 
-// Mock usage and spend history data
-const usageHistory = [
-  { name: 'Jan', activeUsers: 320, totalLicenses: 450, spend: 22500, budget: 25000 },
-  { name: 'Feb', activeUsers: 350, totalLicenses: 450, spend: 23400, budget: 25000 },
-  { name: 'Mar', activeUsers: 380, totalLicenses: 500, spend: 24100, budget: 26000 },
-  { name: 'Apr', activeUsers: 410, totalLicenses: 500, spend: 24800, budget: 26000 },
-  { name: 'May', activeUsers: 390, totalLicenses: 500, spend: 24200, budget: 26000 },
-  { name: 'Jun', activeUsers: 415, totalLicenses: 550, spend: 26300, budget: 28000 },
-  { name: 'Jul', activeUsers: 440, totalLicenses: 550, spend: 27500, budget: 28000 },
-  { name: 'Aug', activeUsers: 460, totalLicenses: 550, spend: 28200, budget: 28000 },
-  { name: 'Sep', activeUsers: 480, totalLicenses: 600, spend: 29100, budget: 30000 },
-  { name: 'Oct', activeUsers: 510, totalLicenses: 600, spend: 30400, budget: 30000 },
-  { name: 'Nov', activeUsers: 540, totalLicenses: 650, spend: 31900, budget: 32000 },
-  { name: 'Dec', activeUsers: 580, totalLicenses: 650, spend: 33200, budget: 32000 },
-];
-
-const UsagePage = () => {
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
-    return localStorage.getItem("sidebar-collapsed") === "true";
+const Usage = () => {
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
+    const saved = localStorage.getItem("sidebar-collapsed");
+    return saved ? JSON.parse(saved) : false;
   });
+  
+  useEffect(() => {
+    const handleSidebarChange = (event: CustomEvent) => {
+      setIsSidebarCollapsed(event.detail.isCollapsed);
+    };
+    
+    window.addEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
+    
+    return () => {
+      window.removeEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
+    };
+  }, []);
 
-  // Calculate usage metrics
+  // Calculate totals
   const totalLicenses = mockSaasData.reduce((sum, saas) => sum + (saas.usage.totalLicenses || 0), 0);
   const activeUsers = mockSaasData.reduce((sum, saas) => sum + saas.usage.activeUsers, 0);
-  const overallUtilization = totalLicenses > 0 ? Math.round((activeUsers / totalLicenses) * 100) : 0;
+  const unusedLicenses = totalLicenses - activeUsers;
+  const utilizationRate = (activeUsers / totalLicenses) * 100;
+
+  // Create usage status categories
+  const highUsageApps = mockSaasData.filter(
+    app => app.usage.totalLicenses && (app.usage.activeUsers / app.usage.totalLicenses) > 0.9
+  );
   
-  // Sort apps by utilization (lowest first for optimization opportunities)
-  const sortedByUtilization = [...mockSaasData].sort((a, b) => a.usage.utilizationRate - b.usage.utilizationRate);
+  const lowUsageApps = mockSaasData.filter(
+    app => app.usage.totalLicenses && (app.usage.activeUsers / app.usage.totalLicenses) < 0.5
+  );
   
-  // Get apps with low utilization (less than 60%)
-  const lowUtilizationApps = sortedByUtilization.filter(app => app.usage.utilizationRate < 60);
-  
-  // Calculate potential savings
-  const potentialSavings = lowUtilizationApps.reduce((sum, app) => {
-    if (app.pricingTerms === 'User-based' && app.usage.totalLicenses) {
-      const unusedLicenses = app.usage.totalLicenses - app.usage.activeUsers;
-      const recommendedReduction = Math.floor(unusedLicenses * 0.7); // Recommend reducing 70% of unused licenses
-      const costPerLicense = app.price / app.usage.totalLicenses;
-      return sum + (recommendedReduction * costPerLicense);
-    }
-    return sum;
-  }, 0);
+  const optimalUsageApps = mockSaasData.filter(
+    app => app.usage.totalLicenses && 
+      (app.usage.activeUsers / app.usage.totalLicenses) >= 0.5 && 
+      (app.usage.activeUsers / app.usage.totalLicenses) <= 0.9
+  );
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex flex-col md:flex-row">
       <Sidebar />
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarCollapsed ? 'ml-16' : 'ml-64'}`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${
+        isSidebarCollapsed ? 'ml-16' : 'ml-64'
+      }`}>
         <Header />
-        <main className="flex-1 p-6 space-y-8">
+        <main className="flex-1 p-6 space-y-8 animate-fade-in">
           <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight">Usage & Optimization</h1>
+            <h1 className="text-3xl font-bold tracking-tight">License Usage Analysis</h1>
           </div>
 
-          <Tabs defaultValue="metrics" className="w-full">
-            <TabsList className="grid w-full md:w-[400px] grid-cols-2">
-              <TabsTrigger value="metrics">Usage Metrics</TabsTrigger>
-              <TabsTrigger value="optimization">Optimization</TabsTrigger>
-            </TabsList>
+          {/* Overall usage stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <Card className="glass-panel">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-2xl">{utilizationRate.toFixed(1)}%</CardTitle>
+                <CardDescription>Overall Utilization Rate</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Progress value={utilizationRate} className="h-2" />
+                <p className="text-xs text-muted-foreground mt-2">
+                  {activeUsers} active users out of {totalLicenses} total licenses
+                </p>
+              </CardContent>
+            </Card>
             
-            <TabsContent value="metrics" className="space-y-6">
-              {/* Overview Card */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>License Utilization Overview</CardTitle>
-                  <CardDescription>
-                    Showing active users against total available licenses across all applications
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col space-y-6">
-                    <div className="space-y-2">
-                      <div className="flex justify-between">
-                        <span className="text-sm font-medium">Overall Utilization</span>
-                        <span className="text-sm font-medium">{overallUtilization}%</span>
-                      </div>
-                      <Progress value={overallUtilization} />
-                      <div className="flex justify-between text-xs text-muted-foreground">
-                        <span>{activeUsers} active users</span>
-                        <span>{totalLicenses} total licenses</span>
-                      </div>
-                    </div>
-                    
-                    {/* First Chart: License Trend */}
-                    <TrendChart
-                      title="License Utilization vs. Cost Trend (12 Month)"
-                      data={usageHistory}
-                      dataKey="name"
-                      categories={["activeUsers", "totalLicenses", "spend", "budget"]}
-                      colors={["hsl(var(--primary))", "hsl(var(--muted))", "hsl(var(--green-500))", "hsl(var(--destructive))"]}
-                      valueFormatter={(value) => value.toString()}
-                      height={300}
-                    />
-                    
-                    {/* Second Chart: Spend vs. Usage Trend */}
-                    <TrendChart
-                      title="Spend vs. Usage Efficiency (12 Month)"
-                      description="Comparing spend per user with utilization rate over time"
-                      data={usageHistory.map(month => ({
-                        ...month,
-                        spendPerUser: Math.round(month.spend / month.activeUsers),
-                        utilizationRate: Math.round((month.activeUsers / month.totalLicenses) * 100)
-                      }))}
-                      dataKey="name"
-                      categories={["spendPerUser", "utilizationRate"]}
-                      colors={["hsl(var(--amber-500))", "hsl(var(--blue-500))"]}
-                      valueFormatter={(value) => value.toString()}
-                      height={300}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-              
-              {/* Application Utilization Table */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Application Utilization</CardTitle>
-                  <CardDescription>
-                    Breakdown of license utilization by application
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Application</TableHead>
-                        <TableHead>License Model</TableHead>
-                        <TableHead>Active / Total</TableHead>
-                        <TableHead>Utilization</TableHead>
-                        <TableHead>Status</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {mockSaasData
-                        .filter(app => app.active && app.pricingTerms === "User-based")
-                        .map((app, i) => (
-                          <TableRow key={i}>
-                            <TableCell className="font-medium">{app.name}</TableCell>
-                            <TableCell>{app.pricingTerms}</TableCell>
-                            <TableCell>
-                              {app.usage.activeUsers} / {app.usage.totalLicenses || "Unlimited"}
-                            </TableCell>
-                            <TableCell>
-                              <div className="flex items-center gap-2">
-                                <Progress value={app.usage.utilizationRate} className="w-20 h-2" />
-                                <span>{app.usage.utilizationRate}%</span>
-                              </div>
-                            </TableCell>
-                            <TableCell>
-                              {app.usage.utilizationRate > 80 ? (
-                                <Badge className="bg-green-100 text-green-800 hover:bg-green-100">
-                                  <CheckCircle2 className="h-3 w-3 mr-1" />
-                                  Optimized
-                                </Badge>
-                              ) : app.usage.utilizationRate > 60 ? (
-                                <Badge variant="outline" className="text-yellow-600 border-yellow-200 bg-yellow-50">
-                                  <AlertCircle className="h-3 w-3 mr-1" />
-                                  Review
-                                </Badge>
-                              ) : (
-                                <Badge variant="destructive">
-                                  <AlertTriangle className="h-3 w-3 mr-1" />
-                                  Underutilized
-                                </Badge>
-                              )}
-                            </TableCell>
-                          </TableRow>
-                        ))}
-                    </TableBody>
-                  </Table>
-                </CardContent>
-              </Card>
-            </TabsContent>
+            <Card className="glass-panel">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-2xl">{unusedLicenses}</CardTitle>
+                <CardDescription>Unused Licenses</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm flex items-center text-amber-500">
+                  <AlertCircle className="h-4 w-4 mr-1" />
+                  <span>Potential savings opportunity</span>
+                </div>
+              </CardContent>
+            </Card>
             
-            <TabsContent value="optimization" className="space-y-6">
-              {/* Optimization Summary */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Optimization Opportunities</CardTitle>
-                  <CardDescription>
-                    We've identified potential savings of <strong>${Math.round(potentialSavings).toLocaleString()}</strong> through license optimization
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <Card className="bg-muted/30">
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Under-utilized Apps</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-baseline">
-                          <span className="text-3xl font-bold mr-2">{lowUtilizationApps.length}</span>
-                          <span className="text-muted-foreground">applications</span>
-                        </div>
-                      </CardContent>
-                    </Card>
+            <Card className="glass-panel">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-2xl">{lowUsageApps.length}</CardTitle>
+                <CardDescription>Underutilized Applications</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-sm flex items-center text-red-500">
+                  <AlertTriangle className="h-4 w-4 mr-1" />
+                  <span>Below 50% utilization</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* License utilization chart */}
+          <LicenseUtilizationChart />
+
+          {/* Application utilization categorization */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <Card className="glass-panel">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-green-600">
+                  <CheckCircle className="h-5 w-5" />
+                  High Utilization
+                </CardTitle>
+                <CardDescription>Applications with &gt;90% license utilization</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {highUsageApps.map(app => {
+                    const utilization = app.usage.totalLicenses 
+                      ? (app.usage.activeUsers / app.usage.totalLicenses) * 100 
+                      : 0;
                     
-                    <Card className="bg-muted/30">
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Unused Licenses</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-baseline">
-                          <span className="text-3xl font-bold mr-2">
-                            {totalLicenses - activeUsers}
-                          </span>
-                          <span className="text-muted-foreground">licenses</span>
+                    return (
+                      <div key={app.id} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">{app.name}</span>
+                          <span className="text-sm">{utilization.toFixed(0)}%</span>
                         </div>
-                      </CardContent>
-                    </Card>
-                    
-                    <Card className="bg-muted/30">
-                      <CardHeader className="pb-2">
-                        <CardTitle className="text-lg">Potential Savings</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="flex items-baseline">
-                          <span className="text-3xl font-bold mr-2 text-green-600">
-                            ${Math.round(potentialSavings).toLocaleString()}
-                          </span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
+                        <Progress value={utilization} className="h-1" />
+                        <p className="text-xs text-muted-foreground">
+                          {app.usage.activeUsers} / {app.usage.totalLicenses} licenses
+                        </p>
+                      </div>
+                    );
+                  })}
                   
-                  {/* Optimization Recommendations */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="text-lg">Recommended Actions</CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <Table>
-                        <TableHeader>
-                          <TableRow>
-                            <TableHead>Application</TableHead>
-                            <TableHead>Current Licenses</TableHead>
-                            <TableHead>Recommended</TableHead>
-                            <TableHead>Est. Savings</TableHead>
-                            <TableHead>Action</TableHead>
-                          </TableRow>
-                        </TableHeader>
-                        <TableBody>
-                          {lowUtilizationApps
-                            .filter(app => app.pricingTerms === "User-based" && app.usage.totalLicenses)
-                            .map((app, i) => {
-                              const unusedLicenses = app.usage.totalLicenses! - app.usage.activeUsers;
-                              const recommendedReduction = Math.floor(unusedLicenses * 0.7);
-                              const recommendedTotal = app.usage.totalLicenses! - recommendedReduction;
-                              const savingsAmount = (app.price / app.usage.totalLicenses!) * recommendedReduction;
-                              
-                              return (
-                                <TableRow key={i}>
-                                  <TableCell className="font-medium">{app.name}</TableCell>
-                                  <TableCell>{app.usage.totalLicenses}</TableCell>
-                                  <TableCell>
-                                    <div className="flex items-center">
-                                      {recommendedTotal}
-                                      <span className="text-red-500 flex items-center ml-2">
-                                        <TrendingDown className="h-3 w-3 mr-1" />
-                                        {recommendedReduction}
-                                      </span>
-                                    </div>
-                                  </TableCell>
-                                  <TableCell className="text-green-600">
-                                    ${Math.round(savingsAmount).toLocaleString()}
-                                  </TableCell>
-                                  <TableCell>
-                                    <Badge variant="outline" className="cursor-pointer hover:bg-muted">
-                                      Review
-                                    </Badge>
-                                  </TableCell>
-                                </TableRow>
-                              );
-                            })}
-                        </TableBody>
-                      </Table>
-                    </CardContent>
-                  </Card>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
+                  {highUsageApps.length === 0 && (
+                    <p className="text-center text-muted-foreground py-4">
+                      No applications with high utilization
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="glass-panel">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-amber-600">
+                  <Users className="h-5 w-5" />
+                  Optimal Utilization
+                </CardTitle>
+                <CardDescription>Applications with 50-90% license utilization</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {optimalUsageApps.map(app => {
+                    const utilization = app.usage.totalLicenses 
+                      ? (app.usage.activeUsers / app.usage.totalLicenses) * 100 
+                      : 0;
+                    
+                    return (
+                      <div key={app.id} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">{app.name}</span>
+                          <span className="text-sm">{utilization.toFixed(0)}%</span>
+                        </div>
+                        <Progress value={utilization} className="h-1" />
+                        <p className="text-xs text-muted-foreground">
+                          {app.usage.activeUsers} / {app.usage.totalLicenses} licenses
+                        </p>
+                      </div>
+                    );
+                  })}
+                  
+                  {optimalUsageApps.length === 0 && (
+                    <p className="text-center text-muted-foreground py-4">
+                      No applications with optimal utilization
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card className="glass-panel">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-red-600">
+                  <AlertTriangle className="h-5 w-5" />
+                  Low Utilization
+                </CardTitle>
+                <CardDescription>Applications with &lt;50% license utilization</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {lowUsageApps.map(app => {
+                    const utilization = app.usage.totalLicenses 
+                      ? (app.usage.activeUsers / app.usage.totalLicenses) * 100 
+                      : 0;
+                    
+                    return (
+                      <div key={app.id} className="space-y-2">
+                        <div className="flex justify-between items-center">
+                          <span className="font-medium">{app.name}</span>
+                          <span className="text-sm">{utilization.toFixed(0)}%</span>
+                        </div>
+                        <Progress value={utilization} className="h-1" />
+                        <p className="text-xs text-muted-foreground">
+                          {app.usage.activeUsers} / {app.usage.totalLicenses} licenses
+                        </p>
+                      </div>
+                    );
+                  })}
+                  
+                  {lowUsageApps.length === 0 && (
+                    <p className="text-center text-muted-foreground py-4">
+                      No applications with low utilization
+                    </p>
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </main>
       </div>
     </div>
   );
 };
 
-export default UsagePage;
+export default Usage;

@@ -31,9 +31,6 @@ const Header = () => {
                 Sign Up
               </Link>
             </Button>
-            <Button size="sm" className="gap-2" onClick={openDemoModal}>
-              Book a Demo
-            </Button>
           </div>
         </div>
       </div>

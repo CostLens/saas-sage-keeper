@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink, Link } from "react-router-dom";
@@ -6,7 +7,6 @@ import {
   LayoutDashboard, 
   TrendingUp, 
   FileText,
-  Wallet, 
   Settings, 
   HelpCircle,
   ChevronLeft,
@@ -64,13 +64,15 @@ const Sidebar = ({ className }: SidebarProps) => {
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
     { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
-    { name: "Contracts", href: "/contracts", icon: FileText },
   ];
   
   // Add Usage tab only if feature flag is enabled
   if (showUsageFeatures) {
     navigation.push({ name: "Usage", href: "/usage", icon: Gauge });
   }
+  
+  // Add Contracts after Usage
+  navigation.push({ name: "Contracts", href: "/contracts", icon: FileText });
 
   const secondaryNavigation = [
     { name: "Settings", href: "/settings", icon: Settings },

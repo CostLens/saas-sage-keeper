@@ -47,7 +47,7 @@ const WaitingListSection = () => {
               </ul>
             </div>
             <Button className="w-full" size="lg" onClick={openDemoModal}>
-              Schedule Demo
+              Book a Demo
             </Button>
             <p className="text-xs text-muted-foreground text-center mt-4">
               By scheduling a demo, you agree to our Terms of Service and Privacy Policy. We'll never share your information.

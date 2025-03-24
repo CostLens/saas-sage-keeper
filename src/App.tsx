@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,22 +21,31 @@ import UserBoarding from "./pages/UserBoarding";
 const queryClient = new QueryClient();
 
 const App = () => {
+  useEffect(() => {
+    if (localStorage.getItem("show-usage-features") === null) {
+      localStorage.setItem("show-usage-features", "true");
+    }
+    if (localStorage.getItem("show-boarding-features") === null) {
+      localStorage.setItem("show-boarding-features", "true");
+    }
+  }, []);
+
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-usage-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
+    return savedValue !== "false"; // Default to true if null or not "false"
   });
 
   const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-boarding-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
+    return savedValue !== "false"; // Default to true if null or not "false"
   });
 
   useEffect(() => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
       const boardingValue = localStorage.getItem("show-boarding-features");
-      setShowUsageFeatures(usageValue === "true");
-      setShowBoardingFeatures(boardingValue === "true");
+      setShowUsageFeatures(usageValue !== "false");
+      setShowBoardingFeatures(boardingValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);

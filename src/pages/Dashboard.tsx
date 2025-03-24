@@ -17,9 +17,20 @@ const Dashboard = () => {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
     return localStorage.getItem("sidebar-collapsed") === "true";
   });
+  
+  // Initialize feature flag if it doesn't exist
+  useEffect(() => {
+    if (localStorage.getItem("show-usage-features") === null) {
+      localStorage.setItem("show-usage-features", "true");
+    }
+    if (localStorage.getItem("show-boarding-features") === null) {
+      localStorage.setItem("show-boarding-features", "true");
+    }
+  }, []);
+  
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-usage-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
+    return savedValue !== "false"; // Default to true if null
   });
 
   const dashboardData = useDashboardData();
@@ -28,7 +39,7 @@ const Dashboard = () => {
     const handleStorageChange = () => {
       setSidebarCollapsed(localStorage.getItem("sidebar-collapsed") === "true");
       const savedValue = localStorage.getItem("show-usage-features");
-      setShowUsageFeatures(savedValue === "true");
+      setShowUsageFeatures(savedValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -81,7 +80,7 @@ export function Header({ className }: HeaderProps) {
       <div className="md:hidden">
         <Link to="/" className="flex items-center gap-2">
           <img 
-            src="/lovable-uploads/1d1ca676-8468-4759-ac5f-3792df75599e.png" 
+            src="/logo.png" 
             alt="XpendIQ Logo" 
             className="w-7 h-7" 
           />

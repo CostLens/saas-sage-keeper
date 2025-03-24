@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
@@ -85,7 +86,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         {!isCollapsed && (
           <div className="flex items-center gap-2">
             <img 
-              src="/lovable-uploads/1d1ca676-8468-4759-ac5f-3792df75599e.png" 
+              src="/logo.png" 
               alt="XpendIQ Logo" 
               className="w-8 h-8" 
             />
@@ -94,7 +95,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         )}
         {isCollapsed && (
           <img 
-            src="/lovable-uploads/1d1ca676-8468-4759-ac5f-3792df75599e.png" 
+            src="/logo.png" 
             alt="XpendIQ Logo" 
             className="w-8 h-8 mx-auto" 
           />

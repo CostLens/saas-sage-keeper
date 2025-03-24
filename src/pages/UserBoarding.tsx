@@ -1,20 +1,18 @@
-import React, { useState, useEffect } from "react";
-import { Header } from "@/components/Header";
-import { Sidebar } from "@/components/Sidebar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { RefreshCw, Download, Zap } from "lucide-react";
-import { toast } from "sonner";
+
+import React from "react";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { mockSaaSData } from "@/lib/mockData";
-import { getHrmsUsers } from "@/lib/hrmsService";
-import { HrmsUser } from "@/types/hrms";
-import { useQuery } from "@tanstack/react-query";
-import { UserBoardingTable } from "@/components/user-boarding/UserBoardingTable";
+import { UserBoardingLayout } from "@/components/user-boarding/UserBoardingLayout";
+import { UserBoardingHeader } from "@/components/user-boarding/UserBoardingHeader";
 import { UserBoardingFilters } from "@/components/user-boarding/UserBoardingFilters";
+import { UserBoardingTable } from "@/components/user-boarding/UserBoardingTable";
 import { OnboardingDialog } from "@/components/user-boarding/OnboardingDialog";
 import { DeBoardingDialog } from "@/components/user-boarding/DeBoardingDialog";
 import { AutoOffboardingDialog } from "@/components/user-boarding/AutoOffboardingDialog";
+import { useUserBoarding } from "@/hooks/useUserBoarding";
+import { HrmsUser } from "@/types/hrms";
 
+// Mock user tool mappings data
 const mockUserToolMappings = [
   { userId: "EMP001", toolIds: ["1", "3", "5"] },
   { userId: "EMP002", toolIds: ["2", "4"] },
@@ -28,6 +26,7 @@ const mockUserToolMappings = [
   { userId: "EMP010", toolIds: ["1", "2", "3", "4", "5"] },
 ];
 
+// Additional users data
 const additionalUsers: HrmsUser[] = [
   {
     id: "dummy1",
@@ -117,269 +116,123 @@ const additionalUsers: HrmsUser[] = [
 ];
 
 const UserBoarding = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-    const saved = localStorage.getItem("sidebar-collapsed");
-    return saved ? JSON.parse(saved) : false;
-  });
-  
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedDepartment, setSelectedDepartment] = useState<string>("");
-  const [showOffboardedUsers, setShowOffboardedUsers] = useState(false);
-  const [onboardDialogOpen, setOnboardDialogOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<HrmsUser | null>(null);
-  const [selectedTools, setSelectedTools] = useState<string[]>([]);
-  const [deBoardDialogOpen, setDeBoardDialogOpen] = useState(false);
-  const [selectedToolsToRemove, setSelectedToolsToRemove] = useState<string[]>([]);
-  const [autoOffboardDialogOpen, setAutoOffboardDialogOpen] = useState(false);
-  const [automationEnabled, setAutomationEnabled] = useState(false);
-  const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
-    const savedValue = localStorage.getItem("show-boarding-features");
-    return savedValue === "true"; // Default to false if null or anything other than "true"
-  });
-
-  const { data: apiUsers, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
-    queryKey: ["hrmsUsers"],
-    queryFn: getHrmsUsers,
-  });
-  
-  const hrmsUsers = React.useMemo(() => {
-    if (!apiUsers) return additionalUsers;
-    
-    const existingIds = new Set(apiUsers.map(user => user.employee_id));
-    
-    const filteredDummyUsers = additionalUsers.filter(user => !existingIds.has(user.employee_id));
-    
-    return [...apiUsers, ...filteredDummyUsers];
-  }, [apiUsers]);
-  
-  const filteredUsers = hrmsUsers?.filter(user => {
-    const matchesSearch = 
-      user.full_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.employee_id.toLowerCase().includes(searchQuery.toLowerCase());
-    
-    const matchesDepartment = !selectedDepartment || user.department === selectedDepartment;
-    const matchesStatus = showOffboardedUsers ? true : user.status === "active";
-    
-    return matchesSearch && matchesDepartment && matchesStatus;
-  });
-
-  const departments = [...new Set(hrmsUsers?.map(user => user.department) || [])];
-  
-  useEffect(() => {
-    const handleSidebarChange = (event: CustomEvent) => {
-      setIsSidebarCollapsed(event.detail.isCollapsed);
-    };
-    
-    const handleStorageChange = () => {
-      const boardingValue = localStorage.getItem("show-boarding-features");
-      setShowBoardingFeatures(boardingValue === "true");
-    };
-    
-    window.addEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('boardingFeaturesToggled', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
-    };
-  }, []);
-
-  const exportUsersData = () => {
-    if (!filteredUsers || filteredUsers.length === 0) {
-      toast.error("No data to export");
-      return;
-    }
-
-    const headers = ["Employee ID", "Name", "Email", "Department", "Position", "Status", "SaaS Tools"];
-    const csvContent = filteredUsers.map(user => {
-      const tools = getUserTools(user.employee_id);
-      const toolNames = tools.map(t => t.name).join("; ");
-      return [
-        user.employee_id,
-        user.full_name,
-        user.email,
-        user.department,
-        user.position,
-        user.status,
-        toolNames
-      ].join(",");
-    });
-
-    const csv = [headers.join(","), ...csvContent].join("\n");
-    
-    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.setAttribute("href", url);
-    link.setAttribute("download", "user-boarding-data.csv");
-    link.style.visibility = "hidden";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    
-    toast.success("Data exported successfully");
-  };
-
-  const getUserTools = (userId: string) => {
-    const mapping = mockUserToolMappings.find(m => m.userId === userId);
-    if (!mapping) return [];
-    return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
-  };
-
-  const handleOnboardUser = () => {
-    if (!selectedUser || selectedTools.length === 0) {
-      toast.error("Please select a user and at least one SaaS tool");
-      return;
-    }
-
-    toast.success(`${selectedUser.full_name} has been onboarded to ${selectedTools.length} tools`);
-    setOnboardDialogOpen(false);
-    setSelectedUser(null);
-    setSelectedTools([]);
-  };
-
-  const handleDeBoardUser = () => {
-    if (!selectedUser || selectedToolsToRemove.length === 0) {
-      toast.error("Please select a user and at least one SaaS tool to remove");
-      return;
-    }
-
-    toast.success(`${selectedUser.full_name} has been de-boarded from ${selectedToolsToRemove.length} tools`);
-    setDeBoardDialogOpen(false);
-    setSelectedUser(null);
-    setSelectedToolsToRemove([]);
-  };
-
-  const handleAutoOffboardSetup = () => {
-    toast.success(`Automatic offboarding has been ${automationEnabled ? 'enabled' : 'disabled'}`);
-    setAutoOffboardDialogOpen(false);
-  };
-
-  if (!showBoardingFeatures) {
-    return (
-      <div className="min-h-screen flex flex-col md:flex-row">
-        <Sidebar />
-        <div className={`flex-1 flex flex-col transition-all duration-300 ${
-          isSidebarCollapsed ? 'ml-16' : 'ml-64'
-        }`}>
-          <Header />
-          <main className="flex-1 p-6 space-y-8 animate-fade-in flex items-center justify-center">
-            <div className="text-center">
-              <h1 className="text-2xl font-bold mb-2">User Boarding Feature is Disabled</h1>
-              <p className="text-muted-foreground">Enable the "Boarding Features" flag in Settings to access this page.</p>
-            </div>
-          </main>
-        </div>
-      </div>
-    );
-  }
+  const {
+    // UI state
+    isSidebarCollapsed,
+    // Filter state
+    searchQuery,
+    setSearchQuery,
+    selectedDepartment,
+    setSelectedDepartment,
+    showOffboardedUsers,
+    setShowOffboardedUsers,
+    // Dialogs state
+    onboardDialogOpen,
+    setOnboardDialogOpen,
+    deBoardDialogOpen,
+    setDeBoardDialogOpen,
+    autoOffboardDialogOpen,
+    setAutoOffboardDialogOpen,
+    // Selected data state
+    selectedUser,
+    setSelectedUser,
+    selectedTools,
+    setSelectedTools,
+    selectedToolsToRemove,
+    setSelectedToolsToRemove,
+    // Automation state
+    automationEnabled,
+    setAutomationEnabled,
+    // Feature visibility state
+    showBoardingFeatures,
+    // Data
+    filteredUsers,
+    isLoadingUsers,
+    departments,
+    // Functions
+    refetchUsers,
+    exportUsersData,
+    getUserTools,
+    handleOnboardUser,
+    handleDeBoardUser,
+    handleAutoOffboardSetup
+  } = useUserBoarding(additionalUsers);
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      <Sidebar />
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${
-        isSidebarCollapsed ? 'ml-16' : 'ml-64'
-      }`}>
-        <Header />
-        <main className="flex-1 p-6 space-y-8 animate-fade-in">
-          <div className="flex items-center justify-between">
-            <h1 className="text-3xl font-bold tracking-tight">User Boarding</h1>
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => refetchUsers()}
-              >
-                <RefreshCw className="h-4 w-4 mr-2" />
-                Refresh
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={exportUsersData}
-              >
-                <Download className="h-4 w-4 mr-2" />
-                Export
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => setAutoOffboardDialogOpen(true)}
-              >
-                <Zap className="h-4 w-4 mr-2" />
-                Setup Auto-Offboarding
-              </Button>
-            </div>
-          </div>
-          
-          <UserBoardingFilters
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            selectedDepartment={selectedDepartment}
-            setSelectedDepartment={setSelectedDepartment}
-            showOffboardedUsers={showOffboardedUsers}
-            setShowOffboardedUsers={setShowOffboardedUsers}
-            departments={departments}
-          />
-          
-          <Card>
-            <CardHeader className="pb-2">
-              <CardTitle>Users & SaaS Tool Access</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <UserBoardingTable
-                isLoadingUsers={isLoadingUsers}
-                filteredUsers={filteredUsers}
-                mockUserToolMappings={mockUserToolMappings}
-                mockSaaSData={mockSaaSData}
-                onOpenOnboard={(user) => {
-                  setSelectedUser(user);
-                  setSelectedTools([]);
-                  setOnboardDialogOpen(true);
-                }}
-                onOpenOffboard={(user) => {
-                  setSelectedUser(user);
-                  setSelectedToolsToRemove([]);
-                  setDeBoardDialogOpen(true);
-                }}
-              />
-            </CardContent>
-          </Card>
-          
-          <OnboardingDialog
-            dialogOpen={onboardDialogOpen}
-            setDialogOpen={setOnboardDialogOpen}
-            selectedUser={selectedUser}
-            selectedTools={selectedTools}
-            setSelectedTools={setSelectedTools}
-            mockSaaSData={mockSaaSData}
-            onConfirm={handleOnboardUser}
-          />
-          
-          <DeBoardingDialog
-            dialogOpen={deBoardDialogOpen}
-            setDialogOpen={setDeBoardDialogOpen}
-            selectedUser={selectedUser}
-            selectedToolsToRemove={selectedToolsToRemove}
-            setSelectedToolsToRemove={setSelectedToolsToRemove}
+    <UserBoardingLayout 
+      isSidebarCollapsed={isSidebarCollapsed}
+      showBoardingFeatures={showBoardingFeatures}
+    >
+      <UserBoardingHeader
+        refetchUsers={refetchUsers}
+        exportUsersData={exportUsersData}
+        openAutoOffboardingDialog={() => setAutoOffboardDialogOpen(true)}
+        mockUserToolMappings={mockUserToolMappings}
+      />
+      
+      <UserBoardingFilters
+        searchQuery={searchQuery}
+        setSearchQuery={setSearchQuery}
+        selectedDepartment={selectedDepartment}
+        setSelectedDepartment={setSelectedDepartment}
+        showOffboardedUsers={showOffboardedUsers}
+        setShowOffboardedUsers={setShowOffboardedUsers}
+        departments={departments}
+      />
+      
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle>Users & SaaS Tool Access</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <UserBoardingTable
+            isLoadingUsers={isLoadingUsers}
+            filteredUsers={filteredUsers}
             mockUserToolMappings={mockUserToolMappings}
             mockSaaSData={mockSaaSData}
-            onConfirm={handleDeBoardUser}
+            onOpenOnboard={(user) => {
+              setSelectedUser(user);
+              setSelectedTools([]);
+              setOnboardDialogOpen(true);
+            }}
+            onOpenOffboard={(user) => {
+              setSelectedUser(user);
+              setSelectedToolsToRemove([]);
+              setDeBoardDialogOpen(true);
+            }}
           />
-          
-          <AutoOffboardingDialog
-            open={autoOffboardDialogOpen}
-            onOpenChange={setAutoOffboardDialogOpen}
-            automationEnabled={automationEnabled}
-            setAutomationEnabled={setAutomationEnabled}
-            onSave={handleAutoOffboardSetup}
-          />
-        </main>
-      </div>
-    </div>
+        </CardContent>
+      </Card>
+      
+      <OnboardingDialog
+        dialogOpen={onboardDialogOpen}
+        setDialogOpen={setOnboardDialogOpen}
+        selectedUser={selectedUser}
+        selectedTools={selectedTools}
+        setSelectedTools={setSelectedTools}
+        mockSaaSData={mockSaaSData}
+        onConfirm={handleOnboardUser}
+      />
+      
+      <DeBoardingDialog
+        dialogOpen={deBoardDialogOpen}
+        setDialogOpen={setDeBoardDialogOpen}
+        selectedUser={selectedUser}
+        selectedToolsToRemove={selectedToolsToRemove}
+        setSelectedToolsToRemove={setSelectedToolsToRemove}
+        mockUserToolMappings={mockUserToolMappings}
+        mockSaaSData={mockSaaSData}
+        onConfirm={handleDeBoardUser}
+      />
+      
+      <AutoOffboardingDialog
+        open={autoOffboardDialogOpen}
+        onOpenChange={setAutoOffboardDialogOpen}
+        automationEnabled={automationEnabled}
+        setAutomationEnabled={setAutomationEnabled}
+        onSave={handleAutoOffboardSetup}
+      />
+    </UserBoardingLayout>
   );
 };
 

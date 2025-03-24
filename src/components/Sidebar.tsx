@@ -3,15 +3,10 @@ import React, { useState, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { NavLink, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { SidebarLinks } from "@/components/SidebarLinks";
 import { 
-  LayoutDashboard, 
-  TrendingUp, 
-  FileText,
-  Settings, 
-  HelpCircle,
   ChevronLeft,
   ChevronRight,
-  Gauge
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -60,25 +55,6 @@ const Sidebar = ({ className }: SidebarProps) => {
     setIsCollapsed(prev => !prev);
   };
 
-  // Dynamic navigation based on feature flag
-  const navigation = [
-    { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-    { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
-  ];
-  
-  // Add Usage tab only if feature flag is enabled
-  if (showUsageFeatures) {
-    navigation.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });
-  }
-  
-  // Add Contracts after Usage
-  navigation.push({ name: "Contracts", href: "/contracts", icon: FileText });
-
-  const secondaryNavigation = [
-    { name: "Settings", href: "/settings", icon: Settings },
-    { name: "Help & Support", href: "/help", icon: HelpCircle },
-  ];
-
   return (
     <aside
       className={cn(
@@ -115,56 +91,7 @@ const Sidebar = ({ className }: SidebarProps) => {
       </div>
 
       <div className="flex-1 overflow-auto py-4 bg-background">
-        <nav className="grid gap-1 px-2">
-          {navigation.map((item) => (
-            <NavLink
-              key={item.name}
-              to={item.href}
-              end={item.href === "/dashboard"}
-              className={({ isActive }) =>
-                cn(
-                  "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                  isActive
-                    ? "bg-primary/10 text-primary"
-                    : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                )
-              }
-            >
-              <item.icon className="h-5 w-5" />
-              {!isCollapsed && <span>{item.name}</span>}
-            </NavLink>
-          ))}
-        </nav>
-
-        <div className="mt-6">
-          <div className="px-4 py-2">
-            {!isCollapsed && (
-              <h2 className="text-xs font-semibold text-muted-foreground">
-                SUPPORT & SETTINGS
-              </h2>
-            )}
-          </div>
-          <nav className="grid gap-1 px-2">
-            {secondaryNavigation.map((item) => (
-              <NavLink
-                key={item.name}
-                to={item.href}
-                end
-                className={({ isActive }) =>
-                  cn(
-                    "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
-                    isActive
-                      ? "bg-primary/10 text-primary"
-                      : "text-muted-foreground hover:bg-muted/50 hover:text-foreground"
-                  )
-                }
-              >
-                <item.icon className="h-5 w-5" />
-                {!isCollapsed && <span>{item.name}</span>}
-              </NavLink>
-            ))}
-          </nav>
-        </div>
+        <SidebarLinks collapsed={isCollapsed} showUsageFeatures={showUsageFeatures} />
       </div>
     </aside>
   );

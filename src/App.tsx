@@ -18,6 +18,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import UserManagement from "./pages/UserManagement";
 import UserOnboarding from "./pages/UserOnboarding";
+import UserBoarding from "./pages/UserBoarding";
 
 const queryClient = new QueryClient();
 
@@ -66,9 +67,15 @@ const App = () => {
               <Route path="/help" element={<Help />} />
               <Route path="/user-management" element={<UserManagement />} />
               {showUsageFeatures ? (
-                <Route path="/user-onboarding" element={<UserOnboarding />} />
+                <>
+                  <Route path="/user-onboarding" element={<UserOnboarding />} />
+                  <Route path="/user-boarding" element={<UserBoarding />} />
+                </>
               ) : (
-                <Route path="/user-onboarding" element={<Navigate to="/dashboard" replace />} />
+                <>
+                  <Route path="/user-onboarding" element={<Navigate to="/dashboard" replace />} />
+                  <Route path="/user-boarding" element={<Navigate to="/dashboard" replace />} />
+                </>
               )}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -11,7 +10,7 @@ import { Progress } from "@/components/ui/progress";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, CalendarClock, Wallet, Flag } from "lucide-react";
+import { ChevronRight, CalendarClock, Wallet, Flag, RefreshCw } from "lucide-react";
 import { format } from "date-fns";
 import {
   Popover,
@@ -35,6 +34,7 @@ const Dashboard = () => {
     const savedValue = localStorage.getItem("show-usage-features");
     return savedValue === "true"; // Default to false if null or anything other than "true"
   });
+  const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -76,6 +76,11 @@ const Dashboard = () => {
   const handleRowClick = (saas: SaaSData) => {
     setSelectedSaas(saas);
     setIsDetailModalOpen(true);
+  };
+
+  const handleRefresh = () => {
+    setLastRefreshed(new Date());
+    toast.success("Dashboard data refreshed");
   };
 
   // Get upcoming renewals
@@ -127,6 +132,19 @@ const Dashboard = () => {
         <main className="flex-1 p-4 md:p-6 space-y-6 md:space-y-8 animate-fade-in overflow-auto">
           <div className="flex items-center justify-between">
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Dashboard</h1>
+            <div className="flex items-center gap-2">
+              <div className="text-xs text-muted-foreground mr-2">
+                Last refreshed: {lastRefreshed.toLocaleTimeString()}
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={handleRefresh}
+              >
+                <RefreshCw className="h-4 w-4 mr-2" />
+                Refresh
+              </Button>
+            </div>
           </div>
 
           {/* First Row: Stats Cards */}

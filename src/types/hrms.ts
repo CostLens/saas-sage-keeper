@@ -7,9 +7,11 @@ export interface HrmsUser {
   department: string;
   position: string;
   join_date: string;
-  exit_date: string | null;
+  exit_date?: string | null;
   status: 'active' | 'terminated' | 'on_leave';
-  manager_id: string | null;
+  created_at: string;
+  updated_at: string;
+  manager_id?: string | null;
 }
 
 export interface EmployeeStatus {

@@ -19,7 +19,8 @@ import {
   Download,
   RefreshCw,
   Check,
-  X
+  X,
+  Zap
 } from "lucide-react";
 import { mockSaasData } from "@/lib/mockData";
 import { getHrmsUsers } from "@/lib/hrmsService";
@@ -159,6 +160,11 @@ const UserBoarding = () => {
   const [selectedTools, setSelectedTools] = useState<string[]>([]);
   const [deBoardDialogOpen, setDeBoardDialogOpen] = useState(false);
   const [selectedToolsToRemove, setSelectedToolsToRemove] = useState<string[]>([]);
+  const [autoOffboardDialogOpen, setAutoOffboardDialogOpen] = useState(false);
+  const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-boarding-features");
+    return savedValue === "true"; // Default to false if null or anything other than "true"
+  });
 
   // Fetch users data
   const { data: apiUsers, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
@@ -201,10 +207,19 @@ const UserBoarding = () => {
       setIsSidebarCollapsed(event.detail.isCollapsed);
     };
     
+    const handleStorageChange = () => {
+      const boardingValue = localStorage.getItem("show-boarding-features");
+      setShowBoardingFeatures(boardingValue === "true");
+    };
+    
     window.addEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('boardingFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -243,6 +258,12 @@ const UserBoarding = () => {
     setSelectedToolsToRemove([]);
   };
 
+  // Handle automatic offboarding setup
+  const handleAutoOffboardSetup = () => {
+    toast.success("Automatic offboarding has been set up for terminated employees");
+    setAutoOffboardDialogOpen(false);
+  };
+  
   // Handle tool selection for onboarding
   const toggleToolSelection = (toolId: string) => {
     if (selectedTools.includes(toolId)) {
@@ -301,6 +322,25 @@ const UserBoarding = () => {
     toast.success("Data exported successfully");
   };
 
+  if (!showBoardingFeatures) {
+    return (
+      <div className="min-h-screen flex flex-col md:flex-row">
+        <Sidebar />
+        <div className={`flex-1 flex flex-col transition-all duration-300 ${
+          isSidebarCollapsed ? 'ml-16' : 'ml-64'
+        }`}>
+          <Header />
+          <main className="flex-1 p-6 space-y-8 animate-fade-in flex items-center justify-center">
+            <div className="text-center">
+              <h1 className="text-2xl font-bold mb-2">User Boarding Feature is Disabled</h1>
+              <p className="text-muted-foreground">Enable the "Boarding Features" flag in Settings to access this page.</p>
+            </div>
+          </main>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <Sidebar />
@@ -327,6 +367,14 @@ const UserBoarding = () => {
               >
                 <Download className="h-4 w-4 mr-2" />
                 Export
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setAutoOffboardDialogOpen(true)}
+              >
+                <Zap className="h-4 w-4 mr-2" />
+                Setup Auto-Offboarding
               </Button>
             </div>
           </div>
@@ -557,6 +605,59 @@ const UserBoarding = () => {
               <DialogFooter>
                 <Button variant="outline" onClick={() => setDeBoardDialogOpen(false)}>Cancel</Button>
                 <Button variant="destructive" onClick={handleDeBoardUser}>Remove Access</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+          
+          {/* Auto-Offboarding Dialog */}
+          <Dialog open={autoOffboardDialogOpen} onOpenChange={setAutoOffboardDialogOpen}>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Setup Automatic Offboarding</DialogTitle>
+                <DialogDescription>
+                  Configure automated offboarding for employees who leave the organization
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="grid gap-4 py-4">
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="auto-offboard-terminated" defaultChecked />
+                    <label htmlFor="auto-offboard-terminated" className="text-sm font-medium">
+                      Automatically offboard terminated employees
+                    </label>
+                  </div>
+                  
+                  <div className="flex items-center space-x-2">
+                    <Checkbox id="auto-offboard-leave" />
+                    <label htmlFor="auto-offboard-leave" className="text-sm font-medium">
+                      Automatically offboard employees on extended leave
+                    </label>
+                  </div>
+                  
+                  <div className="space-y-2 pt-2">
+                    <Label>Offboarding delay:</Label>
+                    <select className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                      <option value="0">Immediately</option>
+                      <option value="1">After 1 day</option>
+                      <option value="7">After 7 days</option>
+                      <option value="14">After 14 days</option>
+                      <option value="30">After 30 days</option>
+                    </select>
+                    <p className="text-xs text-muted-foreground">Time to wait after employee status change before removing access</p>
+                  </div>
+                  
+                  <div className="space-y-2 pt-2">
+                    <Label>Notification recipients:</Label>
+                    <Input placeholder="Email addresses (separated by commas)" />
+                    <p className="text-xs text-muted-foreground">Who should be notified when automatic offboarding occurs</p>
+                  </div>
+                </div>
+              </div>
+              
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setAutoOffboardDialogOpen(false)}>Cancel</Button>
+                <Button onClick={handleAutoOffboardSetup}>Save Configuration</Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>

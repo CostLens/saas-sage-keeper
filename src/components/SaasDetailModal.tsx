@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -55,6 +54,26 @@ const generateMockUsers = (saasId: string, totalUsers: number) => {
 };
 
 export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalProps) {
+  const [showUsageFeatures, setShowUsageFeatures] = useState(false);
+  
+  useEffect(() => {
+    const savedValue = localStorage.getItem("show-usage-features");
+    setShowUsageFeatures(savedValue === "true");
+    
+    const handleStorageChange = () => {
+      const savedValue = localStorage.getItem("show-usage-features");
+      setShowUsageFeatures(savedValue === "true");
+    };
+    
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('usageFeaturesToggled', handleStorageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('usageFeaturesToggled', handleStorageChange);
+    };
+  }, []);
+
   if (!saas) return null;
 
   // Generate chart data
@@ -160,7 +179,7 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="contract">Contract Details</TabsTrigger>
               <TabsTrigger value="payments">Payment History</TabsTrigger>
-              <TabsTrigger value="users">Users</TabsTrigger>
+              {showUsageFeatures && <TabsTrigger value="users">Users</TabsTrigger>}
             </TabsList>
             
             <TabsContent value="analytics" className="space-y-6">
@@ -265,46 +284,48 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
               </div>
             </TabsContent>
             
-            <TabsContent value="users" className="space-y-4">
-              <div className="bg-muted/30 rounded-lg p-6">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-2">
-                    <UsersIcon className="h-5 w-5 text-primary" />
-                    <h3 className="text-lg font-medium">Licensed Users</h3>
+            {showUsageFeatures && (
+              <TabsContent value="users" className="space-y-4">
+                <div className="bg-muted/30 rounded-lg p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center gap-2">
+                      <UsersIcon className="h-5 w-5 text-primary" />
+                      <h3 className="text-lg font-medium">Licensed Users</h3>
+                    </div>
+                    <div className="text-sm text-muted-foreground">
+                      {saas.usage.activeUsers} users
+                    </div>
                   </div>
-                  <div className="text-sm text-muted-foreground">
-                    {saas.usage.activeUsers} users
-                  </div>
-                </div>
-                
-                <div className="overflow-auto max-h-[400px] border rounded-md">
-                  <Table>
-                    <TableHeader className="bg-muted/50 sticky top-0">
-                      <TableRow>
-                        <TableHead className="w-[180px]">Name</TableHead>
-                        <TableHead>Department</TableHead>
-                        <TableHead>Role</TableHead>
-                        <TableHead>Last Login</TableHead>
-                        <TableHead>Active (7d)</TableHead>
-                        <TableHead>Active (30d)</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {userData.map((user) => (
-                        <TableRow key={user.id}>
-                          <TableCell className="font-medium">{user.name}</TableCell>
-                          <TableCell>{user.department}</TableCell>
-                          <TableCell>{user.role}</TableCell>
-                          <TableCell>{format(user.lastLogin, "MMM d, yyyy")}</TableCell>
-                          <TableCell>{getActivityBadge(user.isActive7d)}</TableCell>
-                          <TableCell>{getActivityBadge(user.isActive30d)}</TableCell>
+                  
+                  <div className="overflow-auto max-h-[400px] border rounded-md">
+                    <Table>
+                      <TableHeader className="bg-muted/50 sticky top-0">
+                        <TableRow>
+                          <TableHead className="w-[180px]">Name</TableHead>
+                          <TableHead>Department</TableHead>
+                          <TableHead>Role</TableHead>
+                          <TableHead>Last Login</TableHead>
+                          <TableHead>Active (7d)</TableHead>
+                          <TableHead>Active (30d)</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {userData.map((user) => (
+                          <TableRow key={user.id}>
+                            <TableCell className="font-medium">{user.name}</TableCell>
+                            <TableCell>{user.department}</TableCell>
+                            <TableCell>{user.role}</TableCell>
+                            <TableCell>{format(user.lastLogin, "MMM d, yyyy")}</TableCell>
+                            <TableCell>{getActivityBadge(user.isActive7d)}</TableCell>
+                            <TableCell>{getActivityBadge(user.isActive30d)}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
-              </div>
-            </TabsContent>
+              </TabsContent>
+            )}
           </Tabs>
         </div>
       </DialogContent>

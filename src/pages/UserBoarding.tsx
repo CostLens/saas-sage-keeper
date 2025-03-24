@@ -163,7 +163,6 @@ const UserBoarding = () => {
     const savedValue = localStorage.getItem("show-boarding-features");
     return savedValue === "true"; // Default to false if null or anything other than "true"
   });
-  const [isOffboardingDisabled, setIsOffboardingDisabled] = useState(false);
 
   const { data: apiUsers, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
     queryKey: ["hrmsUsers"],
@@ -246,8 +245,7 @@ const UserBoarding = () => {
   };
 
   const handleAutoOffboardSetup = () => {
-    setAutomationEnabled(true);
-    toast.success("Automatic offboarding has been set up for terminated employees");
+    toast.success(`Automatic offboarding has been ${automationEnabled ? 'enabled' : 'disabled'}`);
     setAutoOffboardDialogOpen(false);
   };
 
@@ -353,17 +351,9 @@ const UserBoarding = () => {
                 variant="outline"
                 size="sm"
                 onClick={() => setAutoOffboardDialogOpen(true)}
-                disabled={isOffboardingDisabled}
               >
                 <Zap className="h-4 w-4 mr-2" />
                 Setup Auto-Offboarding
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => setIsOffboardingDisabled(!isOffboardingDisabled)}
-              >
-                {isOffboardingDisabled ? 'Enable' : 'Disable'} Auto-Offboarding
               </Button>
             </div>
           </div>
@@ -605,16 +595,40 @@ const UserBoarding = () => {
               
               <div className="grid gap-4 py-4">
                 <div className="space-y-3">
-                  <div className="flex items-center space-x-2">
-                    <Checkbox id="auto-offboard-terminated" defaultChecked />
-                    <label htmlFor="auto-offboard-terminated" className="text-sm font-medium">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="text-sm font-medium">Automation Status</h3>
+                      <p className="text-xs text-muted-foreground">
+                        {automationEnabled ? "Automatic offboarding is enabled" : "Automatic offboarding is disabled"}
+                      </p>
+                    </div>
+                    <Switch 
+                      checked={automationEnabled}
+                      onCheckedChange={setAutomationEnabled}
+                      id="automation-toggle"
+                    />
+                  </div>
+                  
+                  <div className="flex items-center space-x-2 mt-4">
+                    <Checkbox 
+                      id="auto-offboard-terminated" 
+                      defaultChecked 
+                      disabled={!automationEnabled}
+                    />
+                    <label 
+                      htmlFor="auto-offboard-terminated" 
+                      className={`text-sm font-medium ${!automationEnabled ? 'text-muted-foreground' : ''}`}
+                    >
                       Automatically offboard terminated employees
                     </label>
                   </div>
                   
                   <div className="space-y-2 pt-2">
-                    <Label>Offboarding delay:</Label>
-                    <select className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+                    <Label className={!automationEnabled ? 'text-muted-foreground' : ''}>Offboarding delay:</Label>
+                    <select 
+                      className="w-full h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      disabled={!automationEnabled}
+                    >
                       <option value="0">Immediately</option>
                       <option value="1">After 1 day</option>
                       <option value="7">After 7 days</option>
@@ -625,14 +639,17 @@ const UserBoarding = () => {
                   </div>
                   
                   <div className="space-y-2 pt-2">
-                    <Label>Notification recipients:</Label>
-                    <Input placeholder="Email addresses (separated by commas)" />
+                    <Label className={!automationEnabled ? 'text-muted-foreground' : ''}>Notification recipients:</Label>
+                    <Input 
+                      placeholder="Email addresses (separated by commas)" 
+                      disabled={!automationEnabled}
+                    />
                     <p className="text-xs text-muted-foreground">Who should be notified when automatic offboarding occurs</p>
                   </div>
                   
                   <div className="flex items-center space-x-2 pt-4">
                     <div className="flex-1">
-                      <h3 className="text-sm font-medium">Automation Status</h3>
+                      <h3 className="text-sm font-medium">Current Status</h3>
                       <p className="text-xs text-muted-foreground">
                         {automationEnabled ? "Automatic offboarding is enabled" : "Automatic offboarding is disabled"}
                       </p>

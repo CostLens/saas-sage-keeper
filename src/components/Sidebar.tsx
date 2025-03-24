@@ -34,19 +34,28 @@ const Sidebar = ({ className }: SidebarProps) => {
     return savedValue === "true"; // Default to false if null or anything other than "true"
   });
 
+  const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-boarding-features");
+    return savedValue === "true"; // Default to false if null or anything other than "true"
+  });
+
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
     const handleStorageChange = () => {
-      const savedValue = localStorage.getItem("show-usage-features");
-      setShowUsageFeatures(savedValue === "true");
+      const usageValue = localStorage.getItem("show-usage-features");
+      const boardingValue = localStorage.getItem("show-boarding-features");
+      setShowUsageFeatures(usageValue === "true");
+      setShowBoardingFeatures(boardingValue === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
+    window.addEventListener('boardingFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
+      window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
     };
   }, []);
   
@@ -70,6 +79,10 @@ const Sidebar = ({ className }: SidebarProps) => {
   // Add Usage tab only if feature flag is enabled
   if (showUsageFeatures) {
     navigation.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });
+  }
+  
+  // Add User Boarding only if boarding flag is enabled
+  if (showBoardingFeatures) {
     navigation.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
   }
   

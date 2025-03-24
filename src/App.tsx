@@ -27,18 +27,27 @@ const App = () => {
     return savedValue === "true"; // Default to false if null or anything other than "true"
   });
 
+  const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-boarding-features");
+    return savedValue === "true"; // Default to false if null or anything other than "true"
+  });
+
   useEffect(() => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
+      const boardingValue = localStorage.getItem("show-boarding-features");
       setShowUsageFeatures(usageValue === "true");
+      setShowBoardingFeatures(boardingValue === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
+    window.addEventListener('boardingFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
+      window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -65,7 +74,7 @@ const App = () => {
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route path="/user-management" element={<UserManagement />} />
-              {showUsageFeatures ? (
+              {showBoardingFeatures ? (
                 <Route path="/user-boarding" element={<UserBoarding />} />
               ) : (
                 <Route path="/user-boarding" element={<Navigate to="/dashboard" replace />} />

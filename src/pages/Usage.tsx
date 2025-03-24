@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -59,16 +60,16 @@ const Usage = () => {
     
     switch (timeRange) {
       case "30days":
-        fromDate = new Date(today.setDate(today.getDate() - 30));
+        fromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30);
         break;
       case "90days":
-        fromDate = new Date(today.setDate(today.getDate() - 90));
+        fromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 90);
         break;
       case "6months":
-        fromDate = new Date(today.setMonth(today.getMonth() - 6));
+        fromDate = new Date(today.getFullYear(), today.getMonth() - 6, today.getDate());
         break;
       case "1year":
-        fromDate = new Date(today.setFullYear(today.getFullYear() - 1));
+        fromDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
         break;
       case "custom":
         // Keep existing custom date range

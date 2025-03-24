@@ -17,9 +17,10 @@ import {
 interface SidebarLinksProps {
   collapsed: boolean;
   showUsageFeatures: boolean;
+  showBoardingFeatures: boolean;
 }
 
-export function SidebarLinks({ collapsed, showUsageFeatures }: SidebarLinksProps) {
+export function SidebarLinks({ collapsed, showUsageFeatures, showBoardingFeatures }: SidebarLinksProps) {
   const location = useLocation();
   
   const links = [
@@ -43,17 +44,17 @@ export function SidebarLinks({ collapsed, showUsageFeatures }: SidebarLinksProps
       show: showUsageFeatures,
     },
     {
-      name: "Contracts",
-      href: "/contracts",
-      icon: <FileText className="h-5 w-5" />,
-      active: location.pathname === "/contracts",
-    },
-    {
       name: "User Boarding",
       href: "/user-boarding",
       icon: <UserCog className="h-5 w-5" />,
       active: location.pathname === "/user-boarding",
-      show: showUsageFeatures,
+      show: showBoardingFeatures,
+    },
+    {
+      name: "Contracts",
+      href: "/contracts",
+      icon: <FileText className="h-5 w-5" />,
+      active: location.pathname === "/contracts",
     },
     {
       name: "AI Assistant",

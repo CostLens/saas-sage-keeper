@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,13 +12,14 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { toast } from "sonner";
 import { 
   Search, 
-  Plus, 
   UserPlus, 
   UserMinus, 
   Filter, 
   MoreHorizontal, 
   Download,
-  RefreshCw
+  RefreshCw,
+  Check,
+  X
 } from "lucide-react";
 import { mockSaasData } from "@/lib/mockData";
 import { getHrmsUsers } from "@/lib/hrmsService";
@@ -40,16 +40,109 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 
-// Mock user-tool mappings (would come from backend in real app)
+// Enhanced mock user-tool mappings with more dummy data
 const mockUserToolMappings = [
   { userId: "EMP001", toolIds: ["1", "3", "5"] },
   { userId: "EMP002", toolIds: ["2", "4"] },
   { userId: "EMP003", toolIds: ["1", "2", "3", "4"] },
   { userId: "EMP004", toolIds: ["5"] },
   { userId: "EMP005", toolIds: ["1", "2"] },
+  { userId: "EMP006", toolIds: ["1", "3", "4"] },
+  { userId: "EMP007", toolIds: ["2", "5"] },
+  { userId: "EMP008", toolIds: ["3"] },
+  { userId: "EMP009", toolIds: [] },
+  { userId: "EMP010", toolIds: ["1", "2", "3", "4", "5"] },
+];
+
+// Additional dummy HRMS users (will be merged with API data)
+const additionalUsers: HrmsUser[] = [
+  {
+    id: "dummy1",
+    employee_id: "EMP006",
+    full_name: "Olivia Johnson",
+    email: "olivia.johnson@example.com",
+    department: "Marketing",
+    position: "Marketing Specialist",
+    status: "active",
+    join_date: "2022-05-15",
+    created_at: "2022-05-15T00:00:00.000Z",
+    updated_at: "2022-05-15T00:00:00.000Z"
+  },
+  {
+    id: "dummy2",
+    employee_id: "EMP007",
+    full_name: "William Taylor",
+    email: "william.taylor@example.com",
+    department: "Engineering",
+    position: "Software Engineer",
+    status: "active",
+    join_date: "2022-06-01",
+    created_at: "2022-06-01T00:00:00.000Z",
+    updated_at: "2022-06-01T00:00:00.000Z"
+  },
+  {
+    id: "dummy3",
+    employee_id: "EMP008",
+    full_name: "Emma Brown",
+    email: "emma.brown@example.com",
+    department: "HR",
+    position: "HR Coordinator",
+    status: "active",
+    join_date: "2022-07-12",
+    created_at: "2022-07-12T00:00:00.000Z",
+    updated_at: "2022-07-12T00:00:00.000Z"
+  },
+  {
+    id: "dummy4",
+    employee_id: "EMP009",
+    full_name: "James Wilson",
+    email: "james.wilson@example.com",
+    department: "Finance",
+    position: "Financial Analyst",
+    status: "active",
+    join_date: "2022-08-03",
+    created_at: "2022-08-03T00:00:00.000Z",
+    updated_at: "2022-08-03T00:00:00.000Z"
+  },
+  {
+    id: "dummy5",
+    employee_id: "EMP010",
+    full_name: "Sophia Davis",
+    email: "sophia.davis@example.com",
+    department: "Product",
+    position: "Product Manager",
+    status: "active",
+    join_date: "2022-09-20",
+    created_at: "2022-09-20T00:00:00.000Z",
+    updated_at: "2022-09-20T00:00:00.000Z"
+  },
+  {
+    id: "dummy6",
+    employee_id: "EMP011",
+    full_name: "Lucas Garcia",
+    email: "lucas.garcia@example.com",
+    department: "Sales",
+    position: "Sales Representative",
+    status: "terminated",
+    join_date: "2021-04-15",
+    exit_date: "2023-01-10",
+    created_at: "2021-04-15T00:00:00.000Z",
+    updated_at: "2023-01-10T00:00:00.000Z"
+  },
+  {
+    id: "dummy7",
+    employee_id: "EMP012",
+    full_name: "Mia Martinez",
+    email: "mia.martinez@example.com",
+    department: "Customer Support",
+    position: "Customer Support Lead",
+    status: "on_leave",
+    join_date: "2021-10-05",
+    created_at: "2021-10-05T00:00:00.000Z",
+    updated_at: "2021-10-05T00:00:00.000Z"
+  }
 ];
 
 const UserBoarding = () => {
@@ -68,10 +161,23 @@ const UserBoarding = () => {
   const [selectedToolsToRemove, setSelectedToolsToRemove] = useState<string[]>([]);
 
   // Fetch users data
-  const { data: hrmsUsers, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
+  const { data: apiUsers, isLoading: isLoadingUsers, refetch: refetchUsers } = useQuery({
     queryKey: ["hrmsUsers"],
     queryFn: getHrmsUsers,
   });
+  
+  // Combine API users with additional dummy users
+  const hrmsUsers = React.useMemo(() => {
+    if (!apiUsers) return additionalUsers;
+    
+    // Create a Set of employee_ids from API users to avoid duplicates
+    const existingIds = new Set(apiUsers.map(user => user.employee_id));
+    
+    // Filter out dummy users that would duplicate API users
+    const filteredDummyUsers = additionalUsers.filter(user => !existingIds.has(user.employee_id));
+    
+    return [...apiUsers, ...filteredDummyUsers];
+  }, [apiUsers]);
   
   // Filter users based on search, department, and status
   const filteredUsers = hrmsUsers?.filter(user => {
@@ -139,20 +245,20 @@ const UserBoarding = () => {
 
   // Handle tool selection for onboarding
   const toggleToolSelection = (toolId: string) => {
-    setSelectedTools(prev => 
-      prev.includes(toolId)
-        ? prev.filter(id => id !== toolId)
-        : [...prev, toolId]
-    );
+    if (selectedTools.includes(toolId)) {
+      setSelectedTools(selectedTools.filter(id => id !== toolId));
+    } else {
+      setSelectedTools([...selectedTools, toolId]);
+    }
   };
 
   // Handle tool selection for de-boarding
   const toggleToolToRemove = (toolId: string) => {
-    setSelectedToolsToRemove(prev => 
-      prev.includes(toolId)
-        ? prev.filter(id => id !== toolId)
-        : [...prev, toolId]
-    );
+    if (selectedToolsToRemove.includes(toolId)) {
+      setSelectedToolsToRemove(selectedToolsToRemove.filter(id => id !== toolId));
+    } else {
+      setSelectedToolsToRemove([...selectedToolsToRemove, toolId]);
+    }
   };
 
   // Helper function to export users data as CSV
@@ -222,70 +328,6 @@ const UserBoarding = () => {
                 <Download className="h-4 w-4 mr-2" />
                 Export
               </Button>
-              <Dialog open={onboardDialogOpen} onOpenChange={setOnboardDialogOpen}>
-                <DialogTrigger asChild>
-                  <Button size="sm">
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Onboard User
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-[600px]">
-                  <DialogHeader>
-                    <DialogTitle>Onboard User to SaaS Tools</DialogTitle>
-                    <DialogDescription>
-                      Select a user and the SaaS tools you want to provide access to.
-                    </DialogDescription>
-                  </DialogHeader>
-                  
-                  <div className="grid gap-4 py-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="user">Select User</Label>
-                      <select 
-                        id="user"
-                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                        value={selectedUser?.employee_id || ""}
-                        onChange={(e) => {
-                          const selected = hrmsUsers?.find(u => u.employee_id === e.target.value) || null;
-                          setSelectedUser(selected);
-                        }}
-                      >
-                        <option value="">Select a user...</option>
-                        {hrmsUsers?.filter(u => u.status === "active").map(user => (
-                          <option key={user.employee_id} value={user.employee_id}>
-                            {user.full_name} ({user.employee_id})
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label>Select SaaS Tools</Label>
-                      <div className="grid grid-cols-2 gap-4 max-h-[200px] overflow-y-auto">
-                        {mockSaasData.map(tool => (
-                          <div key={tool.id} className="flex items-center space-x-2">
-                            <Checkbox 
-                              id={`tool-${tool.id}`} 
-                              checked={selectedTools.includes(tool.id)}
-                              onCheckedChange={() => toggleToolSelection(tool.id)}
-                            />
-                            <label 
-                              htmlFor={`tool-${tool.id}`}
-                              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                            >
-                              {tool.name}
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <DialogFooter>
-                    <Button variant="outline" onClick={() => setOnboardDialogOpen(false)}>Cancel</Button>
-                    <Button onClick={handleOnboardUser}>Onboard User</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
             </div>
           </div>
           
@@ -396,41 +438,34 @@ const UserBoarding = () => {
                             </div>
                           </TableCell>
                           <TableCell className="text-right">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
-                                  <span className="sr-only">Open menu</span>
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuItem
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                variant="outline" 
+                                size="sm"
+                                onClick={() => {
+                                  setSelectedUser(user);
+                                  setSelectedTools([]);
+                                  setOnboardDialogOpen(true);
+                                }}
+                              >
+                                <UserPlus className="h-4 w-4 mr-1" />
+                                Onboard
+                              </Button>
+                              {userTools.length > 0 && (
+                                <Button 
+                                  variant="outline" 
+                                  size="sm"
                                   onClick={() => {
                                     setSelectedUser(user);
-                                    setSelectedTools([]);
-                                    setOnboardDialogOpen(true);
+                                    setSelectedToolsToRemove([]);
+                                    setDeBoardDialogOpen(true);
                                   }}
                                 >
-                                  <UserPlus className="h-4 w-4 mr-2" />
-                                  Onboard to Tools
-                                </DropdownMenuItem>
-                                {userTools.length > 0 && (
-                                  <DropdownMenuItem
-                                    onClick={() => {
-                                      setSelectedUser(user);
-                                      setSelectedToolsToRemove([]);
-                                      setDeBoardDialogOpen(true);
-                                    }}
-                                  >
-                                    <UserMinus className="h-4 w-4 mr-2" />
-                                    Remove from Tools
-                                  </DropdownMenuItem>
-                                )}
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem>View Details</DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                                  <UserMinus className="h-4 w-4 mr-1" />
+                                  Offboard
+                                </Button>
+                              )}
+                            </div>
                           </TableCell>
                         </TableRow>
                       );
@@ -440,6 +475,46 @@ const UserBoarding = () => {
               </Table>
             </CardContent>
           </Card>
+          
+          {/* Onboard Dialog */}
+          <Dialog open={onboardDialogOpen} onOpenChange={setOnboardDialogOpen}>
+            <DialogContent className="sm:max-w-[600px]">
+              <DialogHeader>
+                <DialogTitle>Onboard User to SaaS Tools</DialogTitle>
+                <DialogDescription>
+                  {selectedUser ? `Select the SaaS tools to provide to ${selectedUser.full_name}` : 'Select the tools to provide'}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="grid gap-4 py-4">
+                <div className="space-y-2">
+                  <Label>Select SaaS Tools</Label>
+                  <div className="grid grid-cols-2 gap-4 max-h-[200px] overflow-y-auto">
+                    {mockSaasData.map(tool => (
+                      <div key={tool.id} className="flex items-center space-x-2">
+                        <Checkbox 
+                          id={`tool-${tool.id}`} 
+                          checked={selectedTools.includes(tool.id)}
+                          onCheckedChange={() => toggleToolSelection(tool.id)}
+                        />
+                        <label 
+                          htmlFor={`tool-${tool.id}`}
+                          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                        >
+                          {tool.name}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+              
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setOnboardDialogOpen(false)}>Cancel</Button>
+                <Button onClick={handleOnboardUser}>Onboard User</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
           
           {/* De-Board Dialog */}
           <Dialog open={deBoardDialogOpen} onOpenChange={setDeBoardDialogOpen}>

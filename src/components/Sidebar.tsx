@@ -61,13 +61,15 @@ const Sidebar = ({ className }: SidebarProps) => {
   const navigation = [
     { name: "Dashboard", href: "/", icon: LayoutDashboard },
     { name: "Spend Trends", href: "/spend-trends", icon: TrendingUp },
-    { name: "Contracts", href: "/contracts", icon: FileText },
   ];
   
   // Add Usage tab only if feature flag is enabled
   if (showUsageFeatures) {
     navigation.push({ name: "Usage", href: "/usage", icon: Gauge });
   }
+  
+  // Add Contracts after Usage
+  navigation.push({ name: "Contracts", href: "/contracts", icon: FileText });
 
   const secondaryNavigation = [
     { name: "Settings", href: "/settings", icon: Settings },

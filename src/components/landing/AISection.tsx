@@ -1,45 +1,57 @@
 
 import React from "react";
-import { Bot, Cpu, Sparkles } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { BrainCircuit, Bot, SparklesIcon } from "lucide-react";
 
 const AISection = () => {
   return (
-    <section className="py-12 md:py-20 bg-gradient-to-r from-green-400/5 to-blue-500/5">
+    <section className="py-8 md:py-16 bg-gradient-to-b from-background to-secondary/20">
       <div className="container mx-auto px-4 md:px-6">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">AI-Powered Intelligence</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Our platform leverages advanced AI and autonomous agents to transform your SaaS management experience.
-          </p>
-        </div>
-        
-        <div className="grid md:grid-cols-3 gap-8 mb-16">
-          <div className="bg-background rounded-xl p-6 shadow-sm border">
-            <div className="h-12 w-12 rounded-full bg-purple-100 flex items-center justify-center mb-4">
-              <Bot className="h-6 w-6 text-purple-500" />
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div>
+            <div className="relative">
+              <div className="rounded-2xl overflow-hidden border-2 border-primary/50 shadow-xl">
+                <img 
+                  src="https://images.unsplash.com/photo-1675271591211-728a94dd1095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  alt="AI assistant visualization" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute -bottom-4 -right-4 bg-background/80 backdrop-blur-sm border border-border p-3 rounded-lg shadow-lg hidden md:block">
+                <Badge variant="secondary" className="gap-1">
+                  <SparklesIcon className="h-3.5 w-3.5" />
+                  <span>AI-Powered</span>
+                </Badge>
+              </div>
             </div>
-            <h3 className="text-xl font-semibold mb-3">Intelligent Agents</h3>
-            <p className="text-muted-foreground">
-              Autonomous agents scan your SaaS ecosystem, identify optimization opportunities, and proactively alert you about critical events.
-            </p>
           </div>
-          <div className="bg-background rounded-xl p-6 shadow-sm border">
-            <div className="h-12 w-12 rounded-full bg-blue-100 flex items-center justify-center mb-4">
-              <Cpu className="h-6 w-6 text-blue-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-3">Predictive Analytics</h3>
-            <p className="text-muted-foreground">
-              Our AI models analyze spending patterns to forecast future costs and identify potential savings opportunities before they arise.
+          <div className="space-y-4">
+            <Badge variant="outline" className="gap-1 px-3 py-1">
+              <BrainCircuit className="h-3.5 w-3.5" />
+              <span>Powered by AI</span>
+            </Badge>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight">AI-Driven SaaS Spend Optimization</h2>
+            <p className="text-xl text-muted-foreground">
+              Our intelligent AI system analyzes your SaaS portfolio to identify optimization opportunities that human analysis might miss.
             </p>
-          </div>
-          <div className="bg-background rounded-xl p-6 shadow-sm border">
-            <div className="h-12 w-12 rounded-full bg-green-100 flex items-center justify-center mb-4">
-              <Sparkles className="h-6 w-6 text-green-500" />
-            </div>
-            <h3 className="text-xl font-semibold mb-3">Smart Recommendations</h3>
-            <p className="text-muted-foreground">
-              Receive personalized recommendations based on your specific usage patterns and business requirements.
-            </p>
+            <ul className="space-y-3 text-muted-foreground">
+              <li className="flex items-start gap-2">
+                <Bot className="h-5 w-5 text-primary mt-0.5" />
+                <span>Identifies duplicate or redundant SaaS tools with overlapping functionality</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Bot className="h-5 w-5 text-primary mt-0.5" />
+                <span>Predicts future spending trends based on historical data</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Bot className="h-5 w-5 text-primary mt-0.5" />
+                <span>Recommends tier downgrades for underutilized premium subscriptions</span>
+              </li>
+              <li className="flex items-start gap-2">
+                <Bot className="h-5 w-5 text-primary mt-0.5" />
+                <span>Alerts you before auto-renewals to prevent unwanted charges</span>
+              </li>
+            </ul>
           </div>
         </div>
       </div>

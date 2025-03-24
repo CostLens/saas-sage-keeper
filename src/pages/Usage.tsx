@@ -19,20 +19,20 @@ import {
   AlertCircle
 } from "lucide-react";
 
-// Mock usage history data
+// Mock usage and spend history data
 const usageHistory = [
-  { name: 'Jan', activeUsers: 320, totalLicenses: 450 },
-  { name: 'Feb', activeUsers: 350, totalLicenses: 450 },
-  { name: 'Mar', activeUsers: 380, totalLicenses: 500 },
-  { name: 'Apr', activeUsers: 410, totalLicenses: 500 },
-  { name: 'May', activeUsers: 390, totalLicenses: 500 },
-  { name: 'Jun', activeUsers: 415, totalLicenses: 550 },
-  { name: 'Jul', activeUsers: 440, totalLicenses: 550 },
-  { name: 'Aug', activeUsers: 460, totalLicenses: 550 },
-  { name: 'Sep', activeUsers: 480, totalLicenses: 600 },
-  { name: 'Oct', activeUsers: 510, totalLicenses: 600 },
-  { name: 'Nov', activeUsers: 540, totalLicenses: 650 },
-  { name: 'Dec', activeUsers: 580, totalLicenses: 650 },
+  { name: 'Jan', activeUsers: 320, totalLicenses: 450, spend: 22500, budget: 25000 },
+  { name: 'Feb', activeUsers: 350, totalLicenses: 450, spend: 23400, budget: 25000 },
+  { name: 'Mar', activeUsers: 380, totalLicenses: 500, spend: 24100, budget: 26000 },
+  { name: 'Apr', activeUsers: 410, totalLicenses: 500, spend: 24800, budget: 26000 },
+  { name: 'May', activeUsers: 390, totalLicenses: 500, spend: 24200, budget: 26000 },
+  { name: 'Jun', activeUsers: 415, totalLicenses: 550, spend: 26300, budget: 28000 },
+  { name: 'Jul', activeUsers: 440, totalLicenses: 550, spend: 27500, budget: 28000 },
+  { name: 'Aug', activeUsers: 460, totalLicenses: 550, spend: 28200, budget: 28000 },
+  { name: 'Sep', activeUsers: 480, totalLicenses: 600, spend: 29100, budget: 30000 },
+  { name: 'Oct', activeUsers: 510, totalLicenses: 600, spend: 30400, budget: 30000 },
+  { name: 'Nov', activeUsers: 540, totalLicenses: 650, spend: 31900, budget: 32000 },
+  { name: 'Dec', activeUsers: 580, totalLicenses: 650, spend: 33200, budget: 32000 },
 ];
 
 const UsagePage = () => {
@@ -101,13 +101,29 @@ const UsagePage = () => {
                       </div>
                     </div>
                     
-                    {/* License Trend Chart */}
+                    {/* First Chart: License Trend */}
                     <TrendChart
-                      title="User License Trend (12 Month)"
+                      title="License Utilization vs. Cost Trend (12 Month)"
                       data={usageHistory}
                       dataKey="name"
-                      categories={["activeUsers", "totalLicenses"]}
-                      colors={["hsl(var(--primary))", "hsl(var(--muted))"] }
+                      categories={["activeUsers", "totalLicenses", "spend", "budget"]}
+                      colors={["hsl(var(--primary))", "hsl(var(--muted))", "hsl(var(--green-500))", "hsl(var(--destructive))"]}
+                      valueFormatter={(value) => value.toString()}
+                      height={300}
+                    />
+                    
+                    {/* Second Chart: Spend vs. Usage Trend */}
+                    <TrendChart
+                      title="Spend vs. Usage Efficiency (12 Month)"
+                      description="Comparing spend per user with utilization rate over time"
+                      data={usageHistory.map(month => ({
+                        ...month,
+                        spendPerUser: Math.round(month.spend / month.activeUsers),
+                        utilizationRate: Math.round((month.activeUsers / month.totalLicenses) * 100)
+                      }))}
+                      dataKey="name"
+                      categories={["spendPerUser", "utilizationRate"]}
+                      colors={["hsl(var(--amber-500))", "hsl(var(--blue-500))"]}
                       valueFormatter={(value) => value.toString()}
                       height={300}
                     />
@@ -291,4 +307,3 @@ const UsagePage = () => {
 };
 
 export default UsagePage;
-

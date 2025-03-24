@@ -29,6 +29,15 @@ const validateTaskStatus = (status: string): 'pending' | 'in_progress' | 'comple
   return 'pending';
 };
 
+// Helper function to validate priority
+const validatePriority = (priority: string): 'low' | 'medium' | 'high' => {
+  if (priority === 'low' || priority === 'medium' || priority === 'high') {
+    return priority;
+  }
+  console.warn(`Invalid priority value: ${priority}, defaulting to 'medium'`);
+  return 'medium';
+};
+
 // Fetch users from HRMS integration
 export const getHrmsUsers = async (): Promise<HrmsUser[]> => {
   const { data, error } = await supabase
@@ -83,7 +92,8 @@ export const getUserOnboardingTasks = async (employeeId: string): Promise<Onboar
   return (data || []).map(task => ({
     ...task,
     task_type: validateTaskType(task.task_type),
-    status: validateTaskStatus(task.status)
+    status: validateTaskStatus(task.status),
+    priority: validatePriority(task.priority)
   }));
 };
 

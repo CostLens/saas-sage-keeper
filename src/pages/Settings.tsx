@@ -1,57 +1,121 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
-import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import { Mail, Users } from "lucide-react";
-import { 
-  Dialog, 
-  DialogContent, 
-  DialogHeader, 
-  DialogTitle, 
-  DialogDescription,
-  DialogFooter 
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useIsMobile } from "@/hooks/use-mobile";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { toast } from "sonner";
+import { CheckCircle, XCircle } from "lucide-react";
 
 const Settings = () => {
-  const [name, setName] = useState("Kanav Hasija");
-  const [email, setEmail] = useState("kanav.hasija@gmail.com");
-  const [emailNotifications, setEmailNotifications] = useState(true);
-  const [contractRenewalAlerts, setContractRenewalAlerts] = useState(true);
-  const [spendAlerts, setSpendAlerts] = useState(true);
-  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    return localStorage.getItem("show-usage-features") === "true"; // Default to false if not set
-  });
-  const [gmailConnected, setGmailConnected] = useState(false);
-  const [quickbooksConnected, setQuickbooksConnected] = useState(false);
-  const [zohoConnected, setZohoConnected] = useState(() => {
-    const savedZohoConnected = localStorage.getItem("zoho-connected");
-    return savedZohoConnected === "true";
-  });
-  const [gmailDialogOpen, setGmailDialogOpen] = useState(false);
-  const [quickbooksDialogOpen, setQuickbooksDialogOpen] = useState(false);
-  const [zohoDialogOpen, setZohoDialogOpen] = useState(false);
-  const [gmailEmail, setGmailEmail] = useState("");
-  const [gmailPassword, setGmailPassword] = useState("");
-  const [quickbooksUsername, setQuickbooksUsername] = useState("");
-  const [quickbooksPassword, setQuickbooksPassword] = useState("");
-  const [zohoUsername, setZohoUsername] = useState("");
-  const [zohoPassword, setZohoPassword] = useState("");
-  const { toast } = useToast();
-  const isMobile = useIsMobile();
-
-  // Track sidebar collapsed state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
     const saved = localStorage.getItem("sidebar-collapsed");
     return saved ? JSON.parse(saved) : false;
   });
   
-  // Listen for sidebar state changes
+  // Feature flags
+  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-usage-features");
+    return savedValue === "true";
+  });
+
+  const [showUserManagementFeatures, setShowUserManagementFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-user-management-features");
+    return savedValue === "true";
+  });
+  
+  // Integration status
+  const [integrations, setIntegrations] = useState({
+    gmail: { connected: true, lastSynced: "2023-10-15T08:30:00" },
+    slack: { connected: false, lastSynced: null },
+    quickbooks: { connected: true, lastSynced: "2023-10-14T14:22:00" },
+    zoom: { connected: false, lastSynced: null },
+    zoho: { connected: false, lastSynced: null },
+  });
+  
+  // Form values
+  const [companyDetails, setCompanyDetails] = useState({
+    name: "Acme Corp",
+    email: "admin@acmecorp.com",
+    industry: "Technology",
+    size: "50-100",
+    country: "United States"
+  });
+
+  const toggleUsageFeatures = () => {
+    const newValue = !showUsageFeatures;
+    localStorage.setItem("show-usage-features", newValue.toString());
+    setShowUsageFeatures(newValue);
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('usageFeaturesToggled'));
+    
+    toast.success(`Usage features ${newValue ? 'enabled' : 'disabled'}`);
+  };
+
+  const toggleUserManagementFeatures = () => {
+    const newValue = !showUserManagementFeatures;
+    localStorage.setItem("show-user-management-features", newValue.toString());
+    setShowUserManagementFeatures(newValue);
+    
+    // Dispatch custom event to notify other components
+    window.dispatchEvent(new Event('userManagementFeaturesToggled'));
+    
+    toast.success(`User management features ${newValue ? 'enabled' : 'disabled'}`);
+  };
+  
+  const handleCompanyDetailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setCompanyDetails(prev => ({ ...prev, [name]: value }));
+  };
+  
+  const handleCompanyDetailsSave = () => {
+    // Here you would normally save to an API
+    toast.success("Company details saved successfully!");
+  };
+  
+  const handleConnect = (integration: string) => {
+    // Here you would normally connect to the integration via API
+    setIntegrations(prev => ({
+      ...prev,
+      [integration]: { 
+        connected: true, 
+        lastSynced: new Date().toISOString() 
+      }
+    }));
+    
+    toast.success(`Connected to ${integration} successfully!`);
+  };
+  
+  const handleDisconnect = (integration: string) => {
+    // Here you would normally disconnect from the integration via API
+    setIntegrations(prev => ({
+      ...prev,
+      [integration]: { 
+        connected: false, 
+        lastSynced: null 
+      }
+    }));
+    
+    toast.success(`Disconnected from ${integration} successfully!`);
+  };
+  
+  const formatDate = (dateString: string | null) => {
+    if (!dateString) return "Never";
+    const date = new Date(dateString);
+    return new Intl.DateTimeFormat('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    }).format(date);
+  };
+
   useEffect(() => {
     const handleSidebarChange = (event: CustomEvent) => {
       setIsSidebarCollapsed(event.detail.isCollapsed);
@@ -64,444 +128,538 @@ const Settings = () => {
     };
   }, []);
 
-  useEffect(() => {
-    const savedShowUsageFeatures = localStorage.getItem("show-usage-features");
-    if (savedShowUsageFeatures !== null) {
-      setShowUsageFeatures(savedShowUsageFeatures === "true");
-    }
-    
-    const savedGmailConnected = localStorage.getItem("gmail-connected");
-    if (savedGmailConnected !== null) {
-      setGmailConnected(savedGmailConnected === "true");
-    }
-    
-    const savedQuickbooksConnected = localStorage.getItem("quickbooks-connected");
-    if (savedQuickbooksConnected !== null) {
-      setQuickbooksConnected(savedQuickbooksConnected === "true");
-    }
-    
-    const savedZohoConnected = localStorage.getItem("zoho-connected");
-    if (savedZohoConnected !== null) {
-      setZohoConnected(savedZohoConnected === "true");
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("show-usage-features", showUsageFeatures.toString());
-    window.dispatchEvent(new Event("usageFeaturesToggled"));
-  }, [showUsageFeatures]);
-  
-  useEffect(() => {
-    localStorage.setItem("gmail-connected", gmailConnected.toString());
-  }, [gmailConnected]);
-  
-  useEffect(() => {
-    localStorage.setItem("quickbooks-connected", quickbooksConnected.toString());
-  }, [quickbooksConnected]);
-  
-  useEffect(() => {
-    localStorage.setItem("zoho-connected", zohoConnected.toString());
-  }, [zohoConnected]);
-
-  const handleSaveSettings = () => {
-    toast({
-      title: "Settings saved",
-      description: "Your settings have been saved successfully.",
-    });
-  };
-  
-  const handleConnectGmail = () => {
-    setGmailDialogOpen(true);
-  };
-  
-  const handleGmailLogin = () => {
-    setGmailDialogOpen(false);
-    setGmailConnected(true);
-    toast({
-      title: "Gmail connected",
-      description: "Your Gmail account has been connected successfully.",
-    });
-  };
-  
-  const handleDisconnectGmail = () => {
-    setGmailConnected(false);
-    toast({
-      title: "Gmail disconnected",
-      description: "Your Gmail account has been disconnected.",
-    });
-  };
-  
-  const handleConnectQuickbooks = () => {
-    setQuickbooksDialogOpen(true);
-  };
-  
-  const handleQuickbooksLogin = () => {
-    setQuickbooksDialogOpen(false);
-    setQuickbooksConnected(true);
-    toast({
-      title: "QuickBooks connected",
-      description: "Your QuickBooks account has been connected successfully.",
-    });
-  };
-  
-  const handleDisconnectQuickbooks = () => {
-    setQuickbooksConnected(false);
-    toast({
-      title: "QuickBooks disconnected",
-      description: "Your QuickBooks account has been disconnected.",
-    });
-  };
-
-  const handleConnectZoho = () => {
-    setZohoDialogOpen(true);
-  };
-  
-  const handleZohoLogin = () => {
-    setZohoDialogOpen(false);
-    setZohoConnected(true);
-    toast({
-      title: "Zoho HRMS connected",
-      description: "Your Zoho HRMS account has been connected successfully.",
-    });
-  };
-  
-  const handleDisconnectZoho = () => {
-    setZohoConnected(false);
-    toast({
-      title: "Zoho HRMS disconnected",
-      description: "Your Zoho HRMS account has been disconnected.",
-    });
-  };
-
   return (
-    <div className="flex min-h-screen flex-col md:flex-row">
+    <div className="min-h-screen flex flex-col md:flex-row">
       <Sidebar />
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${isSidebarCollapsed ? 'ml-0 md:ml-16' : 'ml-0 md:ml-64'}`}>
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${
+        isSidebarCollapsed ? 'ml-16' : 'ml-64'
+      }`}>
         <Header />
-        <main className="flex-1 overflow-auto p-4 md:p-6">
-          <div className="max-w-4xl mx-auto">
-            <h1 className="text-2xl font-bold mb-6">Settings</h1>
+        <main className="flex-1 p-6 space-y-8 animate-fade-in">
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
+          </div>
+
+          <Tabs defaultValue="general" className="space-y-6">
+            <TabsList>
+              <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="integrations">Integrations</TabsTrigger>
+              <TabsTrigger value="features">Feature Flags</TabsTrigger>
+              <TabsTrigger value="notifications">Notifications</TabsTrigger>
+              <TabsTrigger value="team">Team</TabsTrigger>
+            </TabsList>
             
-            <div className="space-y-6">
-              {/* Profile Settings Card */}
+            <TabsContent value="general" className="space-y-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Profile Settings</CardTitle>
-                  <CardDescription>Manage your personal information</CardDescription>
+                  <CardTitle>Company Details</CardTitle>
+                  <CardDescription>Update your company information</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label htmlFor="name">Company Name</Label>
+                      <Input 
+                        id="name" 
+                        name="name" 
+                        value={companyDetails.name} 
+                        onChange={handleCompanyDetailChange} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="email">Company Email</Label>
+                      <Input 
+                        id="email" 
+                        name="email" 
+                        type="email" 
+                        value={companyDetails.email} 
+                        onChange={handleCompanyDetailChange} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="industry">Industry</Label>
+                      <Input 
+                        id="industry" 
+                        name="industry" 
+                        value={companyDetails.industry} 
+                        onChange={handleCompanyDetailChange} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="size">Company Size</Label>
+                      <Input 
+                        id="size" 
+                        name="size" 
+                        value={companyDetails.size} 
+                        onChange={handleCompanyDetailChange} 
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <Label htmlFor="country">Country</Label>
+                      <Input 
+                        id="country" 
+                        name="country" 
+                        value={companyDetails.country} 
+                        onChange={handleCompanyDetailChange} 
+                      />
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    <Button onClick={handleCompanyDetailsSave}>Save Changes</Button>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card>
+                <CardHeader>
+                  <CardTitle>Subscription</CardTitle>
+                  <CardDescription>Manage your subscription plan</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="bg-muted rounded-md p-4 mb-4">
+                    <div className="flex justify-between">
+                      <div>
+                        <h3 className="font-medium">Current Plan: Professional</h3>
+                        <p className="text-sm text-muted-foreground">Billed annually at $599/year</p>
+                      </div>
+                      <Badge className="bg-green-100 text-green-800 border-green-200">Active</Badge>
+                    </div>
+                  </div>
+                  
+                  <div className="flex space-x-4">
+                    <Button variant="outline">Change Plan</Button>
+                    <Button variant="outline" className="text-red-500 hover:text-red-600">Cancel Subscription</Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="integrations" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Connected Services</CardTitle>
+                  <CardDescription>Manage integrations with third-party services</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {/* Gmail Integration */}
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-red-100 p-2 rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500">
+                          <path d="M3 3h18v18H3z"/>
+                          <path d="m3 8 8 5 8-5"/>
+                          <path d="M3 8V6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Gmail</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {integrations.gmail.connected 
+                            ? `Last synced: ${formatDate(integrations.gmail.lastSynced)}` 
+                            : "Not connected"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      {integrations.gmail.connected ? (
+                        <Button variant="outline" onClick={() => handleDisconnect('gmail')}>
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Disconnect
+                        </Button>
+                      ) : (
+                        <Button onClick={() => handleConnect('gmail')}>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Connect
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* QuickBooks Integration */}
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-blue-100 p-2 rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-500">
+                          <path d="M3 3v18h18"/>
+                          <path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">QuickBooks</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {integrations.quickbooks.connected 
+                            ? `Last synced: ${formatDate(integrations.quickbooks.lastSynced)}` 
+                            : "Not connected"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      {integrations.quickbooks.connected ? (
+                        <Button variant="outline" onClick={() => handleDisconnect('quickbooks')}>
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Disconnect
+                        </Button>
+                      ) : (
+                        <Button onClick={() => handleConnect('quickbooks')}>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Connect
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Slack Integration */}
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-purple-100 p-2 rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500">
+                          <path d="M14.5 2v4c0 1.1-.9 2-2 2h-4"/>
+                          <path d="M9.5 22v-4c0-1.1.9-2 2-2h4"/>
+                          <path d="M22 9.5h-4c-1.1 0-2-.9-2-2v-4"/>
+                          <path d="M2 14.5h4c1.1 0 2 .9 2 2v4"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Slack</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {integrations.slack.connected 
+                            ? `Last synced: ${formatDate(integrations.slack.lastSynced)}` 
+                            : "Not connected"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      {integrations.slack.connected ? (
+                        <Button variant="outline" onClick={() => handleDisconnect('slack')}>
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Disconnect
+                        </Button>
+                      ) : (
+                        <Button onClick={() => handleConnect('slack')}>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Connect
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Zoom Integration */}
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-blue-100 p-2 rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-700">
+                          <path d="M15 10l4.553-2.276A1 1 0 0 1 21 8.618v6.764a1 1 0 0 1-1.447.894L15 14v-4z"/>
+                          <rect x="3" y="6" width="12" height="12" rx="2" ry="2"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Zoom</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {integrations.zoom.connected 
+                            ? `Last synced: ${formatDate(integrations.zoom.lastSynced)}` 
+                            : "Not connected"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      {integrations.zoom.connected ? (
+                        <Button variant="outline" onClick={() => handleDisconnect('zoom')}>
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Disconnect
+                        </Button>
+                      ) : (
+                        <Button onClick={() => handleConnect('zoom')}>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Connect
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                  
+                  {/* Zoho HRMS Integration */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-4">
+                      <div className="bg-green-100 p-2 rounded-md">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-700">
+                          <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                          <circle cx="9" cy="7" r="4"/>
+                          <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                          <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                      </div>
+                      <div>
+                        <h3 className="font-medium">Zoho HRMS</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {integrations.zoho.connected 
+                            ? `Last synced: ${formatDate(integrations.zoho.lastSynced)}` 
+                            : "Not connected"}
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      {integrations.zoho.connected ? (
+                        <Button variant="outline" onClick={() => handleDisconnect('zoho')}>
+                          <XCircle className="h-4 w-4 mr-2" />
+                          Disconnect
+                        </Button>
+                      ) : (
+                        <Button onClick={() => handleConnect('zoho')}>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Connect
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="features" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Feature Flags</CardTitle>
+                  <CardDescription>Enable or disable specific features</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div>
+                      <h3 className="font-medium">Usage Analytics</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Enable usage analytics and license management features
+                      </p>
+                    </div>
+                    <Switch 
+                      checked={showUsageFeatures} 
+                      onCheckedChange={toggleUsageFeatures} 
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div>
+                      <h3 className="font-medium">User Management</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Enable user onboarding and offboarding management
+                      </p>
+                    </div>
+                    <Switch 
+                      checked={showUserManagementFeatures} 
+                      onCheckedChange={toggleUserManagementFeatures} 
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div>
+                      <h3 className="font-medium">Advanced Reporting</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Enable advanced reporting and analytics features
+                      </p>
+                    </div>
+                    <Switch 
+                      disabled 
+                      checked={false} 
+                    />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium">Compliance Management</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Enable compliance management and reporting features
+                      </p>
+                    </div>
+                    <Switch 
+                      disabled 
+                      checked={false} 
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="notifications" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Notification Preferences</CardTitle>
+                  <CardDescription>Manage how you receive notifications</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div>
+                      <h3 className="font-medium">Email Notifications</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Receive notifications via email
+                      </p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div>
+                      <h3 className="font-medium">Contract Renewals</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Get notified about upcoming contract renewals
+                      </p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between border-b pb-4">
+                    <div>
+                      <h3 className="font-medium">Payment Reminders</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Get notified about upcoming payments
+                      </p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                  
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h3 className="font-medium">Weekly Reports</h3>
+                      <p className="text-sm text-muted-foreground">
+                        Receive weekly summary reports
+                      </p>
+                    </div>
+                    <Switch defaultChecked />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+            
+            <TabsContent value="team" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Team Members</CardTitle>
+                  <CardDescription>Manage users who have access to your account</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Name</label>
-                      <input 
-                        type="text" 
-                        placeholder="Your name"
-                        className="w-full px-3 py-2 border rounded-md"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                      />
-                    </div>
-                    <div>
-                      <label className="text-sm font-medium mb-1 block">Email</label>
-                      <input 
-                        type="email" 
-                        placeholder="Your email"
-                        className="w-full px-3 py-2 border rounded-md"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Integrations Card */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Integrations</CardTitle>
-                  <CardDescription>Connect with other applications</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                          <Mail className="h-5 w-5 text-primary" />
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-4">
+                        <div className="rounded-full bg-primary/10 p-2 text-primary">
+                          <User className="h-5 w-5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-medium">Gmail</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {gmailConnected 
-                              ? "Connected to Gmail" 
-                              : "Connect to import contract emails and notifications"}
-                          </p>
+                          <p className="font-medium">John Doe</p>
+                          <p className="text-sm text-muted-foreground">john@example.com</p>
                         </div>
                       </div>
-                      <Button 
-                        variant={gmailConnected ? "outline" : "default"}
-                        onClick={gmailConnected ? handleDisconnectGmail : handleConnectGmail}
-                        size="sm"
-                      >
-                        {gmailConnected ? "Disconnect" : "Connect"}
-                      </Button>
+                      <Badge>Admin</Badge>
                     </div>
                     
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-md bg-green-100 flex items-center justify-center">
-                          <svg className="h-5 w-5 text-green-600" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M22.3 2.9c-.5-.3-1.3-.3-2.2 0l-6.8 2.3V2.7c0-.7-.6-1.3-1.3-1.3h-4.5c-.7 0-1.3.6-1.3 1.3v4.6L1.7 9.9C.6 10.3 0 11.3 0 12.5v9c0 1.4 1.1 2.5 2.5 2.5h19c1.4 0 2.5-1.1 2.5-2.5v-16c0-.9-.7-1.8-1.7-2.6zm-14-1.5h6v5.5l-6-2.1V1.4zm10.2 21.1H5.5v-7.1l6.5 3.2 6.5-3.2v7.1zm1.3-9.5L12 16.5 4.2 13c-.8-.4-.8-1.5 0-1.9l6.4-2.9 7.4-2.5c.8-.3 1.5.2 1.5 1 0 .6-.3 1.1-.9 1.4l-7.9 2.7-3.4 1.5 7.9 3.5 7.9-3.5c.1-.1.2-.1.2-.2v-.5c0-.7-.7-1.3-1.5-1l-.9.3-.1-1.1 1-.3c1.5-.5 3.1.2 3.1 1.8v.7c0 .9-.7 1.8-1.8 2.3z"/>
-                          </svg>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-4">
+                        <div className="rounded-full bg-primary/10 p-2 text-primary">
+                          <User className="h-5 w-5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-medium">QuickBooks</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {quickbooksConnected 
-                              ? "Connected to QuickBooks" 
-                              : "Connect to import accounting data and expenses"}
-                          </p>
+                          <p className="font-medium">Jane Smith</p>
+                          <p className="text-sm text-muted-foreground">jane@example.com</p>
                         </div>
                       </div>
-                      <Button 
-                        variant={quickbooksConnected ? "outline" : "default"}
-                        onClick={quickbooksConnected ? handleDisconnectQuickbooks : handleConnectQuickbooks}
-                        size="sm"
-                      >
-                        {quickbooksConnected ? "Disconnect" : "Connect"}
-                      </Button>
+                      <Badge variant="outline">Member</Badge>
                     </div>
-
-                    {/* New Zoho HRMS Integration */}
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-md bg-blue-100 flex items-center justify-center">
-                          <Users className="h-5 w-5 text-blue-600" />
+                    
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-4">
+                        <div className="rounded-full bg-primary/10 p-2 text-primary">
+                          <User className="h-5 w-5" />
                         </div>
                         <div>
-                          <h3 className="text-sm font-medium">Zoho HRMS</h3>
-                          <p className="text-xs text-muted-foreground">
-                            {zohoConnected 
-                              ? "Connected to Zoho HRMS" 
-                              : "Connect to import employee data and manage user access"}
-                          </p>
+                          <p className="font-medium">Bob Johnson</p>
+                          <p className="text-sm text-muted-foreground">bob@example.com</p>
                         </div>
                       </div>
-                      <Button 
-                        variant={zohoConnected ? "outline" : "default"}
-                        onClick={zohoConnected ? handleDisconnectZoho : handleConnectZoho}
-                        size="sm"
-                      >
-                        {zohoConnected ? "Disconnect" : "Connect"}
-                      </Button>
+                      <Badge variant="outline">Member</Badge>
                     </div>
+                  </div>
+                  
+                  <div className="mt-6">
+                    <Button>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Add Team Member
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
-
-              {/* Feature Settings Card */}
+              
               <Card>
                 <CardHeader>
-                  <CardTitle>Feature Settings</CardTitle>
-                  <CardDescription>Control which features are visible in the application</CardDescription>
+                  <CardTitle>Roles & Permissions</CardTitle>
+                  <CardDescription>Manage access rights for different roles</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center border-b pb-4">
                       <div>
-                        <span className="text-sm font-medium">Usage Features</span>
-                        <p className="text-xs text-muted-foreground">
-                          Show or hide usage metrics and optimization features
-                        </p>
+                        <p className="font-medium">Admin</p>
+                        <p className="text-sm text-muted-foreground">Full access to all features</p>
                       </div>
-                      <Switch
-                        checked={showUsageFeatures}
-                        onCheckedChange={setShowUsageFeatures}
-                      />
+                      <Button variant="outline" size="sm">Edit</Button>
+                    </div>
+                    
+                    <div className="flex justify-between items-center border-b pb-4">
+                      <div>
+                        <p className="font-medium">Manager</p>
+                        <p className="text-sm text-muted-foreground">Can manage contracts and users</p>
+                      </div>
+                      <Button variant="outline" size="sm">Edit</Button>
+                    </div>
+                    
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <p className="font-medium">Member</p>
+                        <p className="text-sm text-muted-foreground">View-only access</p>
+                      </div>
+                      <Button variant="outline" size="sm">Edit</Button>
                     </div>
                   </div>
                 </CardContent>
               </Card>
-
-              {/* Notification Settings Card */}
-              <Card>
-                <CardHeader>
-                  <CardTitle>Notification Settings</CardTitle>
-                  <CardDescription>Manage how you receive notifications</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm font-medium">Email Notifications</span>
-                        <p className="text-xs text-muted-foreground">
-                          Receive important alerts via email
-                        </p>
-                      </div>
-                      <Switch
-                        checked={emailNotifications}
-                        onCheckedChange={setEmailNotifications}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm font-medium">Contract Renewal Alerts</span>
-                        <p className="text-xs text-muted-foreground">
-                          Get notified before contracts are due for renewal
-                        </p>
-                      </div>
-                      <Switch
-                        checked={contractRenewalAlerts}
-                        onCheckedChange={setContractRenewalAlerts}
-                      />
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <span className="text-sm font-medium">Spend Alerts</span>
-                        <p className="text-xs text-muted-foreground">
-                          Get notified about unusual spending patterns
-                        </p>
-                      </div>
-                      <Switch
-                        checked={spendAlerts}
-                        onCheckedChange={setSpendAlerts}
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="flex justify-end">
-                <Button onClick={handleSaveSettings}>Save Changes</Button>
-              </div>
-            </div>
-          </div>
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
-
-      {/* Gmail Login Dialog */}
-      <Dialog open={gmailDialogOpen} onOpenChange={setGmailDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Connect to Gmail</DialogTitle>
-            <DialogDescription>
-              Enter your Gmail credentials to connect your account
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="gmail-email">Email</Label>
-              <Input
-                id="gmail-email"
-                value={gmailEmail}
-                onChange={(e) => setGmailEmail(e.target.value)}
-                placeholder="your.email@gmail.com"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="gmail-password">Password</Label>
-              <Input
-                id="gmail-password"
-                type="password"
-                value={gmailPassword}
-                onChange={(e) => setGmailPassword(e.target.value)}
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setGmailDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleGmailLogin}>
-              Login & Connect
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* QuickBooks Login Dialog */}
-      <Dialog open={quickbooksDialogOpen} onOpenChange={setQuickbooksDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Connect to QuickBooks</DialogTitle>
-            <DialogDescription>
-              Enter your QuickBooks credentials to connect your account
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="quickbooks-username">Username</Label>
-              <Input
-                id="quickbooks-username"
-                value={quickbooksUsername}
-                onChange={(e) => setQuickbooksUsername(e.target.value)}
-                placeholder="Your QuickBooks username"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="quickbooks-password">Password</Label>
-              <Input
-                id="quickbooks-password"
-                type="password"
-                value={quickbooksPassword}
-                onChange={(e) => setQuickbooksPassword(e.target.value)}
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setQuickbooksDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleQuickbooksLogin}>
-              Login & Connect
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-
-      {/* Zoho HRMS Login Dialog */}
-      <Dialog open={zohoDialogOpen} onOpenChange={setZohoDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Connect to Zoho HRMS</DialogTitle>
-            <DialogDescription>
-              Enter your Zoho HRMS credentials to connect your account
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid gap-2">
-              <Label htmlFor="zoho-username">Username</Label>
-              <Input
-                id="zoho-username"
-                value={zohoUsername}
-                onChange={(e) => setZohoUsername(e.target.value)}
-                placeholder="Your Zoho username"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="zoho-password">Password</Label>
-              <Input
-                id="zoho-password"
-                type="password"
-                value={zohoPassword}
-                onChange={(e) => setZohoPassword(e.target.value)}
-                placeholder="••••••••"
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setZohoDialogOpen(false)}>
-              Cancel
-            </Button>
-            <Button onClick={handleZohoLogin}>
-              Login & Connect
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </div>
   );
 };
+
+// Add missing components for types
+const Badge = ({ children, variant = "default", className = "" }) => {
+  const baseClasses = "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold";
+  const variantClasses = {
+    default: "bg-primary text-primary-foreground",
+    secondary: "bg-secondary text-secondary-foreground",
+    outline: "border border-input bg-background text-foreground",
+    destructive: "bg-destructive text-destructive-foreground",
+    success: "bg-green-500 text-white"
+  };
+  
+  const selectedVariant = variant in variantClasses ? variant : "default";
+  
+  return (
+    <span className={`${baseClasses} ${variantClasses[selectedVariant]} ${className}`}>
+      {children}
+    </span>
+  );
+};
+
+const User = ({ className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+    <circle cx="12" cy="7" r="4" />
+  </svg>
+);
+
+const Plus = ({ className = "" }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <path d="M12 5v14M5 12h14" />
+  </svg>
+);
 
 export default Settings;

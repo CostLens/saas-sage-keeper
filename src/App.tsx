@@ -18,6 +18,7 @@ import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import UserManagement from "./pages/UserManagement";
+import UserOnboarding from "./pages/UserOnboarding";
 
 const queryClient = new QueryClient();
 
@@ -27,18 +28,28 @@ const App = () => {
     return savedValue === "true"; // Default to false if null or anything other than "true"
   });
 
+  const [showUserManagementFeatures, setShowUserManagementFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-user-management-features");
+    return savedValue === "true"; // Default to false if null or anything other than "true"
+  });
+
   useEffect(() => {
     const handleStorageChange = () => {
-      const savedValue = localStorage.getItem("show-usage-features");
-      setShowUsageFeatures(savedValue === "true");
+      const usageValue = localStorage.getItem("show-usage-features");
+      setShowUsageFeatures(usageValue === "true");
+      
+      const userManagementValue = localStorage.getItem("show-user-management-features");
+      setShowUserManagementFeatures(userManagementValue === "true");
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
+    window.addEventListener('userManagementFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
+      window.removeEventListener('userManagementFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -65,6 +76,11 @@ const App = () => {
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route path="/user-management" element={<UserManagement />} />
+              {showUserManagementFeatures ? (
+                <Route path="/user-onboarding" element={<UserOnboarding />} />
+              ) : (
+                <Route path="/user-onboarding" element={<Navigate to="/dashboard" replace />} />
+              )}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BookDemoModalProvider>

@@ -1,6 +1,15 @@
 
 import { supabase } from "@/integrations/supabase/client";
-import { EmployeeStatus, HrmsUser } from "@/types/hrms";
+import { EmployeeStatus, HrmsUser, OnboardingTask } from "@/types/hrms";
+
+// Helper function to validate status
+const validateEmployeeStatus = (status: string): 'active' | 'terminated' | 'on_leave' => {
+  if (status === 'active' || status === 'terminated' || status === 'on_leave') {
+    return status;
+  }
+  console.warn(`Invalid status value: ${status}, defaulting to 'active'`);
+  return 'active';
+};
 
 // Fetch users from HRMS integration
 export const getHrmsUsers = async (): Promise<HrmsUser[]> => {
@@ -13,7 +22,11 @@ export const getHrmsUsers = async (): Promise<HrmsUser[]> => {
     throw error;
   }
   
-  return data || [];
+  // Map and validate the data to match our HrmsUser type
+  return (data || []).map(user => ({
+    ...user,
+    status: validateEmployeeStatus(user.status)
+  }));
 };
 
 // Get employee status
@@ -29,11 +42,15 @@ export const getEmployeeStatus = async (employeeId: string): Promise<EmployeeSta
     return null;
   }
   
-  return data || null;
+  // Convert string status to our enum type
+  return data ? {
+    ...data,
+    status: validateEmployeeStatus(data.status)
+  } : null;
 };
 
 // Get all user onboarding/offboarding tasks
-export const getUserOnboardingTasks = async (employeeId: string) => {
+export const getUserOnboardingTasks = async (employeeId: string): Promise<OnboardingTask[]> => {
   const { data, error } = await supabase
     .from('user_onboarding_tasks')
     .select('*')

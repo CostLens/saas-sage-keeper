@@ -15,7 +15,7 @@ export function FeatureFlagsTab() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Feature Flags</CardTitle>
+        <CardTitle>Feature Flag</CardTitle>
         <CardDescription>
           Enable or disable specific features
         </CardDescription>

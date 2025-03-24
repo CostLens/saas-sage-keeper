@@ -14,7 +14,7 @@ export function SettingsTabs() {
       <div className="overflow-x-auto">
         <TabsList className="w-full md:w-auto">
           <TabsTrigger value="general">General</TabsTrigger>
-          <TabsTrigger value="features">Feature Flags</TabsTrigger>
+          <TabsTrigger value="features">Feature Flag</TabsTrigger>
           <TabsTrigger value="subscription">Subscription</TabsTrigger>
           <TabsTrigger value="integrations">Integrations</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>

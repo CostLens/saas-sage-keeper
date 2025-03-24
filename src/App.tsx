@@ -17,6 +17,7 @@ import Usage from "./pages/Usage";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import UserManagement from "./pages/UserManagement";
 
 const queryClient = new QueryClient();
 
@@ -63,6 +64,7 @@ const App = () => {
               <Route path="/ai-assistant" element={<AIAssistant />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
+              <Route path="/user-management" element={<UserManagement />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BookDemoModalProvider>

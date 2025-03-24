@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -35,7 +34,7 @@ const Dashboard = () => {
   });
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-usage-features");
-    return savedValue === "true";
+    return savedValue === "true"; // Default to false if null or anything other than "true"
   });
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
 
@@ -160,7 +159,7 @@ const Dashboard = () => {
               className="h-full"
             />
             
-            {showUsageFeatures ? (
+            {showUsageFeatures && (
               <>
                 <StatCard
                   key="license-utilization"
@@ -181,26 +180,6 @@ const Dashboard = () => {
                   value={`$${Math.round(potentialSavings).toLocaleString()}`}
                   icon={<TrendingDown className="h-5 w-5" />}
                   description={`${unusedLicenses} unused licenses across all apps`}
-                  className="h-full"
-                />
-              </>
-            ) : (
-              <>
-                <StatCard
-                  key="placeholder-1"
-                  title="License Utilization"
-                  value="Feature Disabled"
-                  icon={<Users className="h-5 w-5" />}
-                  description="Enable Usage Features in Settings"
-                  className="h-full"
-                />
-                
-                <StatCard
-                  key="placeholder-2"
-                  title="Potential Cost Savings"
-                  value="Feature Disabled"
-                  icon={<TrendingDown className="h-5 w-5" />}
-                  description="Enable Usage Features in Settings"
                   className="h-full"
                 />
               </>

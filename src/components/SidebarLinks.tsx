@@ -57,7 +57,7 @@ export function SidebarLinks({ collapsed, showUsageFeatures, showBoardingFeature
       show: showBoardingFeatures,
     },
     {
-      name: "Repository",
+      name: "Contracts",
       href: "/contracts",
       icon: <FileText className="h-5 w-5" />,
       active: location.pathname === "/contracts",

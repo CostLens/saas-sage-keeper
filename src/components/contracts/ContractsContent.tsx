@@ -1,9 +1,7 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { ContractDocument } from "@/lib/mockData";
-import { DocumentsBySaas } from "./DocumentsBySaas";
-import { useQuery } from "@tanstack/react-query";
-import { getSaasApplications } from "@/lib/supabaseService";
+import { ContractHierarchy } from "@/components/contracts/ContractHierarchy";
 
 interface ContractsContentProps {
   contractsBySaas: Record<string, { saasName: string; documents: ContractDocument[] }>;
@@ -11,18 +9,17 @@ interface ContractsContentProps {
 }
 
 export const ContractsContent = ({ contractsBySaas, onDocumentClick }: ContractsContentProps) => {
-  // Fetch SaaS applications
-  const { data: saasApplications, isLoading } = useQuery({
-    queryKey: ['saasApplications'],
-    queryFn: getSaasApplications,
-  });
-
   return (
-    <DocumentsBySaas
-      saasApplications={saasApplications}
-      isLoading={isLoading}
-      documentsBySaas={contractsBySaas}
-      onDocumentClick={onDocumentClick}
-    />
+    <div className="space-y-6">
+      {Object.entries(contractsBySaas).map(([saasId, { saasName, documents }]) => (
+        <ContractHierarchy 
+          key={saasId}
+          saasId={saasId}
+          saasName={saasName}
+          documents={documents}
+          onDocumentClick={onDocumentClick}
+        />
+      ))}
+    </div>
   );
 };

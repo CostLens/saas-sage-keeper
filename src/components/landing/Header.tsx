@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { User, ListChecks } from "lucide-react";
+import { User, Calendar } from "lucide-react";
 
 const Header = () => {
   return (
@@ -22,9 +22,17 @@ const Header = () => {
                 Sign In
               </Link>
             </Button>
-            <Button size="sm" className="gap-2">
-              <ListChecks className="h-4 w-4" />
-              Join Waiting List
+            <Button variant="outline" size="sm" className="gap-2" asChild>
+              <Link to="/dashboard">
+                <User className="h-4 w-4" />
+                Sign Up
+              </Link>
+            </Button>
+            <Button size="sm" className="gap-2" asChild>
+              <Link to="/dashboard">
+                <Calendar className="h-4 w-4" />
+                Book a Demo
+              </Link>
             </Button>
           </div>
         </div>

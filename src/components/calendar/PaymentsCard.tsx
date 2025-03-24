@@ -65,10 +65,10 @@ export function PaymentsCard({ paymentsData, paymentsAmount }: PaymentsCardProps
                           <div className="flex flex-col gap-1">
                             <span className="font-medium">{saas.name}</span>
                             <span className="text-xs text-muted-foreground">
-                              Est. {format(addMonths(new Date(saas.lastPayment.date), 1), 'MMM d, yyyy')}
+                              {saas.lastPayment ? `Est. ${format(addMonths(new Date(saas.lastPayment.date), 1), 'MMM d, yyyy')}` : 'N/A'}
                             </span>
                           </div>
-                          <span className="font-semibold">${saas.lastPayment.amount.toLocaleString()}</span>
+                          <span className="font-semibold">${saas.lastPayment ? saas.lastPayment.amount.toLocaleString() : '0'}</span>
                         </div>
                       </div>
                     ))}

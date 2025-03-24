@@ -145,7 +145,7 @@ export function SaasTable({ data, onRowClick, showUsage = true }: SaasTableProps
           <div className="flex items-center gap-2">
             <Tag className="h-4 w-4 text-muted-foreground" />
             <div className="flex flex-col">
-              <Badge variant="outline">{row.pricingTerms}</Badge>
+              <Badge variant="outline">{row.pricingTerms || 'Not specified'}</Badge>
               {getLicenseOrStorage(row) && (
                 <span className="text-xs text-muted-foreground mt-1">
                   <Database className="h-3 w-3 inline mr-1" />
@@ -164,9 +164,9 @@ export function SaasTable({ data, onRowClick, showUsage = true }: SaasTableProps
           <div className="flex items-center gap-2">
             <CreditCard className="h-4 w-4 text-muted-foreground" />
             <div className="flex flex-col">
-              <span>{formatCurrency(row.lastPayment.amount)}</span>
+              <span>{row.lastPayment ? formatCurrency(row.lastPayment.amount) : 'N/A'}</span>
               <span className="text-xs text-muted-foreground">
-                {formatRelativeDate(row.lastPayment.date)}
+                {row.lastPayment ? formatRelativeDate(row.lastPayment.date) : 'N/A'}
               </span>
             </div>
           </div>

@@ -1,9 +1,16 @@
+
 export interface SaaSData {
   id: string;
   name: string;
   description: string;
   price: number;
   renewalDate: string;
+  active?: boolean; // Added the active property
+  pricingTerms?: string; // Added the pricingTerms property
+  lastPayment?: { // Added the lastPayment property
+    date: string;
+    amount: number;
+  };
   contract: {
     signedDate: string;
     term: string;
@@ -36,6 +43,19 @@ export interface SaaSData {
   }[];
 }
 
+// Add the ObligationData interface
+export interface ObligationData {
+  id: string;
+  saasId: string;
+  saasName: string;
+  type: string;
+  description: string;
+  dueDate: string;
+  status: string;
+  priority: string;
+  assignedTo?: string;
+}
+
 export const mockSaaSData: SaaSData[] = [
   {
     id: "salesforce1",
@@ -43,6 +63,12 @@ export const mockSaaSData: SaaSData[] = [
     description: "Customer relationship management software.",
     price: 15000,
     renewalDate: "2024-03-15",
+    active: true,
+    pricingTerms: "User-based",
+    lastPayment: {
+      date: "2023-03-15",
+      amount: 15000
+    },
     contract: {
       signedDate: "2022-03-15",
       term: "Annual",
@@ -90,6 +116,12 @@ export const mockSaaSData: SaaSData[] = [
     description: "Team collaboration and messaging platform.",
     price: 12000,
     renewalDate: "2024-02-01",
+    active: true,
+    pricingTerms: "User-based",
+    lastPayment: {
+      date: "2023-02-01",
+      amount: 12000
+    },
     contract: {
       signedDate: "2022-02-01",
       term: "Annual",
@@ -129,6 +161,12 @@ export const mockSaaSData: SaaSData[] = [
     description: "Project management tool for team collaboration.",
     price: 9000,
     renewalDate: "2024-04-01",
+    active: true,
+    pricingTerms: "User-based",
+    lastPayment: {
+      date: "2023-04-01",
+      amount: 9000
+    },
     contract: {
       signedDate: "2022-04-01",
       term: "Annual",
@@ -160,6 +198,12 @@ export const mockSaaSData: SaaSData[] = [
     description: "Marketing, sales, and service software.",
     price: 18000,
     renewalDate: "2024-05-15",
+    active: true,
+    pricingTerms: "User-based",
+    lastPayment: {
+      date: "2023-05-15",
+      amount: 18000
+    },
     contract: {
       signedDate: "2022-05-15",
       term: "Annual",
@@ -199,6 +243,12 @@ export const mockSaaSData: SaaSData[] = [
     description: "Video conferencing and online meeting platform.",
     price: 8000,
     renewalDate: "2024-06-01",
+    active: true,
+    pricingTerms: "User-based",
+    lastPayment: {
+      date: "2023-06-01",
+      amount: 8000
+    },
     contract: {
       signedDate: "2022-06-01",
       term: "Annual",
@@ -225,6 +275,71 @@ export const mockSaaSData: SaaSData[] = [
     ],
   },
 ];
+
+// Add mockObligations array
+export const mockObligations: ObligationData[] = [
+  {
+    id: "ob1",
+    saasId: "salesforce1",
+    saasName: "Salesforce",
+    type: "Payment",
+    description: "Monthly payment for Salesforce licenses",
+    dueDate: "2023-12-15",
+    status: "Pending",
+    priority: "High"
+  },
+  {
+    id: "ob2",
+    saasId: "slack1",
+    saasName: "Slack",
+    type: "Review",
+    description: "Annual contract review for Slack",
+    dueDate: "2023-12-01",
+    status: "Completed",
+    priority: "Medium"
+  },
+  {
+    id: "ob3",
+    saasId: "asana1",
+    saasName: "Asana",
+    type: "Cancellation",
+    description: "Deadline for cancellation notice",
+    dueDate: "2024-01-31",
+    status: "Pending",
+    priority: "High"
+  },
+  {
+    id: "ob4",
+    saasId: "hubspot1",
+    saasName: "HubSpot",
+    type: "Payment",
+    description: "Quarterly payment for HubSpot",
+    dueDate: "2023-11-30",
+    status: "Overdue",
+    priority: "High"
+  },
+  {
+    id: "ob5",
+    saasId: "zoom1",
+    saasName: "Zoom",
+    type: "Review",
+    description: "Usage review for Zoom licenses",
+    dueDate: "2024-02-15",
+    status: "Pending",
+    priority: "Low"
+  }
+];
+
+// Add generateSpendByCategory function
+export const generateSpendByCategory = () => {
+  const categories = ["CRM", "Communication", "Marketing", "Project Management", "IT Infrastructure"];
+  return categories.map(category => {
+    return {
+      category,
+      amount: Math.floor(Math.random() * 50000) + 10000
+    };
+  });
+};
 
 export const generateUsageTrendData = (saasId: string) => {
   const saas = mockSaaSData.find((saas) => saas.id === saasId);

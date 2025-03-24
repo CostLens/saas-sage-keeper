@@ -1,6 +1,6 @@
 
 import React from "react";
-import { mockSaasData } from "@/lib/mockData";
+import { mockSaaSData } from "@/lib/mockData";
 import { 
   BarChart, 
   Bar,
@@ -21,7 +21,7 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 
 const LicenseUtilizationChart = () => {
   // Generate utilization data for the chart
-  const utilizationData = mockSaasData
+  const utilizationData = mockSaaSData
     .filter(app => app.usage.totalLicenses && app.usage.totalLicenses > 0)
     .map(app => ({
       name: app.name,

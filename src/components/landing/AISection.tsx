@@ -12,7 +12,7 @@ const AISection = () => {
             <div className="relative">
               <div className="rounded-2xl overflow-hidden border-2 border-primary/50 shadow-xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1675271591211-728a94dd1095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                  src="https://images.unsplash.com/photo-1551434678-e076c223a692?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
                   alt="AI assistant visualization" 
                   className="w-full h-full object-cover"
                 />

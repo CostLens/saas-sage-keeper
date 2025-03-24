@@ -27,12 +27,17 @@ const HeroSection = () => {
                 Optimize your SaaS spending with data-driven insights, comprehensive monitoring, and practical recommendations that help you make informed decisions.
               </p>
             </div>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+              <Button size="lg" onClick={openDemoModal}>
+                Book a Demo
+              </Button>
+            </div>
           </div>
           <div className="relative">
             <div className="rounded-2xl overflow-hidden shadow-xl border-2 border-border/50">
               <AspectRatio ratio={4/3} className="w-full">
                 <img 
-                  src="https://images.unsplash.com/photo-1553877522-43269d4ea984?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                  src="https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
                   alt="XpendIQ Dashboard" 
                   className="w-full h-full object-cover" 
                 />

@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -23,6 +24,7 @@ import {
   CreditCard,
   Shield,
   LifeBuoy,
+  Flag,
 } from "lucide-react";
 
 const Settings = () => {
@@ -62,12 +64,14 @@ const Settings = () => {
           <Tabs defaultValue="general" className="space-y-4">
             <TabsList>
               <TabsTrigger value="general">General</TabsTrigger>
+              <TabsTrigger value="features">Feature Flags</TabsTrigger>
+              <TabsTrigger value="subscription">Subscription</TabsTrigger>
               <TabsTrigger value="integrations">Integrations</TabsTrigger>
               <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              <TabsTrigger value="billing">Billing</TabsTrigger>
               <TabsTrigger value="security">Security</TabsTrigger>
               <TabsTrigger value="support">Support</TabsTrigger>
             </TabsList>
+
             <TabsContent value="general" className="space-y-6">
               {/* Personal Details */}
               <div className="space-y-4">
@@ -132,27 +136,103 @@ const Settings = () => {
                 </div>
                 <Button type="submit">Save Company Details</Button>
               </div>
+            </TabsContent>
 
-              <Separator className="my-6" />
-
-              {/* Preferences */}
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-lg font-medium">Preferences</h3>
-                  <p className="text-sm text-muted-foreground">
-                    Customize your experience
-                  </p>
-                </div>
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="darkMode">Dark Mode</Label>
-                    <Switch id="darkMode" />
+            <TabsContent value="features" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Feature Flags</CardTitle>
+                  <CardDescription>
+                    Enable or disable specific features
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="flex items-center justify-between space-x-2">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="usageFeatures">Usage Analytics</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Enable detailed usage analytics and reporting
+                      </p>
+                    </div>
+                    <Switch
+                      id="usageFeatures"
+                      defaultChecked={localStorage.getItem("show-usage-features") === "true"}
+                      onCheckedChange={(checked) => {
+                        localStorage.setItem("show-usage-features", checked.toString());
+                        window.dispatchEvent(new Event("usageFeaturesToggled"));
+                      }}
+                    />
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Enable dark mode for a more comfortable viewing experience.
-                  </p>
-                </div>
-              </div>
+                  <Separator />
+                  <div className="flex items-center justify-between space-x-2">
+                    <div className="space-y-0.5">
+                      <Label htmlFor="boardingFeatures">User Boarding</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Enable user onboarding and offboarding automation
+                      </p>
+                    </div>
+                    <Switch
+                      id="boardingFeatures"
+                      defaultChecked={localStorage.getItem("show-boarding-features") === "true"}
+                      onCheckedChange={(checked) => {
+                        localStorage.setItem("show-boarding-features", checked.toString());
+                        window.dispatchEvent(new Event("boardingFeaturesToggled"));
+                      }}
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="subscription" className="space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Subscription Details</CardTitle>
+                  <CardDescription>
+                    Manage your subscription and billing information
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-medium">Current Plan</h4>
+                        <p className="text-sm text-muted-foreground">Enterprise</p>
+                      </div>
+                      <Button variant="outline">Change Plan</Button>
+                    </div>
+                    <Separator />
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Billing Information</h4>
+                      <div className="grid grid-cols-2 gap-4">
+                        <div>
+                          <p className="text-sm font-medium">Next billing date</p>
+                          <p className="text-sm text-muted-foreground">
+                            March 1, 2024
+                          </p>
+                        </div>
+                        <div>
+                          <p className="text-sm font-medium">Amount</p>
+                          <p className="text-sm text-muted-foreground">$499/month</p>
+                        </div>
+                      </div>
+                    </div>
+                    <Separator />
+                    <div className="space-y-2">
+                      <h4 className="font-medium">Payment Method</h4>
+                      <div className="flex items-center space-x-4">
+                        <CreditCard className="h-6 w-6" />
+                        <div>
+                          <p className="text-sm font-medium">Visa ending in 4242</p>
+                          <p className="text-sm text-muted-foreground">
+                            Expires 12/2024
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </TabsContent>
 
             <TabsContent value="integrations" className="space-y-6">
@@ -160,7 +240,7 @@ const Settings = () => {
                 <CardHeader>
                   <CardTitle>Integrations</CardTitle>
                   <CardDescription>
-                    Connect to your favorite tools and services.
+                    Connect to your favorite tools and services
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="grid gap-4">
@@ -180,7 +260,10 @@ const Settings = () => {
                           </p>
                         </div>
                       </div>
-                      <Switch id={integration.name} defaultChecked={integration.connected} />
+                      <Switch
+                        id={integration.name}
+                        defaultChecked={integration.connected}
+                      />
                     </div>
                   ))}
                 </CardContent>
@@ -192,7 +275,7 @@ const Settings = () => {
                 <CardHeader>
                   <CardTitle>Notifications</CardTitle>
                   <CardDescription>
-                    Manage your notification preferences.
+                    Manage your notification preferences
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
@@ -204,36 +287,6 @@ const Settings = () => {
                     <Label htmlFor="pushNotifications">Push Notifications</Label>
                     <Switch id="pushNotifications" />
                   </div>
-                  <div className="flex items-center justify-between">
-                    <Label htmlFor="smsNotifications">SMS Notifications</Label>
-                    <Switch id="smsNotifications" />
-                  </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-
-            <TabsContent value="billing" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Billing</CardTitle>
-                  <CardDescription>
-                    Manage your subscription and billing details.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium">Current Plan</h4>
-                    <p className="text-sm text-muted-foreground">
-                      You are currently on the Pro plan.
-                    </p>
-                  </div>
-                  <div className="space-y-2">
-                    <h4 className="text-sm font-medium">Payment Method</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Visa ending in 1234
-                    </p>
-                  </div>
-                  <Button>Update Payment Method</Button>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -243,17 +296,19 @@ const Settings = () => {
                 <CardHeader>
                   <CardTitle>Security</CardTitle>
                   <CardDescription>
-                    Manage your account security settings.
+                    Manage your security settings
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium">Change Password</h4>
-                    <p className="text-sm text-muted-foreground">
-                      Update your account password.
-                    </p>
+                    <h4 className="font-medium">Change Password</h4>
+                    <Button>Update Password</Button>
                   </div>
-                  <Button>Change Password</Button>
+                  <Separator />
+                  <div className="space-y-2">
+                    <h4 className="font-medium">Two-Factor Authentication</h4>
+                    <Button variant="outline">Enable 2FA</Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>
@@ -263,17 +318,25 @@ const Settings = () => {
                 <CardHeader>
                   <CardTitle>Support</CardTitle>
                   <CardDescription>
-                    Get help and support with our product.
+                    Get help and support
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="space-y-2">
-                    <h4 className="text-sm font-medium">Contact Support</h4>
+                    <h4 className="font-medium">Documentation</h4>
                     <p className="text-sm text-muted-foreground">
-                      Contact our support team for assistance.
+                      View our documentation to learn more about our features
                     </p>
+                    <Button variant="outline">View Documentation</Button>
                   </div>
-                  <Button>Contact Support</Button>
+                  <Separator />
+                  <div className="space-y-2">
+                    <h4 className="font-medium">Contact Support</h4>
+                    <p className="text-sm text-muted-foreground">
+                      Get in touch with our support team
+                    </p>
+                    <Button>Contact Support</Button>
+                  </div>
                 </CardContent>
               </Card>
             </TabsContent>

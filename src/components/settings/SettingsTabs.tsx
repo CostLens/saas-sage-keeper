@@ -41,7 +41,7 @@ export function SettingsTabs() {
     <Tabs 
       value={activeTab} 
       onValueChange={handleTabChange}
-      className="space-y-6 w-full"
+      className="space-y-4 md:space-y-6 w-full"
     >
       <div className="border-b sticky top-0 bg-background z-10 pb-0">
         <TabNavigation />

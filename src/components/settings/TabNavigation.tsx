@@ -24,12 +24,12 @@ export function TabNavigation() {
 
   return (
     <div className="w-full overflow-x-auto pb-2">
-      <TabsList className="w-full flex flex-nowrap justify-start gap-1">
+      <TabsList className="w-full flex flex-nowrap justify-start sm:justify-center gap-1">
         {tabs.map((tab) => (
           <TabsTrigger 
             key={tab.value} 
             value={tab.value}
-            className="flex items-center gap-2 whitespace-nowrap px-4"
+            className="flex items-center gap-2 whitespace-nowrap px-3 sm:px-4"
           >
             {tab.icon}
             <span className={isMobile ? "sr-only" : ""}>{tab.label}</span>

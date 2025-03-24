@@ -93,6 +93,12 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Improve mobile experience by preventing zoom on focus */
+  input, select, textarea {
+    @apply text-base;
   }
 }
 
@@ -107,6 +113,17 @@
   
   .text-balance {
     text-wrap: balance;
+  }
+  
+  /* Fix for mobile viewport height issues */
+  .min-h-screen {
+    min-height: 100vh; /* Fallback */
+    min-height: 100dvh;
+  }
+  
+  .h-screen {
+    height: 100vh; /* Fallback */
+    height: 100dvh;
   }
 }
 
@@ -148,4 +165,17 @@
 .page-transition-exit-active {
   opacity: 0;
   transition: opacity 300ms;
+}
+
+/* Add responsive viewport meta tag via CSS to ensure proper mobile rendering */
+@media (max-width: 640px) {
+  html {
+    font-size: 14px;
+  }
+}
+
+/* Ensure dropdowns and tooltips appear correctly on mobile */
+.dropdown-content,
+[data-radix-popper-content-wrapper] {
+  @apply z-50 !important;
 }

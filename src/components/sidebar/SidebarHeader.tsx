@@ -7,9 +7,10 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 interface SidebarHeaderProps {
   isCollapsed: boolean;
   toggleCollapse: () => void;
+  isMobile?: boolean;
 }
 
-export const SidebarHeader = ({ isCollapsed, toggleCollapse }: SidebarHeaderProps) => {
+export const SidebarHeader = ({ isCollapsed, toggleCollapse, isMobile = false }: SidebarHeaderProps) => {
   return (
     <div className="flex h-16 items-center border-b px-4 justify-between">
       {!isCollapsed && (
@@ -27,14 +28,16 @@ export const SidebarHeader = ({ isCollapsed, toggleCollapse }: SidebarHeaderProp
           </div>
         </Link>
       )}
-      <Button 
-        variant="ghost" 
-        size="icon" 
-        onClick={toggleCollapse}
-        className={isCollapsed ? "mx-auto" : "ml-auto"}
-      >
-        {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
-      </Button>
+      {!isMobile && (
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={toggleCollapse}
+          className={isCollapsed ? "mx-auto" : "ml-auto"}
+        >
+          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        </Button>
+      )}
     </div>
   );
 };

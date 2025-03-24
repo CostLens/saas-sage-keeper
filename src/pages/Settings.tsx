@@ -56,21 +56,23 @@ const Settings = () => {
       <Sidebar />
       <div className="flex-1 flex flex-col">
         <Header />
-        <main className="flex-1 p-6 space-y-8 animate-fade-in">
+        <main className="flex-1 p-6 space-y-8 animate-fade-in overflow-auto">
           <div className="flex items-center justify-between">
             <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           </div>
 
           <Tabs defaultValue="general" className="space-y-4">
-            <TabsList>
-              <TabsTrigger value="general">General</TabsTrigger>
-              <TabsTrigger value="features">Feature Flags</TabsTrigger>
-              <TabsTrigger value="subscription">Subscription</TabsTrigger>
-              <TabsTrigger value="integrations">Integrations</TabsTrigger>
-              <TabsTrigger value="notifications">Notifications</TabsTrigger>
-              <TabsTrigger value="security">Security</TabsTrigger>
-              <TabsTrigger value="support">Support</TabsTrigger>
-            </TabsList>
+            <div className="overflow-x-auto">
+              <TabsList className="w-full md:w-auto">
+                <TabsTrigger value="general">General</TabsTrigger>
+                <TabsTrigger value="features">Feature Flags</TabsTrigger>
+                <TabsTrigger value="subscription">Subscription</TabsTrigger>
+                <TabsTrigger value="integrations">Integrations</TabsTrigger>
+                <TabsTrigger value="notifications">Notifications</TabsTrigger>
+                <TabsTrigger value="security">Security</TabsTrigger>
+                <TabsTrigger value="support">Support</TabsTrigger>
+              </TabsList>
+            </div>
 
             <TabsContent value="general" className="space-y-6">
               {/* Personal Details */}

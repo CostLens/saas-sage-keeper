@@ -1,10 +1,10 @@
 
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs } from "@/components/ui/tabs";
 import { ContractDocument } from "@/lib/mockData";
-import { File, FileText, ReceiptText, Pencil } from "lucide-react";
-import { DocumentsTable } from "./DocumentsTable";
+import { DocumentTypeTabs } from "./DocumentTypeTabs";
+import { DocumentTypeTab } from "./DocumentTypeTab";
 
 interface DocumentGroupByTypeProps {
   documents: ContractDocument[];
@@ -17,6 +17,13 @@ export const DocumentGroupByType = ({ documents, onDocumentClick }: DocumentGrou
   const invoices = documents.filter(doc => doc.type === "Invoice");
   const amendments = documents.filter(doc => doc.type === "Amendment");
 
+  const tabCounts = {
+    all: documents.length,
+    contracts: contracts.length,
+    invoices: invoices.length,
+    amendments: amendments.length
+  };
+
   return (
     <Card className="glass-panel">
       <CardHeader className="pb-1">
@@ -24,40 +31,12 @@ export const DocumentGroupByType = ({ documents, onDocumentClick }: DocumentGrou
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="mb-4">
-            <TabsTrigger value="all" className="gap-2">
-              <File className="h-4 w-4" />
-              All ({documents.length})
-            </TabsTrigger>
-            <TabsTrigger value="contracts" className="gap-2">
-              <FileText className="h-4 w-4" />
-              Contracts ({contracts.length})
-            </TabsTrigger>
-            <TabsTrigger value="invoices" className="gap-2">
-              <ReceiptText className="h-4 w-4" />
-              Invoices ({invoices.length})
-            </TabsTrigger>
-            <TabsTrigger value="amendments" className="gap-2">
-              <Pencil className="h-4 w-4" />
-              Amendments ({amendments.length})
-            </TabsTrigger>
-          </TabsList>
+          <DocumentTypeTabs tabCounts={tabCounts} />
           
-          <TabsContent value="all">
-            <DocumentsTable documents={documents} onRowClick={onDocumentClick} />
-          </TabsContent>
-          
-          <TabsContent value="contracts">
-            <DocumentsTable documents={contracts} onRowClick={onDocumentClick} />
-          </TabsContent>
-          
-          <TabsContent value="invoices">
-            <DocumentsTable documents={invoices} onRowClick={onDocumentClick} />
-          </TabsContent>
-          
-          <TabsContent value="amendments">
-            <DocumentsTable documents={amendments} onRowClick={onDocumentClick} />
-          </TabsContent>
+          <DocumentTypeTab value="all" documents={documents} onRowClick={onDocumentClick} />
+          <DocumentTypeTab value="contracts" documents={contracts} onRowClick={onDocumentClick} />
+          <DocumentTypeTab value="invoices" documents={invoices} onRowClick={onDocumentClick} />
+          <DocumentTypeTab value="amendments" documents={amendments} onRowClick={onDocumentClick} />
         </Tabs>
       </CardContent>
     </Card>

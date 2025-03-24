@@ -4,25 +4,16 @@ import { Sidebar } from "@/components/Sidebar";
 import { SaasTable } from "@/components/SaasTable";
 import { SaasDetailModal } from "@/components/SaasDetailModal";
 import { StatCard } from "@/components/ui/stat-card";
-import { mockSaaSData, mockObligations, SaaSData } from "@/lib/mockData";
-import { DollarSign, Users, TrendingDown, Calendar, AlertTriangle, FileTerminal } from "lucide-react";
+import { mockSaaSData, SaaSData } from "@/lib/mockData";
+import { DollarSign, Users, TrendingDown } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ChevronRight, CalendarClock, Wallet, Flag, RefreshCw } from "lucide-react";
-import { format } from "date-fns";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import { RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { RenewalCard } from "@/components/calendar/RenewalCard";
+import { PaymentsCard } from "@/components/calendar/PaymentsCard";
+import { TerminationsCard } from "@/components/calendar/TerminationsCard";
 
 const Dashboard = () => {
   const isMobile = useIsMobile();
@@ -115,12 +106,6 @@ const Dashboard = () => {
     )
     .slice(0, 2);
 
-  const getDaysRemaining = (date: Date): number => {
-    const today = new Date();
-    const diffTime = date.getTime() - today.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  };
-
   return (
     <div className="min-h-screen flex flex-col md:flex-row">
       <Sidebar />
@@ -148,142 +133,96 @@ const Dashboard = () => {
             </div>
           </div>
 
+          {/* First row of cards - changes based on feature flag */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-            <StatCard
-              key="total-spend"
-              title="Total Annual SaaS Spend"
-              value={`$${totalSpend.toLocaleString()}`}
-              icon={<DollarSign className="h-4 w-4" />}
-              trend={{ value: 12, isPositive: false }}
-              description="12% increase from last year"
-              className="h-full"
-            />
-            
             {showUsageFeatures ? (
+              // When feature flag is ON - 3 cards in first row
               <>
+                <StatCard
+                  key="total-spend"
+                  title="Total Annual SaaS Spend"
+                  value={`$${totalSpend.toLocaleString()}`}
+                  icon={<DollarSign className="h-4 w-4" />}
+                  trend={{ value: 12, isPositive: false }}
+                  description="12% increase from last year"
+                  className="h-full col-span-1"
+                />
                 <StatCard
                   key="license-utilization"
                   title="License Utilization"
                   value={`${overallUtilization}%`}
                   icon={<Users className="h-5 w-5" />}
                   description={`${activeUsers} active of ${totalLicenses} total licenses`}
-                  className="h-full"
+                  className="h-full col-span-1"
                 >
                   <div className="mt-2">
                     <Progress value={overallUtilization} className="h-2" />
                   </div>
                 </StatCard>
-                
                 <StatCard
                   key="potential-savings"
                   title="Potential Cost Savings"
                   value={`$${Math.round(potentialSavings).toLocaleString()}`}
                   icon={<TrendingDown className="h-5 w-5" />}
                   description={`${unusedLicenses} unused licenses across all apps`}
-                  className="h-full"
+                  className="h-full col-span-1 lg:col-span-2"
                 />
               </>
             ) : (
+              // When feature flag is OFF - 4 cards in one row
               <>
-                <div className="h-full"></div>
-                <div className="h-full"></div>
+                <StatCard
+                  key="total-spend"
+                  title="Total Annual SaaS Spend"
+                  value={`$${totalSpend.toLocaleString()}`}
+                  icon={<DollarSign className="h-4 w-4" />}
+                  trend={{ value: 12, isPositive: false }}
+                  description="12% increase from last year"
+                  className="h-full col-span-1"
+                />
+                <div className="h-full col-span-1">
+                  <RenewalCard 
+                    renewals={upcomingRenewals} 
+                    upcomingRenewalAmount={upcomingRenewalAmount} 
+                  />
+                </div>
+                <div className="h-full col-span-1">
+                  <PaymentsCard 
+                    paymentsData={paymentsData} 
+                    paymentsAmount={paymentsAmount} 
+                  />
+                </div>
+                <div className="h-full col-span-1">
+                  <TerminationsCard 
+                    terminationsData={terminationsData} 
+                  />
+                </div>
               </>
             )}
-            
-            <div className="h-full"></div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
-            <Card className="glass-panel glass-panel-hover h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-base">
-                  <div className="flex items-center gap-2">
-                    <CalendarClock className="h-4 w-4 text-primary" />
-                    <span>Upcoming Renewals</span>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-xs flex items-center gap-1 h-6 px-2"
-                  >
-                    View All
-                    <ChevronRight className="h-3 w-3" />
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pb-4">
-                <div className="bg-primary/5 rounded-lg p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium">Next 90 Days</span>
-                    <span className="text-sm font-bold">${upcomingRenewalAmount.toLocaleString()}</span>
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {upcomingRenewals.length} {upcomingRenewals.length === 1 ? 'subscription' : 'subscriptions'} to renew
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="glass-panel glass-panel-hover h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-base">
-                  <div className="flex items-center gap-2">
-                    <Wallet className="h-4 w-4 text-emerald-500" />
-                    <span>Payments Due</span>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-xs flex items-center gap-1 h-6 px-2"
-                  >
-                    View All
-                    <ChevronRight className="h-3 w-3" />
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pb-4">
-                <div className="bg-emerald-500/5 rounded-lg p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium">Next 30 Days</span>
-                    <span className="text-sm font-bold">${paymentsAmount.toLocaleString()}</span>
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {paymentsData.length} {paymentsData.length === 1 ? 'payment' : 'payments'} due
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="glass-panel glass-panel-hover h-full">
-              <CardHeader className="pb-2">
-                <CardTitle className="flex items-center justify-between text-base">
-                  <div className="flex items-center gap-2">
-                    <Flag className="h-4 w-4 text-amber-500" />
-                    <span>Termination Deadlines</span>
-                  </div>
-                  <Button 
-                    variant="ghost" 
-                    size="sm" 
-                    className="text-xs flex items-center gap-1 h-6 px-2"
-                  >
-                    View All
-                    <ChevronRight className="h-3 w-3" />
-                  </Button>
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="pb-4">
-                <div className="bg-amber-500/5 rounded-lg p-3">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-medium">Next 30 Days</span>
-                    <span className="text-sm font-bold">{terminationsData.length}</span>
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-1">
-                    {terminationsData.length} {terminationsData.length === 1 ? 'deadline' : 'deadlines'} approaching
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+          {/* Second row of cards - only shown when feature flag is ON */}
+          {showUsageFeatures && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+              <div className="h-full">
+                <RenewalCard 
+                  renewals={upcomingRenewals} 
+                  upcomingRenewalAmount={upcomingRenewalAmount} 
+                />
+              </div>
+              <div className="h-full">
+                <PaymentsCard 
+                  paymentsData={paymentsData} 
+                  paymentsAmount={paymentsAmount} 
+                />
+              </div>
+              <div className="h-full">
+                <TerminationsCard 
+                  terminationsData={terminationsData} 
+                />
+              </div>
+            </div>
+          )}
 
           <div className="space-y-4">
             <div className="flex items-center justify-between">

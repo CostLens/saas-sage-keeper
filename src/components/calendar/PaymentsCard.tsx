@@ -27,7 +27,7 @@ export function PaymentsCard({ paymentsData, paymentsAmount }: PaymentsCardProps
   }
 
   return (
-    <Card className="glass-panel glass-panel-hover flex-1">
+    <Card className="glass-panel glass-panel-hover h-full">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">

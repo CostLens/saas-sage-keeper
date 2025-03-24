@@ -24,7 +24,7 @@ export function RenewalCard({ renewals, upcomingRenewalAmount }: RenewalCardProp
   ).sort((a, b) => a.renewalDateObj.getTime() - b.renewalDateObj.getTime());
 
   return (
-    <Card className="glass-panel glass-panel-hover flex-1">
+    <Card className="glass-panel glass-panel-hover h-full">
       <CardHeader className="pb-2">
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">

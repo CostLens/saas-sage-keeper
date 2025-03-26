@@ -11,12 +11,14 @@ import {
   UserCog,
   Menu,
   X,
-  FileSearch
+  FileSearch,
+  Search
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarHeader } from "./sidebar/SidebarHeader";
 import { NavSection } from "./sidebar/NavSection";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 interface SidebarProps {
   className?: string;
@@ -35,6 +37,7 @@ const Sidebar = ({ className }: SidebarProps) => {
   });
   
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -131,11 +134,12 @@ const Sidebar = ({ className }: SidebarProps) => {
       items.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
     }
     
-    items.push({ name: "Repository", href: "/contracts", icon: FileText });
-    
+    // Contract negotiation now comes before repository
     if (showNegotiationFeatures) {
       items.push({ name: "Contract Negotiation", href: "/contract-negotiation", icon: FileSearch });
     }
+    
+    items.push({ name: "Repository", href: "/contracts", icon: FileText });
     
     return items;
   };
@@ -180,6 +184,22 @@ const Sidebar = ({ className }: SidebarProps) => {
           toggleCollapse={toggleCollapse} 
           isMobile={isMobile}
         />
+
+        {/* Add search bar */}
+        {!isCollapsed && (
+          <div className="px-3 py-2">
+            <div className="relative">
+              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input 
+                type="search"
+                placeholder="Search..."
+                className="pl-8 h-9 text-sm w-full"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)} 
+              />
+            </div>
+          </div>
+        )}
 
         <div className="flex-1 overflow-auto py-4 bg-background">
           <NavSection 

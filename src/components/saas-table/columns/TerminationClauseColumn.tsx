@@ -10,7 +10,7 @@ export function TerminationClauseColumn({ row }: { row: SaaSData }) {
       <FileTerminal className="h-4 w-4 text-muted-foreground" />
       <Badge 
         variant={row.contract?.hasTerminationClause ? "default" : "outline"}
-        className={row.contract?.hasTerminationClause ? "bg-green-500" : ""}
+        className={row.contract?.hasTerminationClause ? "bg-amber-500 text-white" : "bg-green-500 text-white"}
       >
         {row.contract?.hasTerminationClause ? "Yes" : "No"}
       </Badge>

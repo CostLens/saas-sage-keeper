@@ -29,6 +29,14 @@ export function UserBoardingTable({
     return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
   };
 
+  // Extended mock data for tools display
+  const getDisplayTools = (userId: string) => {
+    const tools = getUserTools(userId);
+    // Return only 3 tools for display with a "+X more" indicator if needed
+    if (tools.length <= 3) return { display: tools, more: 0 };
+    return { display: tools.slice(0, 3), more: tools.length - 3 };
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -53,7 +61,7 @@ export function UserBoardingTable({
           </TableRow>
         ) : (
           filteredUsers?.map(user => {
-            const userTools = getUserTools(user.employee_id);
+            const toolsInfo = getDisplayTools(user.employee_id);
             return (
               <TableRow key={user.employee_id}>
                 <TableCell className="font-medium">{user.employee_id}</TableCell>
@@ -73,15 +81,22 @@ export function UserBoardingTable({
                 </TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
-                    {userTools.length > 0 ? (
-                      userTools.map(tool => (
-                        <span 
-                          key={tool.id} 
-                          className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800"
-                        >
-                          {tool.name}
-                        </span>
-                      ))
+                    {toolsInfo.display.length > 0 ? (
+                      <>
+                        {toolsInfo.display.map(tool => (
+                          <span 
+                            key={tool.id} 
+                            className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800"
+                          >
+                            {tool.name}
+                          </span>
+                        ))}
+                        {toolsInfo.more > 0 && (
+                          <span className="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-semibold text-gray-800">
+                            +{toolsInfo.more} more
+                          </span>
+                        )}
+                      </>
                     ) : (
                       <span className="text-sm text-muted-foreground">No tools assigned</span>
                     )}
@@ -97,16 +112,14 @@ export function UserBoardingTable({
                       <UserPlus className="h-4 w-4 mr-1" />
                       Onboard
                     </Button>
-                    {userTools.length > 0 && (
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => onOpenOffboard(user)}
-                      >
-                        <UserMinus className="h-4 w-4 mr-1" />
-                        Offboard
-                      </Button>
-                    )}
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => onOpenOffboard(user)}
+                    >
+                      <UserMinus className="h-4 w-4 mr-1" />
+                      Offboard
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

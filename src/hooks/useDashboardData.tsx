@@ -6,17 +6,18 @@ import { useToast } from "@/hooks/use-toast";
 export function useDashboardData() {
   const { toast } = useToast();
   const [lastRefreshed, setLastRefreshed] = useState<Date>(new Date());
+  const saasData = mockSaaSData;
   
   // Calculate total spend
-  const totalSpend = mockSaaSData.reduce((sum, saas) => sum + saas.price, 0);
+  const totalSpend = saasData.reduce((sum, saas) => sum + saas.price, 0);
 
   // Calculate license and usage data
-  const totalLicenses = mockSaaSData.reduce((sum, saas) => sum + (saas.usage.totalLicenses || 0), 0);
-  const activeUsers = mockSaaSData.reduce((sum, saas) => sum + saas.usage.activeUsers, 0);
+  const totalLicenses = saasData.reduce((sum, saas) => sum + (saas.usage.totalLicenses || 0), 0);
+  const activeUsers = saasData.reduce((sum, saas) => sum + saas.usage.activeUsers, 0);
   const overallUtilization = totalLicenses > 0 ? Math.round((activeUsers / totalLicenses) * 100) : 0;
   
   const unusedLicenses = totalLicenses - activeUsers;
-  const potentialSavings = mockSaaSData.reduce((sum, saas) => {
+  const potentialSavings = saasData.reduce((sum, saas) => {
     if (saas.pricingTerms === 'User-based' && saas.usage.totalLicenses) {
       const unusedInApp = saas.usage.totalLicenses - saas.usage.activeUsers;
       const costPerLicense = saas.price / saas.usage.totalLicenses;
@@ -26,7 +27,7 @@ export function useDashboardData() {
   }, 0);
 
   // Calculate upcoming renewals
-  const upcomingRenewals = mockSaaSData
+  const upcomingRenewals = saasData
     .filter(saas => 
       saas.renewalDate !== "N/A" && 
       new Date(saas.renewalDate) < new Date(Date.now() + 90 * 24 * 60 * 60 * 1000)
@@ -39,7 +40,7 @@ export function useDashboardData() {
   const upcomingRenewalAmount = upcomingRenewals.reduce((sum, saas) => sum + saas.price, 0);
 
   // Calculate payments data
-  const paymentsData = mockSaaSData
+  const paymentsData = saasData
     .filter(saas => saas.lastPayment && new Date(saas.lastPayment.date) < new Date(Date.now() - 30 * 24 * 60 * 60 * 1000))
     .slice(0, 3);
   
@@ -47,7 +48,7 @@ export function useDashboardData() {
     sum + (saas.lastPayment ? saas.lastPayment.amount : 0), 0);
 
   // Calculate terminations data
-  const terminationsData = mockSaaSData
+  const terminationsData = saasData
     .filter(saas => 
       saas.contract && 
       saas.contract.cancellationDeadline && 
@@ -64,6 +65,7 @@ export function useDashboardData() {
   };
 
   return {
+    saasData,
     lastRefreshed,
     totalSpend,
     totalLicenses,

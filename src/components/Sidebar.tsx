@@ -1,33 +1,30 @@
 
 import React from "react";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarHeader } from "./sidebar/SidebarHeader";
-import { NavSection } from "./sidebar/NavSection";
-import { SidebarMobileOverlay } from "./sidebar/SidebarMobileOverlay";
-import { SidebarMobileButton } from "./sidebar/SidebarMobileButton";
-import { useSidebarFeatures } from "./sidebar/useSidebarFeatures";
-import { useSidebarState } from "./sidebar/useSidebarState";
+import { SidebarNavigation } from "./sidebar/SidebarNavigation";
+import { MobileMenuButton } from "./sidebar/MobileMenuButton";
+import { MobileBackdrop } from "./sidebar/MobileBackdrop";
+import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
+import { useSidebarFeatures } from "@/hooks/useSidebarFeatures";
 
 interface SidebarProps {
   className?: string;
 }
 
 const Sidebar = ({ className }: SidebarProps) => {
-  const isMobile = useIsMobile();
   const { 
     isCollapsed, 
     isMobileOpen, 
     setIsMobileOpen, 
-    toggleCollapse 
-  } = useSidebarState(isMobile);
+    toggleCollapse, 
+    isMobile 
+  } = useSidebarCollapsed();
   
   const { 
     showUsageFeatures, 
     showBoardingFeatures, 
-    showNegotiationFeatures,
-    getPrimaryNavItems,
-    secondaryNavigation
+    showNegotiationFeatures 
   } = useSidebarFeatures();
 
   // Determine sidebar visibility class based on mobile and open state
@@ -41,9 +38,9 @@ const Sidebar = ({ className }: SidebarProps) => {
     <>
       {/* Mobile menu button */}
       {isMobile && (
-        <SidebarMobileButton 
-          isOpen={isMobileOpen} 
-          onClick={toggleCollapse} 
+        <MobileMenuButton 
+          isMobileOpen={isMobileOpen} 
+          toggleCollapse={toggleCollapse} 
         />
       )}
       
@@ -62,24 +59,19 @@ const Sidebar = ({ className }: SidebarProps) => {
           isMobile={isMobile}
         />
 
-        <div className="flex-1 overflow-auto py-4 bg-background">
-          <NavSection 
-            items={getPrimaryNavItems()} 
-            isCollapsed={isMobile ? false : isCollapsed} 
-          />
-          
-          <NavSection 
-            title="SUPPORT & SETTINGS"
-            items={secondaryNavigation} 
-            isCollapsed={isMobile ? false : isCollapsed} 
-          />
-        </div>
+        <SidebarNavigation 
+          isCollapsed={isMobile ? false : isCollapsed}
+          showUsageFeatures={showUsageFeatures}
+          showBoardingFeatures={showBoardingFeatures}
+          showNegotiationFeatures={showNegotiationFeatures}
+        />
       </aside>
       
       {/* Mobile backdrop overlay */}
-      {isMobile && isMobileOpen && (
-        <SidebarMobileOverlay onClose={() => setIsMobileOpen(false)} />
-      )}
+      <MobileBackdrop 
+        isMobileOpen={isMobile && isMobileOpen} 
+        onClose={() => setIsMobileOpen(false)} 
+      />
     </>
   );
 };

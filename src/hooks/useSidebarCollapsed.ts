@@ -1,7 +1,10 @@
 
 import { useState, useEffect } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 
-export const useSidebarState = (isMobile: boolean) => {
+export function useSidebarCollapsed() {
+  const isMobile = useIsMobile();
+  
   // Use localStorage to persist the collapsed state
   const [isCollapsed, setIsCollapsed] = useState(() => {
     // On mobile, default to collapsed
@@ -12,7 +15,16 @@ export const useSidebarState = (isMobile: boolean) => {
   });
   
   const [isMobileOpen, setIsMobileOpen] = useState(false);
-  
+
+  // Update localStorage when isCollapsed changes
+  useEffect(() => {
+    if (!isMobile) {
+      localStorage.setItem("sidebar-collapsed", JSON.stringify(isCollapsed));
+    }
+    // Dispatch a custom event to notify pages about sidebar state change
+    window.dispatchEvent(new CustomEvent('sidebarStateChanged', { detail: { isCollapsed } }));
+  }, [isCollapsed, isMobile]);
+
   // Close mobile sidebar when navigating away
   useEffect(() => {
     const handleRouteChange = () => {
@@ -27,15 +39,6 @@ export const useSidebarState = (isMobile: boolean) => {
       window.removeEventListener('popstate', handleRouteChange);
     };
   }, [isMobile, isMobileOpen]);
-  
-  // Update localStorage when isCollapsed changes
-  useEffect(() => {
-    if (!isMobile) {
-      localStorage.setItem("sidebar-collapsed", JSON.stringify(isCollapsed));
-    }
-    // Dispatch a custom event to notify pages about sidebar state change
-    window.dispatchEvent(new CustomEvent('sidebarStateChanged', { detail: { isCollapsed } }));
-  }, [isCollapsed, isMobile]);
 
   const toggleCollapse = () => {
     if (isMobile) {
@@ -45,11 +48,11 @@ export const useSidebarState = (isMobile: boolean) => {
     }
   };
 
-  return { 
-    isCollapsed, 
-    setIsCollapsed, 
-    isMobileOpen, 
-    setIsMobileOpen, 
-    toggleCollapse 
+  return {
+    isCollapsed,
+    isMobileOpen,
+    setIsMobileOpen,
+    toggleCollapse,
+    isMobile
   };
-};
+}

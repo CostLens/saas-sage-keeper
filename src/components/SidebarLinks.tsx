@@ -95,8 +95,8 @@ export function SidebarLinks({ collapsed, showUsageFeatures, showBoardingFeature
                     "flex items-center py-2 px-3 text-sm font-medium rounded-md transition-colors",
                     collapsed ? "justify-center" : "",
                     link.active 
-                      ? "bg-blue-100 text-blue-600" 
-                      : "text-muted-foreground hover:text-blue-600 hover:bg-blue-50"
+                      ? "bg-primary text-primary-foreground" 
+                      : "text-muted-foreground hover:text-foreground hover:bg-accent"
                   )}
                 >
                   {link.icon}

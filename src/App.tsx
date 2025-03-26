@@ -3,7 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { BookDemoModalProvider } from "@/hooks/useBookDemoModal";
 import Dashboard from "./pages/Dashboard";
@@ -19,7 +19,6 @@ import Signup from "./pages/Signup";
 import UserManagement from "./pages/UserManagement";
 import UserBoarding from "./pages/UserBoarding";
 import ContractNegotiation from "./pages/ContractNegotiation";
-import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -79,36 +78,38 @@ const App = () => {
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <BookDemoModalProvider>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/spend-trends" element={<SpendTrends />} />
-            {showUsageFeatures ? (
-              <Route path="/usage" element={<Usage />} />
-            ) : (
-              <Route path="/usage" element={<Navigate to="/dashboard" replace />} />
-            )}
-            <Route path="/contracts" element={<ContractsRepository />} />
-            <Route path="/ai-assistant" element={<AIAssistant />} />
-            <Route path="/settings" element={<Settings />} />
-            <Route path="/help" element={<Help />} />
-            <Route path="/user-management" element={<UserManagement />} />
-            {showBoardingFeatures ? (
-              <Route path="/user-boarding" element={<UserBoarding />} />
-            ) : (
-              <Route path="/user-boarding" element={<Navigate to="/dashboard" replace />} />
-            )}
-            {showNegotiationFeatures ? (
-              <Route path="/contract-negotiation" element={<ContractNegotiation />} />
-            ) : (
-              <Route path="/contract-negotiation" element={<Navigate to="/dashboard" replace />} />
-            )}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BookDemoModalProvider>
+        <BrowserRouter>
+          <BookDemoModalProvider>
+            <Routes>
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/spend-trends" element={<SpendTrends />} />
+              {showUsageFeatures ? (
+                <Route path="/usage" element={<Usage />} />
+              ) : (
+                <Route path="/usage" element={<Navigate to="/dashboard" replace />} />
+              )}
+              <Route path="/contracts" element={<ContractsRepository />} />
+              <Route path="/ai-assistant" element={<AIAssistant />} />
+              <Route path="/settings" element={<Settings />} />
+              <Route path="/help" element={<Help />} />
+              <Route path="/user-management" element={<UserManagement />} />
+              {showBoardingFeatures ? (
+                <Route path="/user-boarding" element={<UserBoarding />} />
+              ) : (
+                <Route path="/user-boarding" element={<Navigate to="/dashboard" replace />} />
+              )}
+              {showNegotiationFeatures ? (
+                <Route path="/contract-negotiation" element={<ContractNegotiation />} />
+              ) : (
+                <Route path="/contract-negotiation" element={<Navigate to="/dashboard" replace />} />
+              )}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BookDemoModalProvider>
+        </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>
   );

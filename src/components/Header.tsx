@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
@@ -89,7 +90,7 @@ export function Header({ className }: HeaderProps) {
       </div>
 
       <div className="hidden md:flex flex-1 justify-center">
-        <div className="relative w-full max-w-xs">
+        <div className="relative w-full max-w-md">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input 
             type="search"

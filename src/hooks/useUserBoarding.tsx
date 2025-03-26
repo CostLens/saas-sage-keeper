@@ -8,7 +8,8 @@ import { useUserBoardingDialogs } from "./useUserBoardingDialogs";
 import { useUsersData } from "./useUsersData";
 import { UserToolMapping, exportUsersData as exportUsersDataUtil, getUserTools as getUserToolsUtil } from "@/lib/userToolsUtils";
 
-export { UserToolMapping } from "@/lib/userToolsUtils";
+// Use 'export type' instead of 'export' for re-exporting types when isolatedModules is enabled
+export type { UserToolMapping } from "@/lib/userToolsUtils";
 
 export const useUserBoarding = (additionalUsers: HrmsUser[]) => {
   // Get UI state from custom hook

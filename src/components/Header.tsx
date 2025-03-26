@@ -1,8 +1,9 @@
+
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Bell } from "lucide-react";
+import { Bell, Search } from "lucide-react";
 import { 
   DropdownMenu, 
   DropdownMenuContent, 
@@ -16,6 +17,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Input } from "@/components/ui/input";
 
 interface HeaderProps {
   className?: string;
@@ -54,6 +56,7 @@ export function Header({ className }: HeaderProps) {
     }
   ]);
 
+  const [searchQuery, setSearchQuery] = useState("");
   const unreadCount = notifications.filter(n => !n.read).length;
 
   const markAsRead = (id: string) => {
@@ -86,7 +89,17 @@ export function Header({ className }: HeaderProps) {
         </Link>
       </div>
 
-      <div className="hidden md:flex items-center gap-2">
+      <div className="hidden md:flex items-center gap-2 flex-1 max-w-md">
+        <div className="relative w-full">
+          <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input 
+            type="search"
+            placeholder="Search..."
+            className="pl-8 h-9 w-full"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)} 
+          />
+        </div>
       </div>
 
       <div className="flex items-center gap-4">

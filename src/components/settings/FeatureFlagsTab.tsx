@@ -24,6 +24,11 @@ export function FeatureFlagsTab() {
       localStorage.setItem("show-boarding-features", "true");
       window.dispatchEvent(new Event("boardingFeaturesToggled"));
     }
+    
+    if (localStorage.getItem("show-negotiation-features") === null) {
+      localStorage.setItem("show-negotiation-features", "true");
+      window.dispatchEvent(new Event("negotiationFeaturesToggled"));
+    }
   }, []);
 
   return (
@@ -65,6 +70,23 @@ export function FeatureFlagsTab() {
             onCheckedChange={(checked) => {
               localStorage.setItem("show-boarding-features", checked.toString());
               window.dispatchEvent(new Event("boardingFeaturesToggled"));
+            }}
+          />
+        </div>
+        <Separator />
+        <div className="flex items-center justify-between space-x-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="negotiationFeatures">Contract Negotiation</Label>
+            <p className="text-sm text-muted-foreground">
+              Enable contract negotiation suggestions and analysis
+            </p>
+          </div>
+          <Switch
+            id="negotiationFeatures"
+            defaultChecked={localStorage.getItem("show-negotiation-features") !== "false"}
+            onCheckedChange={(checked) => {
+              localStorage.setItem("show-negotiation-features", checked.toString());
+              window.dispatchEvent(new Event("negotiationFeaturesToggled"));
             }}
           />
         </div>

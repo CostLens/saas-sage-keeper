@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,7 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import UserManagement from "./pages/UserManagement";
 import UserBoarding from "./pages/UserBoarding";
+import ContractNegotiation from "./pages/ContractNegotiation";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +29,9 @@ const App = () => {
     }
     if (localStorage.getItem("show-boarding-features") === null) {
       localStorage.setItem("show-boarding-features", "true");
+    }
+    if (localStorage.getItem("show-negotiation-features") === null) {
+      localStorage.setItem("show-negotiation-features", "true");
     }
   }, []);
 
@@ -40,22 +45,31 @@ const App = () => {
     return savedValue !== "false"; // Default to true if null or not "false"
   });
 
+  const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-negotiation-features");
+    return savedValue !== "false"; // Default to true if null or not "false"
+  });
+
   useEffect(() => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
       const boardingValue = localStorage.getItem("show-boarding-features");
+      const negotiationValue = localStorage.getItem("show-negotiation-features");
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
+      setShowNegotiationFeatures(negotiationValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
     window.addEventListener('boardingFeaturesToggled', handleStorageChange);
+    window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
       window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
+      window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -86,6 +100,11 @@ const App = () => {
                 <Route path="/user-boarding" element={<UserBoarding />} />
               ) : (
                 <Route path="/user-boarding" element={<Navigate to="/dashboard" replace />} />
+              )}
+              {showNegotiationFeatures ? (
+                <Route path="/contract-negotiation" element={<ContractNegotiation />} />
+              ) : (
+                <Route path="/contract-negotiation" element={<Navigate to="/dashboard" replace />} />
               )}
               <Route path="*" element={<NotFound />} />
             </Routes>

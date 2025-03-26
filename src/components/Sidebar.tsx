@@ -10,7 +10,8 @@ import {
   Gauge,
   UserCog,
   Menu,
-  X
+  X,
+  FileSearch
 } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { SidebarHeader } from "./sidebar/SidebarHeader";
@@ -38,17 +39,25 @@ const Sidebar = ({ className }: SidebarProps) => {
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-usage-features");
-      return savedValue === "true";
+      return savedValue !== "false";
     }
-    return false;
+    return true;
   });
 
   const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-boarding-features");
-      return savedValue === "true";
+      return savedValue !== "false";
     }
-    return false;
+    return true;
+  });
+
+  const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-negotiation-features");
+      return savedValue !== "false";
+    }
+    return true;
   });
 
   // Close mobile sidebar when navigating away
@@ -71,18 +80,22 @@ const Sidebar = ({ className }: SidebarProps) => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
       const boardingValue = localStorage.getItem("show-boarding-features");
-      setShowUsageFeatures(usageValue === "true");
-      setShowBoardingFeatures(boardingValue === "true");
+      const negotiationValue = localStorage.getItem("show-negotiation-features");
+      setShowUsageFeatures(usageValue !== "false");
+      setShowBoardingFeatures(boardingValue !== "false");
+      setShowNegotiationFeatures(negotiationValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
     window.addEventListener('boardingFeaturesToggled', handleStorageChange);
+    window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
       window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
+      window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
     };
   }, []);
   
@@ -119,6 +132,10 @@ const Sidebar = ({ className }: SidebarProps) => {
     }
     
     items.push({ name: "Repository", href: "/contracts", icon: FileText });
+    
+    if (showNegotiationFeatures) {
+      items.push({ name: "Contract Negotiation", href: "/contract-negotiation", icon: FileSearch });
+    }
     
     return items;
   };

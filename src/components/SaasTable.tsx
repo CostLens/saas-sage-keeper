@@ -13,8 +13,12 @@ import {
   Database,
   CheckCircle,
   AlertCircle,
-  Users
+  Users,
+  Clock,
+  RefreshCw,
+  FileTerminal
 } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
 
 interface SaasTableProps {
   data: SaaSData[];
@@ -23,16 +27,6 @@ interface SaasTableProps {
 }
 
 export function SaasTable({ data, onRowClick, showUsage = true }: SaasTableProps) {
-  // Format currency
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
-
   // Format date to relative time
   const formatRelativeDate = (dateString: string) => {
     if (dateString === "N/A") return "N/A";
@@ -116,6 +110,49 @@ export function SaasTable({ data, onRowClick, showUsage = true }: SaasTableProps
         ),
       },
       {
+        id: "contractTenure",
+        header: "Contract Tenure",
+        sortable: true,
+        cell: (row: SaaSData) => (
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4 text-muted-foreground" />
+            <span>{row.contract?.term || "N/A"}</span>
+          </div>
+        ),
+      },
+      {
+        id: "autoRenewal",
+        header: "Auto Renewal",
+        sortable: true,
+        cell: (row: SaaSData) => (
+          <div className="flex items-center gap-2">
+            <RefreshCw className="h-4 w-4 text-muted-foreground" />
+            <Badge 
+              variant={row.contract?.autoRenewal ? "default" : "outline"}
+              className={row.contract?.autoRenewal ? "bg-blue-500" : ""}
+            >
+              {row.contract?.autoRenewal ? "Yes" : "No"}
+            </Badge>
+          </div>
+        ),
+      },
+      {
+        id: "terminationClause",
+        header: "Termination Clause",
+        sortable: true,
+        cell: (row: SaaSData) => (
+          <div className="flex items-center gap-2">
+            <FileTerminal className="h-4 w-4 text-muted-foreground" />
+            <Badge 
+              variant={row.contract?.hasTerminationClause ? "default" : "outline"}
+              className={row.contract?.hasTerminationClause ? "bg-green-500" : ""}
+            >
+              {row.contract?.hasTerminationClause ? "Yes" : "No"}
+            </Badge>
+          </div>
+        ),
+      },
+      {
         id: "paymentFrequency",
         header: "Payment Frequency",
         sortable: true,
@@ -176,7 +213,7 @@ export function SaasTable({ data, onRowClick, showUsage = true }: SaasTableProps
 
     // Only add usage column if showUsage is true
     if (showUsage) {
-      baseColumns.splice(5, 0, {
+      baseColumns.splice(7, 0, {
         id: "usage",
         header: "Usage",
         sortable: true,

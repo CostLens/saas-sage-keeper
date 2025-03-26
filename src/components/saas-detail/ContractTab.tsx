@@ -98,6 +98,7 @@ export function ContractTab({ saas }: ContractTabProps) {
         term={saas.contract.term}
         autoRenewal={saas.contract.autoRenewal}
         cancellationDeadline={saas.contract.cancellationDeadline}
+        hasTerminationClause={saas.contract.hasTerminationClause}
       />
       
       {/* Contract History */}

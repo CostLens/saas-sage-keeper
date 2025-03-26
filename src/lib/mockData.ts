@@ -5,9 +5,9 @@ export interface SaaSData {
   description: string;
   price: number;
   renewalDate: string;
-  active?: boolean; // Added the active property
-  pricingTerms?: string; // Added the pricingTerms property
-  lastPayment?: { // Added the lastPayment property
+  active?: boolean; 
+  pricingTerms?: string; 
+  lastPayment?: { 
     date: string;
     amount: number;
   };
@@ -16,6 +16,7 @@ export interface SaaSData {
     term: string;
     autoRenewal: boolean;
     cancellationDeadline: string | null;
+    hasTerminationClause?: boolean; // Add this property
   };
   usage: {
     activeUsers: number;
@@ -74,6 +75,7 @@ export const mockSaaSData: SaaSData[] = [
       term: "Annual",
       autoRenewal: true,
       cancellationDeadline: "2024-02-15",
+      hasTerminationClause: true, // Add this property
     },
     usage: {
       activeUsers: 450,
@@ -127,6 +129,7 @@ export const mockSaaSData: SaaSData[] = [
       term: "Annual",
       autoRenewal: true,
       cancellationDeadline: "2024-01-01",
+      hasTerminationClause: true, // Add this property
     },
     usage: {
       activeUsers: 950,
@@ -172,6 +175,7 @@ export const mockSaaSData: SaaSData[] = [
       term: "Annual",
       autoRenewal: false,
       cancellationDeadline: null,
+      hasTerminationClause: false, // Add this property
     },
     usage: {
       activeUsers: 280,
@@ -209,6 +213,7 @@ export const mockSaaSData: SaaSData[] = [
       term: "Annual",
       autoRenewal: true,
       cancellationDeadline: "2024-04-15",
+      hasTerminationClause: true, // Add this property
     },
     usage: {
       activeUsers: 120,
@@ -254,6 +259,7 @@ export const mockSaaSData: SaaSData[] = [
       term: "Annual",
       autoRenewal: true,
       cancellationDeadline: "2024-05-01",
+      hasTerminationClause: false, // Add this property
     },
     usage: {
       activeUsers: 550,

@@ -28,8 +28,8 @@ export const NavItem = ({ name, href, icon: Icon, isCollapsed, exact = false }: 
             cn(
               "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
               isActive
-                ? "bg-blue-500/10 text-blue-600 dark:text-blue-400"
-                : "text-muted-foreground hover:bg-blue-500/5 hover:text-blue-500"
+                ? "bg-primary text-primary-foreground"
+                : "text-muted-foreground hover:bg-accent hover:text-accent-foreground"
             )
           }
         >

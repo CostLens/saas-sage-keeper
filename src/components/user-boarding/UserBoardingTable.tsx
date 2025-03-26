@@ -29,7 +29,7 @@ export function UserBoardingTable({
     return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
   };
 
-  // Extended mock data for tools display
+  // Enhanced mock data for tools display
   const getDisplayTools = (userId: string) => {
     const tools = getUserTools(userId);
     // Return only 3 tools for display with a "+X more" indicator if needed

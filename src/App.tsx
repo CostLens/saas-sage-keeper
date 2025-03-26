@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -18,7 +19,6 @@ import Signup from "./pages/Signup";
 import UserManagement from "./pages/UserManagement";
 import UserBoarding from "./pages/UserBoarding";
 import ContractNegotiation from "./pages/ContractNegotiation";
-import Index from "./pages/Index";
 
 const queryClient = new QueryClient();
 
@@ -81,7 +81,7 @@ const App = () => {
         <BrowserRouter>
           <BookDemoModalProvider>
             <Routes>
-              <Route path="/" element={<Index />} />
+              <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/login" element={<Login />} />
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Dashboard />} />

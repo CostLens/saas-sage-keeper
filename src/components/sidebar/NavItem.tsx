@@ -26,7 +26,7 @@ export const NavItem = ({ name, href, icon: Icon, isCollapsed, exact = false }: 
           end={exact}
           className={({ isActive }) =>
             cn(
-              "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium",
+              "group flex items-center gap-3 rounded-md px-3 py-2 text-sm font-medium transition-colors",
               isActive
                 ? "bg-blue-100 text-blue-600"
                 : "text-muted-foreground hover:bg-blue-50 hover:text-blue-600"

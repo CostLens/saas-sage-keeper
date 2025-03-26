@@ -59,21 +59,27 @@ export function DeBoardingDialog({
           <div className="space-y-2">
             <Label>Select SaaS Tools</Label>
             <div className="grid grid-cols-2 gap-4 max-h-[200px] overflow-y-auto">
-              {userTools.map(tool => (
-                <div key={tool.id} className="flex items-center space-x-2">
-                  <Checkbox 
-                    id={`remove-tool-${tool.id}`} 
-                    checked={selectedToolsToRemove.includes(tool.id)}
-                    onCheckedChange={() => toggleToolToRemove(tool.id)}
-                  />
-                  <label 
-                    htmlFor={`remove-tool-${tool.id}`}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
-                    {tool.name}
-                  </label>
+              {userTools.length > 0 ? (
+                userTools.map(tool => (
+                  <div key={tool.id} className="flex items-center space-x-2">
+                    <Checkbox 
+                      id={`remove-tool-${tool.id}`} 
+                      checked={selectedToolsToRemove.includes(tool.id)}
+                      onCheckedChange={() => toggleToolToRemove(tool.id)}
+                    />
+                    <label 
+                      htmlFor={`remove-tool-${tool.id}`}
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                    >
+                      {tool.name}
+                    </label>
+                  </div>
+                ))
+              ) : (
+                <div className="col-span-2 text-center py-4 text-muted-foreground">
+                  No tools assigned to this user
                 </div>
-              ))}
+              )}
             </div>
           </div>
           

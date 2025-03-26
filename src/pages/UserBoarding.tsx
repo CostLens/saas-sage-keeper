@@ -12,18 +12,20 @@ import { AutoOffboardingDialog } from "@/components/user-boarding/AutoOffboardin
 import { useUserBoarding } from "@/hooks/useUserBoarding";
 import { HrmsUser } from "@/types/hrms";
 
-// Mock user tool mappings data
+// Mock user tool mappings data with more complete mappings
 const mockUserToolMappings = [
-  { userId: "EMP001", toolIds: ["1", "3", "5"] },
-  { userId: "EMP002", toolIds: ["2", "4"] },
-  { userId: "EMP003", toolIds: ["1", "2", "3", "4"] },
-  { userId: "EMP004", toolIds: ["5"] },
-  { userId: "EMP005", toolIds: ["1", "2"] },
-  { userId: "EMP006", toolIds: ["1", "3", "4"] },
-  { userId: "EMP007", toolIds: ["2", "5"] },
-  { userId: "EMP008", toolIds: ["3"] },
-  { userId: "EMP009", toolIds: [] },
-  { userId: "EMP010", toolIds: ["1", "2", "3", "4", "5"] },
+  { userId: "EMP001", toolIds: ["salesforce1", "slack1", "asana1"] },
+  { userId: "EMP002", toolIds: ["hubspot1", "zoom1"] },
+  { userId: "EMP003", toolIds: ["salesforce1", "hubspot1", "slack1", "zoom1"] },
+  { userId: "EMP004", toolIds: ["zoom1", "salesforce1"] },
+  { userId: "EMP005", toolIds: ["salesforce1", "hubspot1"] },
+  { userId: "EMP006", toolIds: ["salesforce1", "slack1", "zoom1"] },
+  { userId: "EMP007", toolIds: ["hubspot1", "zoom1", "slack1"] },
+  { userId: "EMP008", toolIds: ["slack1", "asana1"] },
+  { userId: "EMP009", toolIds: ["salesforce1"] },
+  { userId: "EMP010", toolIds: ["salesforce1", "hubspot1", "slack1", "zoom1", "asana1"] },
+  { userId: "EMP011", toolIds: ["salesforce1", "zoom1"] },
+  { userId: "EMP012", toolIds: ["slack1", "hubspot1", "asana1"] },
 ];
 
 // Additional users data

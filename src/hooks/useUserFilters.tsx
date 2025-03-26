@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { HrmsUser } from "@/types/hrms";
+import type { HrmsUser } from "@/types/hrms";
 
 export const useUserFilters = (hrmsUsers: HrmsUser[] | undefined) => {
   // Filter state

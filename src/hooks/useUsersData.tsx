@@ -1,6 +1,6 @@
 
 import { useQuery } from "@tanstack/react-query";
-import { HrmsUser } from "@/types/hrms";
+import type { HrmsUser } from "@/types/hrms";
 import { getHrmsUsers } from "@/lib/hrmsService";
 import React from "react";
 

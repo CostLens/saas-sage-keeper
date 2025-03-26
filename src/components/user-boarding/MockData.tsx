@@ -1,4 +1,6 @@
 
+import { HrmsUser } from "@/types/hrms";
+
 // Mock user tool mappings data with more complete mappings
 export const mockUserToolMappings = [
   { userId: "EMP001", toolIds: ["salesforce1", "slack1", "asana1"] },
@@ -15,8 +17,8 @@ export const mockUserToolMappings = [
   { userId: "EMP012", toolIds: ["slack1", "hubspot1", "asana1"] },
 ];
 
-// Additional users data
-export const additionalUsers = [
+// Additional users data with proper status types
+export const additionalUsers: HrmsUser[] = [
   {
     id: "dummy1",
     employee_id: "EMP006",

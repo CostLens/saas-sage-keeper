@@ -34,7 +34,7 @@ export const NavItem = ({ name, href, icon: Icon, isCollapsed, exact = false }: 
           }
         >
           <Icon className="h-5 w-5" />
-          {!isCollapsed && <span>{name}</span>}
+          {!isCollapsed && <span className="group-hover:text-blue-600 transition-colors">{name}</span>}
         </NavLink>
       </TooltipTrigger>
       {isCollapsed && (

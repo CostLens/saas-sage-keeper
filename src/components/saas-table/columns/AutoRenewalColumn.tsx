@@ -10,7 +10,7 @@ export function AutoRenewalColumn({ row }: { row: SaaSData }) {
       <RefreshCw className="h-4 w-4 text-muted-foreground" />
       <Badge 
         variant={row.contract?.autoRenewal ? "default" : "outline"}
-        className={row.contract?.autoRenewal ? "bg-blue-500" : ""}
+        className={row.contract?.autoRenewal ? "bg-amber-400 text-amber-950" : "bg-green-500 text-white"}
       >
         {row.contract?.autoRenewal ? "Yes" : "No"}
       </Badge>

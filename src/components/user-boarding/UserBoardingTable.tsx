@@ -29,6 +29,34 @@ export function UserBoardingTable({
     return mockSaaSData.filter(tool => mapping.toolIds.includes(tool.id));
   };
 
+  // Function to render SaaS tools with a "show more" indicator if needed
+  const renderSaaSTools = (tools: SaaSData[]) => {
+    if (tools.length === 0) {
+      return <span className="text-sm text-muted-foreground">No tools assigned</span>;
+    }
+
+    const displayCount = 2; // Show this many tools before "+X more"
+    const remainingCount = tools.length - displayCount;
+
+    return (
+      <div className="flex flex-wrap gap-1">
+        {tools.slice(0, displayCount).map(tool => (
+          <span 
+            key={tool.id} 
+            className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800"
+          >
+            {tool.name}
+          </span>
+        ))}
+        {remainingCount > 0 && (
+          <span className="inline-flex items-center rounded-full bg-muted px-2.5 py-0.5 text-xs font-semibold text-muted-foreground">
+            +{remainingCount} more
+          </span>
+        )}
+      </div>
+    );
+  };
+
   return (
     <Table>
       <TableHeader>
@@ -72,20 +100,7 @@ export function UserBoardingTable({
                   </span>
                 </TableCell>
                 <TableCell>
-                  <div className="flex flex-wrap gap-1">
-                    {userTools.length > 0 ? (
-                      userTools.map(tool => (
-                        <span 
-                          key={tool.id} 
-                          className="inline-flex items-center rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-semibold text-blue-800"
-                        >
-                          {tool.name}
-                        </span>
-                      ))
-                    ) : (
-                      <span className="text-sm text-muted-foreground">No tools assigned</span>
-                    )}
-                  </div>
+                  {renderSaaSTools(userTools)}
                 </TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-2">
@@ -97,16 +112,14 @@ export function UserBoardingTable({
                       <UserPlus className="h-4 w-4 mr-1" />
                       Onboard
                     </Button>
-                    {userTools.length > 0 && (
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        onClick={() => onOpenOffboard(user)}
-                      >
-                        <UserMinus className="h-4 w-4 mr-1" />
-                        Offboard
-                      </Button>
-                    )}
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => onOpenOffboard(user)}
+                    >
+                      <UserMinus className="h-4 w-4 mr-1" />
+                      Offboard
+                    </Button>
                   </div>
                 </TableCell>
               </TableRow>

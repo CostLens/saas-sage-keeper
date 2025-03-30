@@ -41,7 +41,7 @@ export function FeatureFlagsTab() {
     return true;
   });
 
-  // Dark theme state
+  // Dark theme state - default to false (off)
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("dark-theme-enabled");

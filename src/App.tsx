@@ -24,6 +24,7 @@ import Benchmarking from "./pages/Benchmarking";
 const queryClient = new QueryClient();
 
 const App = () => {
+  // Initialize local storage values if they don't exist
   useEffect(() => {
     if (localStorage.getItem("show-usage-features") === null) {
       localStorage.setItem("show-usage-features", "true");
@@ -36,6 +37,17 @@ const App = () => {
     }
     if (localStorage.getItem("show-benchmarking-features") === null) {
       localStorage.setItem("show-benchmarking-features", "true");
+    }
+    if (localStorage.getItem("dark-theme-enabled") === null) {
+      localStorage.setItem("dark-theme-enabled", "false"); // Dark theme off by default
+    }
+    
+    // Apply dark theme if it's enabled in localStorage
+    const darkThemeEnabled = localStorage.getItem("dark-theme-enabled") === "true";
+    if (darkThemeEnabled) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
     }
   }, []);
 

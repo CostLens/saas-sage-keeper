@@ -34,6 +34,9 @@ const App = () => {
     if (localStorage.getItem("show-negotiation-features") === null) {
       localStorage.setItem("show-negotiation-features", "true");
     }
+    if (localStorage.getItem("show-benchmarking-features") === null) {
+      localStorage.setItem("show-benchmarking-features", "true");
+    }
   }, []);
 
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
@@ -51,26 +54,35 @@ const App = () => {
     return savedValue !== "false"; // Default to true if null or not "false"
   });
 
+  const [showBenchmarkingFeatures, setShowBenchmarkingFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-benchmarking-features");
+    return savedValue !== "false"; // Default to true if null or not "false"
+  });
+
   useEffect(() => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
       const boardingValue = localStorage.getItem("show-boarding-features");
       const negotiationValue = localStorage.getItem("show-negotiation-features");
+      const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
       setShowNegotiationFeatures(negotiationValue !== "false");
+      setShowBenchmarkingFeatures(benchmarkingValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
     window.addEventListener('usageFeaturesToggled', handleStorageChange);
     window.addEventListener('boardingFeaturesToggled', handleStorageChange);
     window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
+    window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
       window.removeEventListener('usageFeaturesToggled', handleStorageChange);
       window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
       window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
+      window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -107,7 +119,7 @@ const App = () => {
               ) : (
                 <Route path="/renewals" element={<Navigate to="/dashboard" replace />} />
               )}
-              {showNegotiationFeatures ? (
+              {showBenchmarkingFeatures ? (
                 <Route path="/benchmarking" element={<Benchmarking />} />
               ) : (
                 <Route path="/benchmarking" element={<Navigate to="/dashboard" replace />} />

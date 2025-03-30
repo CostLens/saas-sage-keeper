@@ -18,13 +18,15 @@ interface SidebarNavigationProps {
   showUsageFeatures: boolean;
   showBoardingFeatures: boolean;
   showNegotiationFeatures: boolean;
+  showBenchmarkingFeatures: boolean;
 }
 
 export const SidebarNavigation = ({ 
   isCollapsed, 
   showUsageFeatures, 
   showBoardingFeatures, 
-  showNegotiationFeatures 
+  showNegotiationFeatures,
+  showBenchmarkingFeatures
 }: SidebarNavigationProps) => {
   
   // Build navigation items based on feature flags
@@ -45,6 +47,9 @@ export const SidebarNavigation = ({
     // Updated renewals and benchmarking navigation
     if (showNegotiationFeatures) {
       items.push({ name: "Renewals", href: "/renewals", icon: CalendarClock });
+    }
+    
+    if (showBenchmarkingFeatures) {
       items.push({ name: "Benchmarking", href: "/benchmarking", icon: BarChart });
     }
     

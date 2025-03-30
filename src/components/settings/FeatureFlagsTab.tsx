@@ -29,6 +29,11 @@ export function FeatureFlagsTab() {
       localStorage.setItem("show-negotiation-features", "true");
       window.dispatchEvent(new Event("negotiationFeaturesToggled"));
     }
+
+    if (localStorage.getItem("show-benchmarking-features") === null) {
+      localStorage.setItem("show-benchmarking-features", "true");
+      window.dispatchEvent(new Event("benchmarkingFeaturesToggled"));
+    }
   }, []);
 
   return (
@@ -87,6 +92,23 @@ export function FeatureFlagsTab() {
             onCheckedChange={(checked) => {
               localStorage.setItem("show-negotiation-features", checked.toString());
               window.dispatchEvent(new Event("negotiationFeaturesToggled"));
+            }}
+          />
+        </div>
+        <Separator />
+        <div className="flex items-center justify-between space-x-2">
+          <div className="space-y-0.5">
+            <Label htmlFor="benchmarkingFeatures">Price Benchmarking</Label>
+            <p className="text-sm text-muted-foreground">
+              Enable SaaS price benchmarking against market averages
+            </p>
+          </div>
+          <Switch
+            id="benchmarkingFeatures"
+            defaultChecked={localStorage.getItem("show-benchmarking-features") !== "false"}
+            onCheckedChange={(checked) => {
+              localStorage.setItem("show-benchmarking-features", checked.toString());
+              window.dispatchEvent(new Event("benchmarkingFeaturesToggled"));
             }}
           />
         </div>

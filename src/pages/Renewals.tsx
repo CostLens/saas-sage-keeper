@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -10,10 +10,12 @@ import { useRenewalContracts } from "@/hooks/useRenewalContracts";
 import { SavingsSummaryCard } from "@/components/renewals/SavingsSummaryCard";
 import { RenewalContractsTable } from "@/components/renewals/RenewalContractsTable";
 import { calculateTotalPotentialSavings } from "@/components/renewals/LicenseRecommendation";
-import { Search, Filter, CheckCircle, Clock, AlertCircle, TrendingDown } from "lucide-react";
+import { Search, Filter, CheckCircle, Clock, AlertCircle, TrendingDown, Download, FileText, Upload } from "lucide-react";
+import { toast } from "sonner";
 
 const Renewals = () => {
   const renewalContracts = useRenewalContracts();
+  const [searchQuery, setSearchQuery] = useState("");
   const totalPotentialSavings = calculateTotalPotentialSavings(renewalContracts);
 
   // Renewal workflow statuses
@@ -49,6 +51,36 @@ const Renewals = () => {
     { action: "Utilization alert", vendor: "Slack", savings: "$4,750", time: "30% utilized", icon: <AlertCircle className="h-4 w-4 text-red-500" /> },
   ];
 
+  // Available actions users can take on renewals
+  const availableActions = [
+    { 
+      name: "Generate Renewal Report", 
+      icon: <FileText className="h-4 w-4" />,
+      onClick: () => {
+        toast.success("Renewal report generated! Check your email for the report.");
+      }
+    },
+    { 
+      name: "Export License Data", 
+      icon: <Download className="h-4 w-4" />,
+      onClick: () => {
+        toast.success("License data exported successfully!");
+      }
+    },
+    { 
+      name: "Upload Vendor Quote", 
+      icon: <Upload className="h-4 w-4" />,
+      onClick: () => {
+        toast.success("Quote upload form opened. Please select your file.");
+      }
+    }
+  ];
+
+  // Filter contracts based on search
+  const filteredContracts = renewalContracts.filter(contract => 
+    contract.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <DashboardLayout>
       <div className="space-y-6">
@@ -76,6 +108,29 @@ const Renewals = () => {
           ))}
         </div>
 
+        {/* Actions Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Quick Actions</CardTitle>
+            <CardDescription>Take action on your upcoming renewals</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="flex flex-wrap gap-3">
+              {availableActions.map((action, index) => (
+                <Button 
+                  key={index} 
+                  variant="outline" 
+                  className="flex items-center gap-2"
+                  onClick={action.onClick}
+                >
+                  {action.icon}
+                  {action.name}
+                </Button>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Contracts Table */}
           <div className="lg:col-span-2">
@@ -88,7 +143,12 @@ const Renewals = () => {
                 <div className="flex gap-2">
                   <div className="relative w-[180px]">
                     <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search" className="pl-8 h-9" />
+                    <Input 
+                      placeholder="Search" 
+                      className="pl-8 h-9" 
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
                   </div>
                   <Button variant="outline" size="sm">
                     <Filter className="h-4 w-4 mr-2" />
@@ -106,7 +166,7 @@ const Renewals = () => {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <RenewalContractsTable contracts={renewalContracts} />
+                    <RenewalContractsTable contracts={filteredContracts} />
                   </CardContent>
                 </Card>
               </TabsContent>
@@ -121,7 +181,7 @@ const Renewals = () => {
                   </CardHeader>
                   <CardContent>
                     <RenewalContractsTable 
-                      contracts={renewalContracts.filter(saas => 
+                      contracts={filteredContracts.filter(saas => 
                         saas.usage.utilizationRate < 80 && saas.pricingTerms === 'User-based'
                       )} 
                     />

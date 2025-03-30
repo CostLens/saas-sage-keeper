@@ -23,21 +23,21 @@ export function RenewalContractsSection({ renewalContracts }: RenewalContractsSe
   return (
     <Tabs defaultValue="upcoming">
       <div className="flex justify-between items-center mb-4">
-        <TabsList>
-          <TabsTrigger value="upcoming">Due in 90 Days</TabsTrigger>
-          <TabsTrigger value="optimized">Optimization Opportunities</TabsTrigger>
+        <TabsList className="dark:bg-slate-900 dark:text-slate-400">
+          <TabsTrigger value="upcoming" className="dark:data-[state=active]:bg-slate-800 dark:data-[state=active]:text-white">Due in 90 Days</TabsTrigger>
+          <TabsTrigger value="optimized" className="dark:data-[state=active]:bg-slate-800 dark:data-[state=active]:text-white">Optimization Opportunities</TabsTrigger>
         </TabsList>
         <div className="flex gap-2">
           <div className="relative w-[180px]">
             <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input 
               placeholder="Search" 
-              className="pl-8 h-9" 
+              className="pl-8 h-9 dark:bg-slate-900 dark:border-slate-700" 
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <Button variant="outline" size="sm">
+          <Button variant="outline" size="sm" className="dark:bg-slate-900 dark:border-slate-700 dark:text-slate-300 dark:hover:bg-slate-800">
             <Filter className="h-4 w-4 mr-2" />
             Filter
           </Button>
@@ -45,7 +45,7 @@ export function RenewalContractsSection({ renewalContracts }: RenewalContractsSe
       </div>
 
       <TabsContent value="upcoming" className="m-0">
-        <Card>
+        <Card className="dark:bg-slate-900 dark:border-slate-800">
           <CardHeader>
             <CardTitle>Contracts Due for Renewal</CardTitle>
             <CardDescription>
@@ -59,7 +59,7 @@ export function RenewalContractsSection({ renewalContracts }: RenewalContractsSe
       </TabsContent>
 
       <TabsContent value="optimized" className="m-0">
-        <Card>
+        <Card className="dark:bg-slate-900 dark:border-slate-800">
           <CardHeader>
             <CardTitle>License Optimization Opportunities</CardTitle>
             <CardDescription>

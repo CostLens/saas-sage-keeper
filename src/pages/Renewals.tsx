@@ -7,7 +7,6 @@ import { calculateTotalPotentialSavings } from "@/components/renewals/LicenseRec
 // Import refactored components
 import { PageHeader } from "@/components/renewals/PageHeader";
 import { RenewalStatusCards } from "@/components/renewals/RenewalStatusCards";
-import { RenewalStrategySection } from "@/components/renewals/RenewalStrategySection";
 import { RenewalQuickActions } from "@/components/renewals/RenewalQuickActions";
 import { RenewalContractsSection } from "@/components/renewals/RenewalContractsSection";
 import { OptimizationInsights } from "@/components/renewals/OptimizationInsights";
@@ -24,9 +23,6 @@ const Renewals = () => {
         
         {/* Status Cards */}
         <RenewalStatusCards renewalContracts={renewalContracts} />
-        
-        {/* Renewal Strategy Section */}
-        <RenewalStrategySection />
         
         {/* Actions Section */}
         <RenewalQuickActions />

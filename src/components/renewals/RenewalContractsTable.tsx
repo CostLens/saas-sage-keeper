@@ -22,7 +22,7 @@ interface RenewalContractsTableProps {
 export function RenewalContractsTable({ contracts }: RenewalContractsTableProps) {
   if (contracts.length === 0) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
+      <div className="text-center py-8 text-muted-foreground dark:text-slate-400">
         No contracts due for renewal in the next 90 days
       </div>
     );
@@ -45,7 +45,7 @@ export function RenewalContractsTable({ contracts }: RenewalContractsTableProps)
         {contracts.map((saas) => {
           const recommendation = calculateRecommendation(saas);
           return (
-            <TableRow key={saas.id}>
+            <TableRow key={saas.id} className="dark:border-slate-800">
               <TableCell>
                 <NameColumn row={saas} />
               </TableCell>
@@ -63,7 +63,7 @@ export function RenewalContractsTable({ contracts }: RenewalContractsTableProps)
                 <SavingsCell recommendation={recommendation} />
               </TableCell>
               <TableCell>
-                <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700">
+                <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:border-blue-900 dark:hover:bg-blue-950 dark:hover:text-blue-300">
                   Plan Renewal
                 </Button>
               </TableCell>
@@ -85,8 +85,8 @@ function LicenseUtilizationCell({ saas }: { saas: SaaSData }) {
         variant={saas.usage.utilizationRate > 80 ? "outline" : "destructive"} 
         className={
           saas.usage.utilizationRate > 80 
-            ? "mt-1 text-green-500 border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800" 
-            : "mt-1"
+            ? "mt-1 text-green-500 border-green-200 bg-green-50 dark:bg-green-950 dark:border-green-800 dark:text-green-400" 
+            : "mt-1 dark:bg-red-900 dark:text-red-300"
         }
       >
         {saas.usage.utilizationRate}% Utilized
@@ -103,8 +103,10 @@ function RecommendationCell({ saas, recommendation }: { saas: SaaSData; recommen
           variant={recommendation?.action === "Reduce" ? "destructive" : "outline"}
           className={
             recommendation?.action === "Maintain"
-              ? "bg-green-50 text-green-600 border-green-200 dark:bg-green-950 dark:border-green-800"
-              : ""
+              ? "bg-green-50 text-green-600 border-green-200 dark:bg-green-950 dark:border-green-800 dark:text-green-400"
+              : recommendation?.action === "Reduce" 
+                ? "dark:bg-red-900 dark:text-red-300" 
+                : ""
           }
         >
           {recommendation?.action || "N/A"}
@@ -122,7 +124,7 @@ function RecommendationCell({ saas, recommendation }: { saas: SaaSData; recommen
 function SavingsCell({ recommendation }: { recommendation: Recommendation | null }) {
   if (recommendation?.potentialSavings) {
     return (
-      <span className="font-medium text-green-600">
+      <span className="font-medium text-green-600 dark:text-green-400">
         {formatCurrency(recommendation.potentialSavings)}
       </span>
     );

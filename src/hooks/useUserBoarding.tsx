@@ -12,7 +12,8 @@ import {
   handleAutoOffboardSetup as setupAutoOffboard
 } from "./userBoarding/userBoardingUtils";
 
-export { UserToolMapping } from "@/types/userBoarding";
+// Use export type for re-exporting types when isolatedModules is enabled
+export type { UserToolMapping } from "@/types/userBoarding";
 
 export const useUserBoarding = (additionalUsers: HrmsUser[]) => {
   // Get UI state

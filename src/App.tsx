@@ -18,7 +18,8 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import UserManagement from "./pages/UserManagement";
 import UserBoarding from "./pages/UserBoarding";
-import ContractNegotiation from "./pages/ContractNegotiation";
+import Renewals from "./pages/Renewals";
+import Benchmarking from "./pages/Benchmarking";
 
 const queryClient = new QueryClient();
 
@@ -102,9 +103,14 @@ const App = () => {
                 <Route path="/user-boarding" element={<Navigate to="/dashboard" replace />} />
               )}
               {showNegotiationFeatures ? (
-                <Route path="/contract-negotiation" element={<ContractNegotiation />} />
+                <Route path="/renewals" element={<Renewals />} />
               ) : (
-                <Route path="/contract-negotiation" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/renewals" element={<Navigate to="/dashboard" replace />} />
+              )}
+              {showNegotiationFeatures ? (
+                <Route path="/benchmarking" element={<Benchmarking />} />
+              ) : (
+                <Route path="/benchmarking" element={<Navigate to="/dashboard" replace />} />
               )}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -8,7 +8,8 @@ import {
   HelpCircle,
   Gauge,
   UserCog,
-  FileSearch
+  CalendarClock,
+  BarChart
 } from "lucide-react";
 import { NavSection } from "./NavSection";
 
@@ -41,9 +42,10 @@ export const SidebarNavigation = ({
       items.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
     }
     
-    // Contract negotiation now comes before repository
+    // Updated renewals and benchmarking navigation
     if (showNegotiationFeatures) {
-      items.push({ name: "Contract Negotiation", href: "/contract-negotiation", icon: FileSearch });
+      items.push({ name: "Renewals", href: "/renewals", icon: CalendarClock });
+      items.push({ name: "Benchmarking", href: "/benchmarking", icon: BarChart });
     }
     
     items.push({ name: "Repository", href: "/contracts", icon: FileText });

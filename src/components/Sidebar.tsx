@@ -7,6 +7,7 @@ import { MobileMenuButton } from "./sidebar/MobileMenuButton";
 import { MobileBackdrop } from "./sidebar/MobileBackdrop";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
 import { useSidebarFeatures } from "@/hooks/useSidebarFeatures";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarProps {
   className?: string;
@@ -36,7 +37,7 @@ const Sidebar = ({ className }: SidebarProps) => {
     : "";
 
   return (
-    <>
+    <TooltipProvider>
       {/* Mobile menu button */}
       {isMobile && (
         <MobileMenuButton 
@@ -74,7 +75,7 @@ const Sidebar = ({ className }: SidebarProps) => {
         isMobileOpen={isMobile && isMobileOpen} 
         onClose={() => setIsMobileOpen(false)} 
       />
-    </>
+    </TooltipProvider>
   );
 };
 

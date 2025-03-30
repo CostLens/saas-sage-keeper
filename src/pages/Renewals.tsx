@@ -10,7 +10,7 @@ import { useRenewalContracts } from "@/hooks/useRenewalContracts";
 import { SavingsSummaryCard } from "@/components/renewals/SavingsSummaryCard";
 import { RenewalContractsTable } from "@/components/renewals/RenewalContractsTable";
 import { calculateTotalPotentialSavings } from "@/components/renewals/LicenseRecommendation";
-import { Search, Filter, CheckCircle, Clock, AlertCircle, TrendingDown, Download, FileText, Upload } from "lucide-react";
+import { Search, Filter, CheckCircle, Clock, AlertCircle, TrendingDown, Download, FileText, Upload, Calculator, MessageSquare, BarChart4, History } from "lucide-react";
 import { toast } from "sonner";
 
 const Renewals = () => {
@@ -73,6 +73,34 @@ const Renewals = () => {
       onClick: () => {
         toast.success("Quote upload form opened. Please select your file.");
       }
+    },
+    { 
+      name: "Calculate TCO", 
+      icon: <Calculator className="h-4 w-4" />,
+      onClick: () => {
+        toast.success("Total Cost of Ownership calculator opened.");
+      }
+    },
+    { 
+      name: "Request Negotiation Support", 
+      icon: <MessageSquare className="h-4 w-4" />,
+      onClick: () => {
+        toast.success("Negotiation support request sent to your procurement team.");
+      }
+    },
+    { 
+      name: "Compare Vendor Options", 
+      icon: <BarChart4 className="h-4 w-4" />,
+      onClick: () => {
+        toast.success("Vendor comparison tool opened.");
+      }
+    },
+    { 
+      name: "View Negotiation History", 
+      icon: <History className="h-4 w-4" />,
+      onClick: () => {
+        toast.success("Showing negotiation history for selected vendors.");
+      }
     }
   ];
 
@@ -80,6 +108,40 @@ const Renewals = () => {
   const filteredContracts = renewalContracts.filter(contract => 
     contract.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
+
+  // Mock renewal actions
+  const renewalActions = [
+    {
+      title: "Cost Optimization",
+      description: "Reduce costs by optimizing licenses",
+      steps: [
+        "Review utilization rates across all licenses",
+        "Identify unused or underutilized licenses",
+        "Downgrade or remove excess licenses",
+        "Negotiate volume discounts based on actual usage"
+      ]
+    },
+    {
+      title: "Vendor Negotiation",
+      description: "Strategic approach for better terms",
+      steps: [
+        "Collect competitive market pricing data",
+        "Prepare negotiation strategy with fallback options",
+        "Schedule negotiation meeting with vendor",
+        "Document all commitments and new terms"
+      ]
+    },
+    {
+      title: "Contract Analysis",
+      description: "Evaluate terms and conditions",
+      steps: [
+        "Review auto-renewal clauses and termination rights",
+        "Analyze price increase limitations",
+        "Evaluate service level agreements (SLAs)",
+        "Check support and maintenance terms"
+      ]
+    }
+  ];
 
   return (
     <DashboardLayout>
@@ -107,6 +169,33 @@ const Renewals = () => {
             </Card>
           ))}
         </div>
+
+        {/* Renewal Strategy Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Renewal Strategy Framework</CardTitle>
+            <CardDescription>Recommended actions for successful renewals</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {renewalActions.map((action, index) => (
+                <Card key={index} className="bg-muted/40">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-base">{action.title}</CardTitle>
+                    <CardDescription>{action.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <ol className="list-decimal pl-5 text-sm space-y-1">
+                      {action.steps.map((step, i) => (
+                        <li key={i}>{step}</li>
+                      ))}
+                    </ol>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Actions Section */}
         <Card>

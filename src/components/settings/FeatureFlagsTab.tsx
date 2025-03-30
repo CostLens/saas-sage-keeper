@@ -1,118 +1,206 @@
 
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Switch } from "@/components/ui/switch";
+import { Toggle } from "@/components/ui/toggle"; 
 import { Label } from "@/components/ui/label";
-import { Separator } from "@/components/ui/separator";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Moon } from "lucide-react";
+import { toast } from "sonner";
 
 export function FeatureFlagsTab() {
-  // Set default values for feature flags when component mounts
-  useEffect(() => {
-    // Only set if they haven't been set yet
-    if (localStorage.getItem("show-usage-features") === null) {
-      localStorage.setItem("show-usage-features", "true");
-      window.dispatchEvent(new Event("usageFeaturesToggled"));
+  // Feature flags state
+  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-usage-features");
+      return savedValue !== "false";
     }
-    
-    if (localStorage.getItem("show-boarding-features") === null) {
-      localStorage.setItem("show-boarding-features", "true");
-      window.dispatchEvent(new Event("boardingFeaturesToggled"));
+    return true;
+  });
+  
+  const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-boarding-features");
+      return savedValue !== "false";
     }
-    
-    if (localStorage.getItem("show-negotiation-features") === null) {
-      localStorage.setItem("show-negotiation-features", "true");
-      window.dispatchEvent(new Event("negotiationFeaturesToggled"));
-    }
+    return true;
+  });
 
-    if (localStorage.getItem("show-benchmarking-features") === null) {
-      localStorage.setItem("show-benchmarking-features", "true");
-      window.dispatchEvent(new Event("benchmarkingFeaturesToggled"));
+  const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-negotiation-features");
+      return savedValue !== "false";
     }
-  }, []);
+    return true;
+  });
+
+  const [showBenchmarkingFeatures, setShowBenchmarkingFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-benchmarking-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
+
+  // Dark theme state
+  const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("dark-theme-enabled");
+      return savedValue === "true";
+    }
+    return false;
+  });
+
+  // Set dark theme class on document when theme preference changes
+  useEffect(() => {
+    if (darkThemeEnabled) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkThemeEnabled]);
+
+  // Handle feature flag toggle
+  const handleFeatureToggle = (feature: string, enabled: boolean) => {
+    localStorage.setItem(feature, enabled.toString());
+    
+    // Dispatch custom event for sidebar components to listen to
+    const event = new CustomEvent(`${feature.replace('show-', '')}Toggled`, {
+      detail: { enabled }
+    });
+    window.dispatchEvent(event);
+    
+    toast.success(`${enabled ? 'Enabled' : 'Disabled'} ${feature.replace('show-', '').replace('-features', '')}`);
+  };
+
+  // Handle dark theme toggle
+  const handleDarkThemeToggle = (enabled: boolean) => {
+    localStorage.setItem("dark-theme-enabled", enabled.toString());
+    setDarkThemeEnabled(enabled);
+    toast.success(`${enabled ? 'Enabled' : 'Disabled'} dark theme`);
+  };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Feature Flag</CardTitle>
-        <CardDescription>
-          Enable or disable specific features
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="flex items-center justify-between space-x-2">
-          <div className="space-y-0.5">
-            <Label htmlFor="usageFeatures">Usage Analytics</Label>
-            <p className="text-sm text-muted-foreground">
-              Enable detailed usage analytics and reporting
-            </p>
+    <div className="space-y-6">
+      <Card>
+        <CardHeader>
+          <CardTitle>Theme Settings</CardTitle>
+          <CardDescription>
+            Customize the appearance of the application
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="dark-theme-toggle" className="font-medium">
+                Dark Theme
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enable dark mode for the application
+              </p>
+            </div>
+            <div className="flex items-center space-x-2">
+              <Toggle
+                pressed={darkThemeEnabled}
+                onPressedChange={() => handleDarkThemeToggle(!darkThemeEnabled)}
+                className="data-[state=on]:bg-primary data-[state=on]:text-primary-foreground"
+              >
+                <Moon className="h-4 w-4" />
+              </Toggle>
+              <Switch
+                id="dark-theme-toggle"
+                checked={darkThemeEnabled}
+                onCheckedChange={handleDarkThemeToggle}
+              />
+            </div>
           </div>
-          <Switch
-            id="usageFeatures"
-            defaultChecked={localStorage.getItem("show-usage-features") !== "false"}
-            onCheckedChange={(checked) => {
-              localStorage.setItem("show-usage-features", checked.toString());
-              window.dispatchEvent(new Event("usageFeaturesToggled"));
-            }}
-          />
-        </div>
-        <Separator />
-        <div className="flex items-center justify-between space-x-2">
-          <div className="space-y-0.5">
-            <Label htmlFor="boardingFeatures">User Boarding</Label>
-            <p className="text-sm text-muted-foreground">
-              Enable user onboarding and offboarding automation
-            </p>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Feature Toggles</CardTitle>
+          <CardDescription>
+            Enable or disable specific features of the application
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="usage-features-toggle" className="font-medium">
+                Usage Analytics
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enables usage analytics features
+              </p>
+            </div>
+            <Switch
+              id="usage-features-toggle"
+              checked={showUsageFeatures}
+              onCheckedChange={(checked) => {
+                setShowUsageFeatures(checked);
+                handleFeatureToggle("show-usage-features", checked);
+              }}
+            />
           </div>
-          <Switch
-            id="boardingFeatures"
-            defaultChecked={localStorage.getItem("show-boarding-features") !== "false"}
-            onCheckedChange={(checked) => {
-              localStorage.setItem("show-boarding-features", checked.toString());
-              window.dispatchEvent(new Event("boardingFeaturesToggled"));
-            }}
-          />
-        </div>
-        <Separator />
-        <div className="flex items-center justify-between space-x-2">
-          <div className="space-y-0.5">
-            <Label htmlFor="negotiationFeatures">Contract Negotiation</Label>
-            <p className="text-sm text-muted-foreground">
-              Enable contract negotiation suggestions and analysis
-            </p>
+
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="boarding-features-toggle" className="font-medium">
+                User Boarding
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enables user boarding features
+              </p>
+            </div>
+            <Switch
+              id="boarding-features-toggle"
+              checked={showBoardingFeatures}
+              onCheckedChange={(checked) => {
+                setShowBoardingFeatures(checked);
+                handleFeatureToggle("show-boarding-features", checked);
+              }}
+            />
           </div>
-          <Switch
-            id="negotiationFeatures"
-            defaultChecked={localStorage.getItem("show-negotiation-features") !== "false"}
-            onCheckedChange={(checked) => {
-              localStorage.setItem("show-negotiation-features", checked.toString());
-              window.dispatchEvent(new Event("negotiationFeaturesToggled"));
-            }}
-          />
-        </div>
-        <Separator />
-        <div className="flex items-center justify-between space-x-2">
-          <div className="space-y-0.5">
-            <Label htmlFor="benchmarkingFeatures">Price Benchmarking</Label>
-            <p className="text-sm text-muted-foreground">
-              Enable SaaS price benchmarking against market averages
-            </p>
+
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="negotiation-features-toggle" className="font-medium">
+                Renewals & Negotiation
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enables contract negotiation features
+              </p>
+            </div>
+            <Switch
+              id="negotiation-features-toggle"
+              checked={showNegotiationFeatures}
+              onCheckedChange={(checked) => {
+                setShowNegotiationFeatures(checked);
+                handleFeatureToggle("show-negotiation-features", checked);
+              }}
+            />
           </div>
-          <Switch
-            id="benchmarkingFeatures"
-            defaultChecked={localStorage.getItem("show-benchmarking-features") !== "false"}
-            onCheckedChange={(checked) => {
-              localStorage.setItem("show-benchmarking-features", checked.toString());
-              window.dispatchEvent(new Event("benchmarkingFeaturesToggled"));
-            }}
-          />
-        </div>
-      </CardContent>
-    </Card>
+
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="benchmarking-features-toggle" className="font-medium">
+                Benchmarking
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enables benchmarking features
+              </p>
+            </div>
+            <Switch
+              id="benchmarking-features-toggle"
+              checked={showBenchmarkingFeatures}
+              onCheckedChange={(checked) => {
+                setShowBenchmarkingFeatures(checked);
+                handleFeatureToggle("show-benchmarking-features", checked);
+              }}
+            />
+          </div>
+        </CardContent>
+      </Card>
+    </div>
   );
 }

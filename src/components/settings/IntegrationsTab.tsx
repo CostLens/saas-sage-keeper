@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Switch } from "@/components/ui/switch";
-import { Mail, DollarSign, Users } from "lucide-react";
+import { Mail, DollarSign, Users, Slack } from "lucide-react";
 import {
   Card,
   CardHeader,
@@ -29,6 +29,12 @@ export function IntegrationsTab() {
       description: "Import employee data from Zoho People.",
       connected: false,
       icon: Users,
+    },
+    {
+      name: "Slack",
+      description: "Get renewal notifications and usage alerts in Slack.",
+      connected: false,
+      icon: Slack,
     },
   ];
 

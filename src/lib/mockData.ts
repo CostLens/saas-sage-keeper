@@ -7,6 +7,7 @@ export interface SaaSData {
   renewalDate: string;
   active?: boolean; 
   pricingTerms?: string; 
+  category?: string; // Add category property
   lastPayment?: { 
     date: string;
     amount: number;
@@ -16,7 +17,7 @@ export interface SaaSData {
     term: string;
     autoRenewal: boolean;
     cancellationDeadline: string | null;
-    hasTerminationClause?: boolean; // Add this property
+    hasTerminationClause?: boolean;
   };
   usage: {
     activeUsers: number;
@@ -66,6 +67,7 @@ export const mockSaaSData: SaaSData[] = [
     renewalDate: "2024-03-15",
     active: true,
     pricingTerms: "User-based",
+    category: "CRM", // Add category
     lastPayment: {
       date: "2023-03-15",
       amount: 15000
@@ -120,6 +122,7 @@ export const mockSaaSData: SaaSData[] = [
     renewalDate: "2024-02-01",
     active: true,
     pricingTerms: "User-based",
+    category: "Communication", // Add category
     lastPayment: {
       date: "2023-02-01",
       amount: 12000
@@ -166,6 +169,7 @@ export const mockSaaSData: SaaSData[] = [
     renewalDate: "2024-04-01",
     active: true,
     pricingTerms: "User-based",
+    category: "Project Management", // Add category
     lastPayment: {
       date: "2023-04-01",
       amount: 9000
@@ -204,6 +208,7 @@ export const mockSaaSData: SaaSData[] = [
     renewalDate: "2024-05-15",
     active: true,
     pricingTerms: "User-based",
+    category: "Marketing", // Add category
     lastPayment: {
       date: "2023-05-15",
       amount: 18000
@@ -250,6 +255,7 @@ export const mockSaaSData: SaaSData[] = [
     renewalDate: "2024-06-01",
     active: true,
     pricingTerms: "User-based",
+    category: "Communication", // Add category
     lastPayment: {
       date: "2023-06-01",
       amount: 8000

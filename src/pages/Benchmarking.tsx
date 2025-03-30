@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Search, Filter, TrendingDown, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
 import { mockSaaSData } from "@/lib/mockData";
-import { BenchmarkingTable } from "@/components/benchmarking/BenchmarkingTable";
+import { BenchmarkingTable, BenchmarkSaaSData, BenchmarkProps } from "@/components/benchmarking/BenchmarkingTable";
 import { formatCurrency } from "@/lib/utils";
 
 const Benchmarking = () => {
@@ -23,20 +23,29 @@ const Benchmarking = () => {
   });
   
   // Get unique categories for filtering
-  const categories = ["all", ...Array.from(new Set(mockSaaSData.map(saas => saas.category)))];
+  const categories = ["all", ...Array.from(new Set(mockSaaSData.map(saas => saas.category || "Uncategorized")))];
   
   // Mock benchmark data - normally this would come from a real API or database
-  const benchmarkData = filteredSaasData.map(saas => {
+  const benchmarkData: BenchmarkSaaSData[] = filteredSaasData.map(saas => {
     // Generate mock benchmark metrics
     const industryAvgPrice = saas.price * (0.7 + Math.random() * 0.6); // Random between 70% and 130% of current price
     const priceDifference = ((saas.price - industryAvgPrice) / industryAvgPrice) * 100;
+    let pricingStatus: "below" | "above" | "average";
+    
+    if (priceDifference <= -10) {
+      pricingStatus = "below";
+    } else if (priceDifference >= 10) {
+      pricingStatus = "above";
+    } else {
+      pricingStatus = "average";
+    }
     
     return {
       ...saas,
       benchmarking: {
         industryAvgPrice,
         priceDifference,
-        pricingStatus: priceDifference <= -10 ? "below" : priceDifference >= 10 ? "above" : "average",
+        pricingStatus,
         similarCompanies: Math.floor(Math.random() * 50) + 20,
         potentialSavings: priceDifference > 0 ? (saas.price - industryAvgPrice) : 0
       }

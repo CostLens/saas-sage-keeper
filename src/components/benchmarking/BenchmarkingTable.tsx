@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 
-interface BenchmarkProps {
+export interface BenchmarkProps {
   industryAvgPrice: number;
   priceDifference: number;
   pricingStatus: "below" | "above" | "average";
@@ -22,7 +22,7 @@ interface BenchmarkProps {
   potentialSavings: number;
 }
 
-interface BenchmarkSaaSData extends SaaSData {
+export interface BenchmarkSaaSData extends SaaSData {
   benchmarking: BenchmarkProps;
 }
 
@@ -112,7 +112,7 @@ function PriceComparisonCell({ benchmarking }: { benchmarking: BenchmarkProps })
   }
 }
 
-function ActionBadge({ pricingStatus }: { pricingStatus: string }) {
+function ActionBadge({ pricingStatus }: { pricingStatus: "below" | "above" | "average" }) {
   if (pricingStatus === "above") {
     return (
       <Badge className="bg-red-100 text-red-800 hover:bg-red-200 cursor-pointer">

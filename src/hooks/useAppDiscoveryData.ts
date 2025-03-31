@@ -37,11 +37,21 @@ export function useAppDiscoveryData() {
         const firstPurchaseDate = new Date();
         firstPurchaseDate.setMonth(firstPurchaseDate.getMonth() - monthsAgo);
         
+        // Determine status based on the `active` property
+        let status: "Active" | "Inactive" | "Trial" = "Inactive";
+        if (saas.active === true) {
+          status = "Active";
+        } else if (saas.active === undefined) {
+          // If active is undefined, randomly assign a status
+          const randomStatus = Math.random();
+          status = randomStatus > 0.7 ? "Trial" : randomStatus > 0.3 ? "Active" : "Inactive";
+        }
+        
         return {
           id: saas.id,
           name: saas.name,
           category: saas.category || "Software",
-          status: saas.status as "Active" | "Inactive" | "Trial",
+          status: status,
           totalPayments: totalPayments,
           costToDate: totalPayments, // In a real app, this might differ from total payments
           averageUsage: avgUsage,

@@ -20,6 +20,7 @@ import UserManagement from "./pages/UserManagement";
 import UserBoarding from "./pages/UserBoarding";
 import Renewals from "./pages/Renewals";
 import Benchmarking from "./pages/Benchmarking";
+import AppDiscovery from "./pages/AppDiscovery";
 
 const queryClient = new QueryClient();
 
@@ -111,6 +112,7 @@ const App = () => {
               <Route path="/signup" element={<Signup />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/spend-trends" element={<SpendTrends />} />
+              <Route path="/app-discovery" element={<AppDiscovery />} />
               {showUsageFeatures ? (
                 <Route path="/usage" element={<Usage />} />
               ) : (

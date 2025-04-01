@@ -105,7 +105,7 @@ export function CalendarPopover({ children }: CalendarPopoverProps) {
                 return (
                   <div className="relative h-9 w-9 p-0 font-normal aria-selected:opacity-100">
                     <div className="flex h-full w-full items-center justify-center">
-                      {props.day}
+                      {props.date.getDate()} {/* Fix: Getting day of month from date object instead of accessing day property */}
                     </div>
                     {hasEvents && (
                       <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-0.5">

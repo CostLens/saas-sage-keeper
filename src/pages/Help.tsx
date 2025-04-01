@@ -1,29 +1,59 @@
 
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { Button } from "@/components/ui/button";
-import { HelpCircle, Mail, MessageSquare, Phone } from "lucide-react";
+import { HelpCircle, Mail, MessageSquare, Star, Send } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
+import { Card } from "@/components/ui/card";
 
 const Help = () => {
   // Track sidebar collapsed state
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-    const saved = localStorage.getItem("sidebar-collapsed");
-    return saved ? JSON.parse(saved) : false;
+  const [isSidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    // On mobile devices, sidebar should be collapsed by default
+    return localStorage.getItem("sidebar-collapsed") === "true";
   });
   
-  // Listen for sidebar state changes
+  const [rating, setRating] = useState<number | null>(null);
+  const [feedback, setFeedback] = useState("");
+
   useEffect(() => {
+    // Update sidebar state when mobile status changes
     const handleSidebarChange = (event: CustomEvent) => {
-      setIsSidebarCollapsed(event.detail.isCollapsed);
+      setSidebarCollapsed(event.detail.isCollapsed);
     };
-    
+
+    // Listen for sidebar state changes
     window.addEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
     
     return () => {
       window.removeEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
     };
   }, []);
+
+  const handleRating = (value: number) => {
+    setRating(value);
+  };
+
+  const handleSubmitFeedback = () => {
+    if (!rating) {
+      toast.error("Please provide a rating");
+      return;
+    }
+
+    if (!feedback.trim()) {
+      toast.error("Please provide feedback");
+      return;
+    }
+
+    // Here you would submit feedback to your backend
+    console.log({ rating, feedback });
+    
+    toast.success("Thank you for your feedback!");
+    setRating(null);
+    setFeedback("");
+  };
 
   return (
     <div className="flex h-screen">
@@ -70,19 +100,45 @@ const Help = () => {
                     <Mail className="h-4 w-4" />
                     Email Support
                   </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full justify-start gap-2"
-                    onClick={() => window.location.href = 'tel:+1234567890'}
-                  >
-                    <Phone className="h-4 w-4" />
-                    Call Support
+                </div>
+              </div>
+
+              {/* Feedback Section */}
+              <div className="bg-card rounded-lg p-6 border md:col-span-2">
+                <h2 className="text-lg font-semibold mb-4">Rate Our Product</h2>
+                <div className="space-y-4">
+                  <p className="text-sm text-muted-foreground">We appreciate your feedback to help improve our product</p>
+                  
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((value) => (
+                      <Button
+                        key={value}
+                        variant="ghost"
+                        size="sm"
+                        className={`p-1 ${rating && rating >= value ? 'text-amber-500' : 'text-muted-foreground'}`}
+                        onClick={() => handleRating(value)}
+                      >
+                        <Star className="h-6 w-6" />
+                      </Button>
+                    ))}
+                  </div>
+                  
+                  <Textarea
+                    placeholder="Share your thoughts, suggestions or report an issue..."
+                    className="min-h-[100px]"
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                  />
+                  
+                  <Button onClick={handleSubmitFeedback} className="gap-2">
+                    <Send className="h-4 w-4" />
+                    Submit Feedback
                   </Button>
                 </div>
               </div>
 
               {/* FAQs */}
-              <div className="bg-card rounded-lg p-6 border md:col-span-2">
+              <Card className="p-6 md:col-span-2">
                 <h2 className="text-lg font-semibold mb-4">Frequently Asked Questions</h2>
                 <div className="space-y-4">
                   {[
@@ -105,7 +161,7 @@ const Help = () => {
                     </div>
                   ))}
                 </div>
-              </div>
+              </Card>
             </div>
           </div>
         </main>

@@ -13,7 +13,6 @@ import { Users as UsersIcon } from "lucide-react";
 import { KeyInfoCards } from "./saas-detail/KeyInfoCards";
 import { AnalyticsTab } from "./saas-detail/AnalyticsTab";
 import { ContractTab } from "./saas-detail/ContractTab";
-import { PaymentsTab } from "./saas-detail/PaymentsTab";
 import { UserActivityTab } from "./UserActivityTab";
 
 interface SaasDetailModalProps {
@@ -61,10 +60,9 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
 
           {/* Tabs for different data views */}
           <Tabs defaultValue="analytics" className="w-full">
-            <TabsList className="grid grid-cols-4 mb-6">
+            <TabsList className="grid grid-cols-3 mb-6">
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="contract">Contract Details</TabsTrigger>
-              <TabsTrigger value="payments">Payment History</TabsTrigger>
               {showUsageFeatures && <TabsTrigger value="users">Users</TabsTrigger>}
             </TabsList>
             
@@ -74,10 +72,6 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
             
             <TabsContent value="contract">
               <ContractTab saas={saas} />
-            </TabsContent>
-            
-            <TabsContent value="payments">
-              <PaymentsTab saas={saas} />
             </TabsContent>
             
             {showUsageFeatures && (

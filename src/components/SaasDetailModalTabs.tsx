@@ -2,6 +2,8 @@
 import { SaaSData } from "@/lib/mockData";
 import { UserActivityTab } from "./UserActivityTab";
 import { useState, useEffect } from "react";
+import { AnalyticsTab } from "./saas-detail/AnalyticsTab";
+import { ContractTab } from "./saas-detail/ContractTab";
 
 interface SaasDetailModalTabsProps {
   saas: SaaSData;
@@ -30,6 +32,10 @@ export function SaasDetailModalTabs({ saas, activeTab }: SaasDetailModalTabsProp
   }, []);
 
   switch(activeTab) {
+    case "analytics":
+      return <AnalyticsTab saas={saas} />;
+    case "contract":
+      return <ContractTab saas={saas} />;
     case "users":
       return showUsageFeatures ? <UserActivityTab saas={saas} /> : (
         <div className="text-center py-8">

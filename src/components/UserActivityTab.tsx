@@ -14,28 +14,109 @@ interface UserActivityTabProps {
   saas: SaaSData;
 }
 
+// Mock user activity data
+const mockUserActivity = [
+  {
+    id: "user-1",
+    full_name: "John Smith",
+    email: "john.smith@company.com",
+    department: "Engineering",
+    status: "active",
+    lastLogin: "2023-05-15",
+    active7Days: true,
+    active30Days: true,
+    avatarUrl: ""
+  },
+  {
+    id: "user-2",
+    full_name: "Sarah Johnson",
+    email: "sarah.johnson@company.com",
+    department: "Marketing",
+    status: "active",
+    lastLogin: "2023-05-12",
+    active7Days: true,
+    active30Days: true,
+    avatarUrl: ""
+  },
+  {
+    id: "user-3",
+    full_name: "Michael Brown",
+    email: "michael.brown@company.com",
+    department: "Sales",
+    status: "on_leave",
+    lastLogin: "2023-04-28",
+    active7Days: false,
+    active30Days: true,
+    avatarUrl: ""
+  },
+  {
+    id: "user-4",
+    full_name: "Emily Davis",
+    email: "emily.davis@company.com",
+    department: "HR",
+    status: "active",
+    lastLogin: "2023-05-14",
+    active7Days: true,
+    active30Days: true,
+    avatarUrl: ""
+  },
+  {
+    id: "user-5",
+    full_name: "David Wilson",
+    email: "david.wilson@company.com",
+    department: "Finance",
+    status: "terminated",
+    lastLogin: "2023-02-10",
+    active7Days: false,
+    active30Days: false,
+    avatarUrl: ""
+  },
+  {
+    id: "user-6",
+    full_name: "Jennifer Taylor",
+    email: "jennifer.taylor@company.com",
+    department: "Product",
+    status: "active",
+    lastLogin: "2023-05-10",
+    active7Days: true,
+    active30Days: true,
+    avatarUrl: ""
+  },
+  {
+    id: "user-7",
+    full_name: "Robert Martin",
+    email: "robert.martin@company.com",
+    department: "Engineering",
+    status: "active",
+    lastLogin: "2023-05-01",
+    active7Days: false,
+    active30Days: true,
+    avatarUrl: ""
+  },
+  {
+    id: "user-8",
+    full_name: "Jessica Anderson",
+    email: "jessica.anderson@company.com",
+    department: "Customer Support",
+    status: "on_leave",
+    lastLogin: "2023-04-15",
+    active7Days: false,
+    active30Days: false,
+    avatarUrl: ""
+  }
+];
+
 export function UserActivityTab({ saas }: UserActivityTabProps) {
-  const { data: hrmsUsers, isLoading, error } = useQuery({
+  const { data: hrmsUsers, isLoading } = useQuery({
     queryKey: ["hrmsUsers"],
     queryFn: getHrmsUsers,
   });
 
-  // Filter to get only first 10 users for demo purposes
-  const displayUsers = hrmsUsers ? hrmsUsers.slice(0, 10) : [];
-
-  // Map HRMS status to activity status for demo
-  const mapStatusToActivity = (status: string) => {
-    if (status === 'active') return { active7Days: Math.random() > 0.3, active30Days: true };
-    if (status === 'on_leave') return { active7Days: false, active30Days: Math.random() > 0.5 };
-    return { active7Days: false, active30Days: false };
-  };
+  // Use mock data instead of API data for this demo
+  const displayUsers = mockUserActivity;
 
   if (isLoading) {
     return <div className="p-4 text-center">Loading user data...</div>;
-  }
-
-  if (error) {
-    return <div className="p-4 text-center text-red-500">Error loading user data</div>;
   }
 
   return (
@@ -57,16 +138,15 @@ export function UserActivityTab({ saas }: UserActivityTabProps) {
           </TableHeader>
           <TableBody>
             {displayUsers.map((user) => {
-              const activityStatus = mapStatusToActivity(user.status);
-              // Mock last login date
-              const lastLogin = new Date(Date.now() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000));
+              // Format date
+              const lastLoginDate = new Date(user.lastLogin);
               
               return (
                 <TableRow key={user.id}>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src="" alt={user.full_name} />
+                        <AvatarImage src={user.avatarUrl} alt={user.full_name} />
                         <AvatarFallback>{user.full_name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
                       </Avatar>
                       <div>
@@ -76,9 +156,9 @@ export function UserActivityTab({ saas }: UserActivityTabProps) {
                     </div>
                   </TableCell>
                   <TableCell>{user.department}</TableCell>
-                  <TableCell>{lastLogin.toLocaleDateString()}</TableCell>
+                  <TableCell>{lastLoginDate.toLocaleDateString()}</TableCell>
                   <TableCell>
-                    {activityStatus.active7Days ? (
+                    {user.active7Days ? (
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
                         <CheckCircle className="h-3.5 w-3.5 mr-1" />
                         Active
@@ -91,7 +171,7 @@ export function UserActivityTab({ saas }: UserActivityTabProps) {
                     )}
                   </TableCell>
                   <TableCell>
-                    {activityStatus.active30Days ? (
+                    {user.active30Days ? (
                       <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
                         <CheckCircle className="h-3.5 w-3.5 mr-1" />
                         Active

@@ -15,17 +15,6 @@ export function PaymentsTab({ saas }: PaymentsTabProps) {
   
   return (
     <div className="space-y-4">
-      <TrendChart
-        title="Payment History"
-        description="Monthly payment amounts over time"
-        data={paymentData}
-        dataKey="name"
-        categories={["amount"]}
-        colors={["hsl(var(--primary))"]}
-        valueFormatter={(value) => `$${value.toFixed(2)}`}
-        height={300}
-      />
-      
       <div className="bg-muted/30 rounded-lg p-6">
         <h3 className="text-lg font-medium mb-4">Recent Payments</h3>
         <div className="space-y-4">

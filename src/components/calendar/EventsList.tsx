@@ -1,9 +1,8 @@
 
 import React from "react";
-import { CalendarClock, Wallet, Flag } from "lucide-react";
 import { format } from "date-fns";
-import { cn } from "@/lib/utils";
-import { CalendarEvent } from "./types";
+import { CalendarEvent } from "./CalendarEvent";
+import { CalendarEventItem } from "./CalendarEventItem";
 
 interface EventsListProps {
   date: Date | undefined;
@@ -36,46 +35,9 @@ export function EventsList({ date, selectedDateEvents }: EventsListProps) {
             const typeOrder = { renewal: 0, payment: 1, termination: 2 };
             return typeOrder[a.type] - typeOrder[b.type];
           })
-          .map((event, index) => {
-            let bgColor = "";
-            let icon = null;
-            
-            switch (event.type) {
-              case 'renewal':
-                bgColor = "bg-primary/10 dark:bg-primary/20";
-                icon = <CalendarClock className="h-3.5 w-3.5 text-primary" />;
-                break;
-              case 'payment':
-                bgColor = "bg-emerald-500/10 dark:bg-emerald-500/20";
-                icon = <Wallet className="h-3.5 w-3.5 text-emerald-500" />;
-                break;
-              case 'termination':
-                bgColor = "bg-amber-500/10 dark:bg-amber-500/20";
-                icon = <Flag className="h-3.5 w-3.5 text-amber-500" />;
-                break;
-            }
-            
-            return (
-              <div 
-                key={`${event.type}-${index}`} 
-                className={cn(
-                  "flex flex-col gap-1 rounded-md p-2",
-                  bgColor,
-                  "text-xs"
-                )}
-              >
-                <div className="flex items-center gap-2">
-                  {icon}
-                  <span className="font-medium">{event.title}</span>
-                </div>
-                {event.description && (
-                  <p className="text-xs text-muted-foreground pl-5">
-                    {event.description}
-                  </p>
-                )}
-              </div>
-            );
-          })}
+          .map((event, index) => (
+            <CalendarEventItem key={`${event.type}-${index}`} event={event} index={index} />
+          ))}
       </div>
     </div>
   );

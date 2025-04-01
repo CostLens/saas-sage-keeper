@@ -1,6 +1,8 @@
 
+import { EventType } from './EventType';
+
 export interface CalendarEvent {
-  type: 'renewal' | 'payment' | 'termination';
+  type: EventType;
   date: Date;
   title: string;
   description?: string;

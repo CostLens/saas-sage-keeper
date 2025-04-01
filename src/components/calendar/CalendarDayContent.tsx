@@ -2,9 +2,9 @@
 import React from "react";
 import { format, isSameMonth } from "date-fns";
 import { cn } from "@/lib/utils";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { DayContentProps } from "react-day-picker";
-import { CalendarEvent } from "./types";
+import { CalendarEvent } from "./CalendarEvent";
+import { EventIndicator } from "./EventIndicator";
 
 interface CalendarDayContentProps extends DayContentProps {
   date: Date;
@@ -31,34 +31,13 @@ export function CalendarDayContent({ date, eventsByDate, currentMonth }: Calenda
         {events.length > 0 && (
           <div className="absolute bottom-1 left-0 right-0 flex justify-center gap-0.5">
             {events.some(e => e.type === 'renewal') && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="h-1.5 w-1.5 rounded-full bg-primary"></div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs">Renewal</p>
-                </TooltipContent>
-              </Tooltip>
+              <EventIndicator type="renewal" />
             )}
             {events.some(e => e.type === 'payment') && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="h-1.5 w-1.5 rounded-full bg-emerald-500"></div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs">Payment</p>
-                </TooltipContent>
-              </Tooltip>
+              <EventIndicator type="payment" />
             )}
             {events.some(e => e.type === 'termination') && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <div className="h-1.5 w-1.5 rounded-full bg-amber-500"></div>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p className="text-xs">Termination Deadline</p>
-                </TooltipContent>
-              </Tooltip>
+              <EventIndicator type="termination" />
             )}
           </div>
         )}

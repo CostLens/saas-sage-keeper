@@ -41,6 +41,14 @@ export function useSidebarFeatures() {
     }
     return true;
   });
+  
+  const [showWorkflowFeatures, setShowWorkflowFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-workflow-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
@@ -50,12 +58,14 @@ export function useSidebarFeatures() {
       const negotiationValue = localStorage.getItem("show-negotiation-features");
       const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
       const complianceValue = localStorage.getItem("show-compliance-features");
+      const workflowValue = localStorage.getItem("show-workflow-features");
       
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
       setShowNegotiationFeatures(negotiationValue !== "false");
       setShowBenchmarkingFeatures(benchmarkingValue !== "false");
       setShowComplianceFeatures(complianceValue !== "false");
+      setShowWorkflowFeatures(workflowValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -64,6 +74,7 @@ export function useSidebarFeatures() {
     window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
     window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
     window.addEventListener('complianceFeaturesToggled', handleStorageChange);
+    window.addEventListener('workflowFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -72,6 +83,7 @@ export function useSidebarFeatures() {
       window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
       window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
       window.removeEventListener('complianceFeaturesToggled', handleStorageChange);
+      window.removeEventListener('workflowFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -80,6 +92,7 @@ export function useSidebarFeatures() {
     showBoardingFeatures,
     showNegotiationFeatures,
     showBenchmarkingFeatures,
-    showComplianceFeatures
+    showComplianceFeatures,
+    showWorkflowFeatures
   };
 }

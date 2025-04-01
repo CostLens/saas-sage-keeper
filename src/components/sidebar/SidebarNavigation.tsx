@@ -11,7 +11,8 @@ import {
   CalendarClock,
   BarChart,
   Layers,
-  ShieldCheck
+  ShieldCheck,
+  Workflow
 } from "lucide-react";
 import { NavSection } from "./NavSection";
 
@@ -22,6 +23,7 @@ interface SidebarNavigationProps {
   showNegotiationFeatures: boolean;
   showBenchmarkingFeatures: boolean;
   showComplianceFeatures: boolean;
+  showWorkflowFeatures: boolean;
 }
 
 export const SidebarNavigation = ({ 
@@ -30,7 +32,8 @@ export const SidebarNavigation = ({
   showBoardingFeatures, 
   showNegotiationFeatures,
   showBenchmarkingFeatures,
-  showComplianceFeatures
+  showComplianceFeatures,
+  showWorkflowFeatures
 }: SidebarNavigationProps) => {
   
   // Build navigation items based on feature flags
@@ -60,6 +63,10 @@ export const SidebarNavigation = ({
     
     if (showComplianceFeatures) {
       items.push({ name: "Compliance", href: "/compliance", icon: ShieldCheck });
+    }
+    
+    if (showWorkflowFeatures) {
+      items.push({ name: "Workflow Builder", href: "/workflow-builder", icon: Workflow });
     }
     
     items.push({ name: "Repository", href: "/contracts", icon: FileText });

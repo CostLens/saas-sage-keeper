@@ -22,6 +22,7 @@ import Renewals from "./pages/Renewals";
 import Benchmarking from "./pages/Benchmarking";
 import AppDiscovery from "./pages/AppDiscovery";
 import Compliance from "./pages/Compliance";
+import WorkflowBuilder from "./pages/WorkflowBuilder";
 
 const queryClient = new QueryClient();
 
@@ -42,6 +43,9 @@ const App = () => {
     }
     if (localStorage.getItem("show-compliance-features") === null) {
       localStorage.setItem("show-compliance-features", "true");
+    }
+    if (localStorage.getItem("show-workflow-features") === null) {
+      localStorage.setItem("show-workflow-features", "true");
     }
     if (localStorage.getItem("dark-theme-enabled") === null) {
       localStorage.setItem("dark-theme-enabled", "false"); // Dark theme off by default
@@ -80,6 +84,11 @@ const App = () => {
     const savedValue = localStorage.getItem("show-compliance-features");
     return savedValue !== "false"; // Default to true if null or not "false"
   });
+  
+  const [showWorkflowFeatures, setShowWorkflowFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-workflow-features");
+    return savedValue !== "false"; // Default to true if null or not "false"
+  });
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -88,12 +97,14 @@ const App = () => {
       const negotiationValue = localStorage.getItem("show-negotiation-features");
       const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
       const complianceValue = localStorage.getItem("show-compliance-features");
+      const workflowValue = localStorage.getItem("show-workflow-features");
       
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
       setShowNegotiationFeatures(negotiationValue !== "false");
       setShowBenchmarkingFeatures(benchmarkingValue !== "false");
       setShowComplianceFeatures(complianceValue !== "false");
+      setShowWorkflowFeatures(workflowValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -102,6 +113,7 @@ const App = () => {
     window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
     window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
     window.addEventListener('complianceFeaturesToggled', handleStorageChange);
+    window.addEventListener('workflowFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -110,6 +122,7 @@ const App = () => {
       window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
       window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
       window.removeEventListener('complianceFeaturesToggled', handleStorageChange);
+      window.removeEventListener('workflowFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -156,6 +169,11 @@ const App = () => {
                 <Route path="/compliance" element={<Compliance />} />
               ) : (
                 <Route path="/compliance" element={<Navigate to="/dashboard" replace />} />
+              )}
+              {showWorkflowFeatures ? (
+                <Route path="/workflow-builder" element={<WorkflowBuilder />} />
+              ) : (
+                <Route path="/workflow-builder" element={<Navigate to="/dashboard" replace />} />
               )}
               <Route path="*" element={<NotFound />} />
             </Routes>

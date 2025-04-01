@@ -48,6 +48,14 @@ export function FeatureFlagsTab() {
     }
     return true;
   });
+  
+  const [showWorkflowFeatures, setShowWorkflowFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-workflow-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
 
   // Dark theme state - default to false (off)
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
@@ -223,6 +231,25 @@ export function FeatureFlagsTab() {
               onCheckedChange={(checked) => {
                 setShowComplianceFeatures(checked);
                 handleFeatureToggle("show-compliance-features", checked);
+              }}
+            />
+          </div>
+          
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="workflow-features-toggle" className="font-medium">
+                Workflow Builder
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enables workflow creation and management
+              </p>
+            </div>
+            <Switch
+              id="workflow-features-toggle"
+              checked={showWorkflowFeatures}
+              onCheckedChange={(checked) => {
+                setShowWorkflowFeatures(checked);
+                handleFeatureToggle("show-workflow-features", checked);
               }}
             />
           </div>

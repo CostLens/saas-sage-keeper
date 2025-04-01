@@ -12,7 +12,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ComplianceData } from "@/hooks/useComplianceData";
 import { Input } from "@/components/ui/input";
-import { Shield, ShieldCheck, AlertTriangle, FileCheck } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { FileCheck, Download, ShieldCheck } from "lucide-react";
 
 interface ComplianceCertificationsTableProps {
   data: ComplianceData[];
@@ -28,27 +29,52 @@ export function ComplianceCertificationsTable({ data }: ComplianceCertifications
     )
   );
 
-  // Function to render certification status badge
-  const renderCertificationStatus = (status: "Certified" | "Pending" | "NotCompliant") => {
-    switch (status) {
-      case "Certified":
-        return <Badge className="bg-green-500"><ShieldCheck className="h-3 w-3 mr-1" /> Certified</Badge>;
-      case "Pending":
-        return <Badge className="bg-amber-500"><AlertTriangle className="h-3 w-3 mr-1" /> Pending</Badge>;
-      case "NotCompliant":
-        return <Badge variant="destructive"><Shield className="h-3 w-3 mr-1" /> Not Compliant</Badge>;
-      default:
-        return <Badge variant="outline">Unknown</Badge>;
-    }
+  // Function to export the compliance data as CSV
+  const exportToCSV = () => {
+    // Create CSV header
+    const headers = ['Application', 'HIPAA', 'GDPR', 'CCPA', 'ISO 27001', 'SOC 2', 'PCI DSS'];
+    
+    // Map data to CSV rows, only showing "Certified" values
+    const rows = filteredData.map(item => {
+      const row = [item.name];
+      ['HIPAA', 'GDPR', 'CCPA', 'ISO 27001', 'SOC 2', 'PCI DSS'].forEach(certName => {
+        const cert = item.certifications.find(c => c.name === certName);
+        row.push(cert && cert.status === "Certified" ? "Yes" : "No");
+      });
+      return row;
+    });
+    
+    // Combine header and rows
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.join(','))
+    ].join('\n');
+    
+    // Create download link
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'compliance_certifications.csv');
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-xl flex items-center gap-2">
-          <FileCheck className="h-5 w-5" />
-          Compliance Certifications
-        </CardTitle>
+        <div className="flex justify-between items-center">
+          <CardTitle className="text-xl flex items-center gap-2">
+            <FileCheck className="h-5 w-5" />
+            Compliance Certifications
+          </CardTitle>
+          <Button variant="outline" size="sm" onClick={exportToCSV} className="flex items-center gap-2">
+            <Download className="h-4 w-4" />
+            Export CSV
+          </Button>
+        </div>
         <div className="pt-2">
           <Input 
             placeholder="Search applications or certifications..." 
@@ -80,7 +106,13 @@ export function ComplianceCertificationsTable({ data }: ComplianceCertifications
                     const cert = item.certifications.find(c => c.name === certName);
                     return (
                       <TableCell key={certName}>
-                        {cert ? renderCertificationStatus(cert.status) : <Badge variant="outline">Not Applicable</Badge>}
+                        {cert && cert.status === "Certified" ? (
+                          <Badge className="bg-green-500">
+                            <ShieldCheck className="h-3 w-3 mr-1" /> Certified
+                          </Badge>
+                        ) : (
+                          <span className="text-muted-foreground">-</span>
+                        )}
                       </TableCell>
                     );
                   })}

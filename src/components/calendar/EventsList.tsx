@@ -1,9 +1,10 @@
 
 import React from "react";
-import { CalendarClock, Wallet, Flag } from "lucide-react";
-import { format } from "date-fns";
+import { CalendarClock, Wallet, Flag, Star } from "lucide-react";
+import { format, isSameDay } from "date-fns";
 import { cn } from "@/lib/utils";
 import { CalendarEvent } from "./types";
+import { getHolidaysForDate } from "@/lib/holidaysData";
 
 interface EventsListProps {
   date: Date | undefined;
@@ -11,6 +12,10 @@ interface EventsListProps {
 }
 
 export function EventsList({ date, selectedDateEvents }: EventsListProps) {
+  // Get holidays for the selected date
+  const holidays = date ? getHolidaysForDate(date) : [];
+  const hasEvents = selectedDateEvents.length > 0 || holidays.length > 0;
+  
   return (
     <div className="p-3 border-t bg-muted/50">
       <h4 className="font-medium text-sm mb-2">
@@ -21,12 +26,33 @@ export function EventsList({ date, selectedDateEvents }: EventsListProps) {
         )}
       </h4>
       <div className="space-y-2 max-h-[200px] overflow-y-auto">
-        {selectedDateEvents.length === 0 && (
+        {!hasEvents && (
           <div className="text-xs text-muted-foreground py-1">
             No events scheduled for this date
           </div>
         )}
         
+        {/* Holidays */}
+        {holidays.length > 0 && (
+          <>
+            {holidays.map((holiday) => (
+              <div 
+                key={holiday.id}
+                className="flex flex-col gap-1 rounded-md p-2 bg-purple-100/50 dark:bg-purple-900/20 text-xs"
+              >
+                <div className="flex items-center gap-2">
+                  <Star className="h-3.5 w-3.5 text-purple-500" />
+                  <span className="font-medium">{holiday.name}</span>
+                </div>
+                <p className="text-xs text-muted-foreground pl-5">
+                  {holiday.type.charAt(0).toUpperCase() + holiday.type.slice(1)} holiday
+                </p>
+              </div>
+            ))}
+          </>
+        )}
+        
+        {/* Regular events */}
         {selectedDateEvents
           .sort((a, b) => {
             // Sort by type: renewals first, then payments, then terminations

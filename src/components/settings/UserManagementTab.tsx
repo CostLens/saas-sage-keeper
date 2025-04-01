@@ -31,8 +31,18 @@ export function UserManagementTab() {
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row items-center justify-between">
         <UserManagementHeader onInviteUser={handleInviteUser} />
+        <CalendarPopover>
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="flex items-center gap-2"
+          >
+            <CalendarClock className="h-4 w-4" />
+            <span className="hidden md:inline">View Calendar</span>
+          </Button>
+        </CalendarPopover>
       </CardHeader>
       <CardContent>
         <UserTable 

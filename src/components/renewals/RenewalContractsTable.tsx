@@ -14,15 +14,29 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Mail, CalendarClock } from "lucide-react";
+import { toast } from "sonner";
 
 interface RenewalContractsTableProps {
   contracts: SaaSData[];
 }
 
 export function RenewalContractsTable({ contracts }: RenewalContractsTableProps) {
+  const handleDraftEmail = (saas: SaaSData) => {
+    toast.success(`Email draft created for ${saas.name} renewal discussion`, {
+      description: "Draft available in your email client"
+    });
+  };
+
+  const handleStartRenewalWorkflow = (saas: SaaSData) => {
+    toast.success(`Renewal workflow initiated for ${saas.name}`, {
+      description: "Stakeholders have been notified"
+    });
+  };
+
   if (contracts.length === 0) {
     return (
-      <div className="text-center py-8 text-muted-foreground dark:text-slate-400">
+      <div className="text-center py-8 text-muted-foreground">
         No contracts due for renewal in the next 90 days
       </div>
     );
@@ -38,20 +52,18 @@ export function RenewalContractsTable({ contracts }: RenewalContractsTableProps)
           <TableHead>License Utilization</TableHead>
           <TableHead>Recommendation</TableHead>
           <TableHead>Potential Savings</TableHead>
-          <TableHead>Action</TableHead>
+          <TableHead>Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {contracts.map((saas) => {
           const recommendation = calculateRecommendation(saas);
           return (
-            <TableRow key={saas.id} className="dark:border-slate-800">
+            <TableRow key={saas.id}>
               <TableCell>
                 <NameColumn row={saas} />
               </TableCell>
-              <TableCell>
-                {new Date(saas.renewalDate).toLocaleDateString()}
-              </TableCell>
+              <TableCell>{new Date(saas.renewalDate).toLocaleDateString()}</TableCell>
               <TableCell>{formatCurrency(saas.price)}</TableCell>
               <TableCell>
                 <LicenseUtilizationCell saas={saas} />
@@ -63,9 +75,24 @@ export function RenewalContractsTable({ contracts }: RenewalContractsTableProps)
                 <SavingsCell recommendation={recommendation} />
               </TableCell>
               <TableCell>
-                <Button size="sm" variant="outline" className="text-blue-600 border-blue-200 hover:bg-blue-50 hover:text-blue-700 dark:text-blue-400 dark:border-blue-900 dark:hover:bg-blue-950 dark:hover:text-blue-300">
-                  Plan Renewal
-                </Button>
+                <div className="flex space-x-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => handleDraftEmail(saas)}
+                  >
+                    <Mail className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Email</span>
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleStartRenewalWorkflow(saas)}
+                  >
+                    <CalendarClock className="h-4 w-4 mr-1" />
+                    <span className="hidden sm:inline">Workflow</span>
+                  </Button>
+                </div>
               </TableCell>
             </TableRow>
           );

@@ -12,7 +12,9 @@ import {
   BarChart,
   Layers,
   ShieldCheck,
-  Workflow
+  Workflow,
+  Brain,
+  Merge
 } from "lucide-react";
 import { NavSection } from "./NavSection";
 
@@ -42,6 +44,8 @@ export const SidebarNavigation = ({
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
       { name: "App Discovery", href: "/app-discovery", icon: Layers },
+      { name: "Duplicate App Comparison", href: "/duplicate-app-comparison", icon: Merge },
+      { name: "AI Assistant", href: "/ai-assistant", icon: Brain },
     ];
     
     if (showUsageFeatures) {

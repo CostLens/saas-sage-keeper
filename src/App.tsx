@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -23,11 +22,12 @@ import Benchmarking from "./pages/Benchmarking";
 import AppDiscovery from "./pages/AppDiscovery";
 import Compliance from "./pages/Compliance";
 import WorkflowBuilder from "./pages/WorkflowBuilder";
+import DuplicateAppComparison from "./pages/DuplicateAppComparison";
+import ContractNegotiation from "./pages/ContractNegotiation";
 
 const queryClient = new QueryClient();
 
 const App = () => {
-  // Initialize local storage values if they don't exist
   useEffect(() => {
     if (localStorage.getItem("show-usage-features") === null) {
       localStorage.setItem("show-usage-features", "true");
@@ -48,10 +48,9 @@ const App = () => {
       localStorage.setItem("show-workflow-features", "true");
     }
     if (localStorage.getItem("dark-theme-enabled") === null) {
-      localStorage.setItem("dark-theme-enabled", "false"); // Dark theme off by default
+      localStorage.setItem("dark-theme-enabled", "false");
     }
     
-    // Apply dark theme if it's enabled in localStorage
     const darkThemeEnabled = localStorage.getItem("dark-theme-enabled") === "true";
     if (darkThemeEnabled) {
       document.documentElement.classList.add('dark');
@@ -62,32 +61,32 @@ const App = () => {
 
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-usage-features");
-    return savedValue !== "false"; // Default to true if null or not "false"
+    return savedValue !== "false";
   });
 
   const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-boarding-features");
-    return savedValue !== "false"; // Default to true if null or not "false"
+    return savedValue !== "false";
   });
 
   const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-negotiation-features");
-    return savedValue !== "false"; // Default to true if null or not "false"
+    return savedValue !== "false";
   });
 
   const [showBenchmarkingFeatures, setShowBenchmarkingFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-benchmarking-features");
-    return savedValue !== "false"; // Default to true if null or not "false"
+    return savedValue !== "false";
   });
 
   const [showComplianceFeatures, setShowComplianceFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-compliance-features");
-    return savedValue !== "false"; // Default to true if null or not "false"
+    return savedValue !== "false";
   });
-  
+
   const [showWorkflowFeatures, setShowWorkflowFeatures] = useState(() => {
     const savedValue = localStorage.getItem("show-workflow-features");
-    return savedValue !== "false"; // Default to true if null or not "false"
+    return savedValue !== "false";
   });
 
   useEffect(() => {
@@ -147,6 +146,8 @@ const App = () => {
               )}
               <Route path="/contracts" element={<ContractsRepository />} />
               <Route path="/ai-assistant" element={<AIAssistant />} />
+              <Route path="/duplicate-app-comparison" element={<DuplicateAppComparison />} />
+              <Route path="/contract-negotiation" element={<ContractNegotiation />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route path="/user-management" element={<UserManagement />} />

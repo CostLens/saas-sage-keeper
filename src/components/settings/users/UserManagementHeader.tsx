@@ -1,11 +1,10 @@
 
 import React from "react";
 import { CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { UserPlus } from "lucide-react";
+import { InviteUserDialog, InviteUserFormValues } from "./InviteUserDialog";
 
 interface UserManagementHeaderProps {
-  onInviteUser: () => void;
+  onInviteUser: (userData: InviteUserFormValues) => void;
 }
 
 export function UserManagementHeader({ onInviteUser }: UserManagementHeaderProps) {
@@ -17,10 +16,7 @@ export function UserManagementHeader({ onInviteUser }: UserManagementHeaderProps
           Manage users and their access levels
         </CardDescription>
       </div>
-      <Button onClick={onInviteUser} className="gap-2">
-        <UserPlus className="h-4 w-4" />
-        Invite User
-      </Button>
+      <InviteUserDialog onInviteUser={onInviteUser} />
     </div>
   );
 }

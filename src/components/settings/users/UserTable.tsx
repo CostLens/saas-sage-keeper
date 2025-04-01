@@ -12,9 +12,6 @@ import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Button } from "@/components/ui/button";
-import { Mail, UserCog } from "lucide-react";
-import { toast } from "sonner";
 import { User, UserRole } from "@/components/settings/users/types";
 
 interface UserTableProps {
@@ -33,7 +30,6 @@ export function UserTable({ users, onRoleChange, onStatusChange }: UserTableProp
             <TableHead>Role</TableHead>
             <TableHead className="hidden md:table-cell">Last Login</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead className="w-[100px] text-right">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -76,16 +72,6 @@ export function UserTable({ users, onRoleChange, onStatusChange }: UserTableProp
                   <Badge variant={user.active ? "outline" : "secondary"} className="font-normal">
                     {user.active ? "Active" : "Inactive"}
                   </Badge>
-                </div>
-              </TableCell>
-              <TableCell className="text-right">
-                <div className="flex justify-end gap-2">
-                  <Button size="sm" variant="ghost" onClick={() => toast.info(`Email sent to ${user.email}`)}>
-                    <Mail className="h-4 w-4" />
-                  </Button>
-                  <Button size="sm" variant="ghost" onClick={() => toast.info(`User settings for ${user.name}`)}>
-                    <UserCog className="h-4 w-4" />
-                  </Button>
                 </div>
               </TableCell>
             </TableRow>

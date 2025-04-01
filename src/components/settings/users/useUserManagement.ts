@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { toast } from "sonner";
 import { User, UserRole } from "./types";
+import { InviteUserFormValues } from "./InviteUserDialog";
 
 export function useUserManagement() {
   // Mock data for users
@@ -66,8 +67,22 @@ export function useUserManagement() {
     toast.success(`User status updated to ${active ? 'active' : 'inactive'}`);
   };
 
-  const handleInviteUser = () => {
-    toast.info("Invite user functionality not implemented in this demo");
+  const handleInviteUser = (userData: InviteUserFormValues) => {
+    // Generate a random ID for the new user
+    const newUserId = Math.random().toString(36).substring(2, 9);
+    
+    // Create a new user object
+    const newUser: User = {
+      id: newUserId,
+      name: userData.name,
+      email: userData.email,
+      role: userData.role,
+      active: true,
+      lastLogin: "Never",
+    };
+    
+    // Add the new user to the users array
+    setUsers([...users, newUser]);
   };
 
   return {

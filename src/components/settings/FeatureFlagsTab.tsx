@@ -41,6 +41,14 @@ export function FeatureFlagsTab() {
     return true;
   });
 
+  const [showComplianceFeatures, setShowComplianceFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-compliance-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
+
   // Dark theme state - default to false (off)
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -196,6 +204,25 @@ export function FeatureFlagsTab() {
               onCheckedChange={(checked) => {
                 setShowBenchmarkingFeatures(checked);
                 handleFeatureToggle("show-benchmarking-features", checked);
+              }}
+            />
+          </div>
+
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="compliance-features-toggle" className="font-medium">
+                Compliance
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enables compliance certifications tracking
+              </p>
+            </div>
+            <Switch
+              id="compliance-features-toggle"
+              checked={showComplianceFeatures}
+              onCheckedChange={(checked) => {
+                setShowComplianceFeatures(checked);
+                handleFeatureToggle("show-compliance-features", checked);
               }}
             />
           </div>

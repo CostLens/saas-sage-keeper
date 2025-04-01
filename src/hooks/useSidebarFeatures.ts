@@ -33,6 +33,14 @@ export function useSidebarFeatures() {
     }
     return true;
   });
+  
+  const [showComplianceFeatures, setShowComplianceFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-compliance-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
@@ -41,11 +49,13 @@ export function useSidebarFeatures() {
       const boardingValue = localStorage.getItem("show-boarding-features");
       const negotiationValue = localStorage.getItem("show-negotiation-features");
       const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
+      const complianceValue = localStorage.getItem("show-compliance-features");
       
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
       setShowNegotiationFeatures(negotiationValue !== "false");
       setShowBenchmarkingFeatures(benchmarkingValue !== "false");
+      setShowComplianceFeatures(complianceValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -53,6 +63,7 @@ export function useSidebarFeatures() {
     window.addEventListener('boardingFeaturesToggled', handleStorageChange);
     window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
     window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
+    window.addEventListener('complianceFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -60,6 +71,7 @@ export function useSidebarFeatures() {
       window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
       window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
       window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
+      window.removeEventListener('complianceFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -67,6 +79,7 @@ export function useSidebarFeatures() {
     showUsageFeatures,
     showBoardingFeatures,
     showNegotiationFeatures,
-    showBenchmarkingFeatures
+    showBenchmarkingFeatures,
+    showComplianceFeatures
   };
 }

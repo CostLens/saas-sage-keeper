@@ -21,6 +21,7 @@ import UserBoarding from "./pages/UserBoarding";
 import Renewals from "./pages/Renewals";
 import Benchmarking from "./pages/Benchmarking";
 import AppDiscovery from "./pages/AppDiscovery";
+import Compliance from "./pages/Compliance";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +39,9 @@ const App = () => {
     }
     if (localStorage.getItem("show-benchmarking-features") === null) {
       localStorage.setItem("show-benchmarking-features", "true");
+    }
+    if (localStorage.getItem("show-compliance-features") === null) {
+      localStorage.setItem("show-compliance-features", "true");
     }
     if (localStorage.getItem("dark-theme-enabled") === null) {
       localStorage.setItem("dark-theme-enabled", "false"); // Dark theme off by default
@@ -72,16 +76,24 @@ const App = () => {
     return savedValue !== "false"; // Default to true if null or not "false"
   });
 
+  const [showComplianceFeatures, setShowComplianceFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-compliance-features");
+    return savedValue !== "false"; // Default to true if null or not "false"
+  });
+
   useEffect(() => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
       const boardingValue = localStorage.getItem("show-boarding-features");
       const negotiationValue = localStorage.getItem("show-negotiation-features");
       const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
+      const complianceValue = localStorage.getItem("show-compliance-features");
+      
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
       setShowNegotiationFeatures(negotiationValue !== "false");
       setShowBenchmarkingFeatures(benchmarkingValue !== "false");
+      setShowComplianceFeatures(complianceValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -89,6 +101,7 @@ const App = () => {
     window.addEventListener('boardingFeaturesToggled', handleStorageChange);
     window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
     window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
+    window.addEventListener('complianceFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -96,6 +109,7 @@ const App = () => {
       window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
       window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
       window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
+      window.removeEventListener('complianceFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -137,6 +151,11 @@ const App = () => {
                 <Route path="/benchmarking" element={<Benchmarking />} />
               ) : (
                 <Route path="/benchmarking" element={<Navigate to="/dashboard" replace />} />
+              )}
+              {showComplianceFeatures ? (
+                <Route path="/compliance" element={<Compliance />} />
+              ) : (
+                <Route path="/compliance" element={<Navigate to="/dashboard" replace />} />
               )}
               <Route path="*" element={<NotFound />} />
             </Routes>

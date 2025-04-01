@@ -10,7 +10,8 @@ import {
   UserCog,
   CalendarClock,
   BarChart,
-  Layers
+  Layers,
+  ShieldCheck
 } from "lucide-react";
 import { NavSection } from "./NavSection";
 
@@ -20,6 +21,7 @@ interface SidebarNavigationProps {
   showBoardingFeatures: boolean;
   showNegotiationFeatures: boolean;
   showBenchmarkingFeatures: boolean;
+  showComplianceFeatures: boolean;
 }
 
 export const SidebarNavigation = ({ 
@@ -27,7 +29,8 @@ export const SidebarNavigation = ({
   showUsageFeatures, 
   showBoardingFeatures, 
   showNegotiationFeatures,
-  showBenchmarkingFeatures
+  showBenchmarkingFeatures,
+  showComplianceFeatures
 }: SidebarNavigationProps) => {
   
   // Build navigation items based on feature flags
@@ -53,6 +56,10 @@ export const SidebarNavigation = ({
     
     if (showBenchmarkingFeatures) {
       items.push({ name: "Benchmarking", href: "/benchmarking", icon: BarChart });
+    }
+    
+    if (showComplianceFeatures) {
+      items.push({ name: "Compliance", href: "/compliance", icon: ShieldCheck });
     }
     
     items.push({ name: "Repository", href: "/contracts", icon: FileText });

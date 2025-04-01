@@ -18,7 +18,6 @@ import { CalendarNav } from "./CalendarNav";
 import { CalendarDayContent } from "./CalendarDayContent";
 import { EventsList } from "./EventsList";
 import { CalendarEvent } from "./types";
-import { getHolidaysForMonth } from "@/lib/holidaysData";
 
 interface CalendarPopoverProps {
   children: React.ReactNode;
@@ -32,9 +31,6 @@ export function CalendarPopover({ children }: CalendarPopoverProps) {
   const { renewals } = getUpcomingRenewals(mockSaaSData);
   const { paymentsData } = getUpcomingPayments(mockSaaSData);
   const { terminationsData } = getUpcomingTerminations(mockSaaSData);
-  
-  // Get holidays for the current month
-  const holidays = getHolidaysForMonth(currentMonth);
   
   // Construct calendar events from all data sources
   const allEvents: CalendarEvent[] = [
@@ -103,7 +99,7 @@ export function CalendarPopover({ children }: CalendarPopoverProps) {
           <div className="p-3 border-b">
             <h4 className="font-medium text-sm">Calendar View</h4>
             <p className="text-xs text-muted-foreground">
-              Renewals, payments, and holidays
+              Renewals, payments, and termination deadlines
             </p>
           </div>
           

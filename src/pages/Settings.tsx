@@ -4,9 +4,6 @@ import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { SettingsTabs } from "@/components/settings/SettingsTabs";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { CalendarPopover } from "@/components/calendar/CalendarPopover";
-import { Button } from "@/components/ui/button";
-import { CalendarClock } from "lucide-react";
 
 const Settings = () => {
   const isMobile = useIsMobile();
@@ -42,16 +39,6 @@ const Settings = () => {
           <div className="container mx-auto p-3 md:p-6 space-y-4 md:space-y-6 max-w-6xl">
             <div className="flex items-center justify-between mt-8 md:mt-16">
               <h1 className="text-xl md:text-3xl font-bold tracking-tight">Settings</h1>
-              <CalendarPopover>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  className="flex items-center gap-2"
-                >
-                  <CalendarClock className="h-4 w-4" />
-                  <span className="hidden md:inline">Calendar</span>
-                </Button>
-              </CalendarPopover>
             </div>
             <SettingsTabs />
           </div>

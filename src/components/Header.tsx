@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/popover";
 import { Input } from "@/components/ui/input";
 import { useRenewalContracts } from "@/hooks/useRenewalContracts";
+import { CalendarPopover } from "@/components/calendar/CalendarPopover";
 
 interface HeaderProps {
   className?: string;
@@ -105,42 +106,11 @@ export function Header({ className }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-4">
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button variant="ghost" size="icon" className="relative">
-              <Calendar className="h-5 w-5" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-80 p-0" align="end">
-            <div className="flex items-center justify-between p-2 border-b">
-              <h4 className="font-medium">Upcoming Renewals</h4>
-            </div>
-            <div className="max-h-[300px] overflow-auto">
-              {renewalContracts.length === 0 ? (
-                <div className="p-4 text-center text-muted-foreground">
-                  No upcoming renewals
-                </div>
-              ) : (
-                renewalContracts.map((contract) => (
-                  <div 
-                    key={contract.id} 
-                    className="p-3 border-b last:border-0 hover:bg-muted/50 transition-colors cursor-pointer"
-                  >
-                    <div className="flex justify-between">
-                      <h5 className="text-sm font-medium">{contract.name}</h5>
-                      <span className="text-xs text-muted-foreground">{contract.renewalDate}</span>
-                    </div>
-                    <p className="text-xs text-muted-foreground mt-1">
-                      {contract.usage?.utilizationRate < 50 
-                        ? "Low utilization. Consider reducing licenses." 
-                        : "Review contract terms before renewal."}
-                    </p>
-                  </div>
-                ))
-              )}
-            </div>
-          </PopoverContent>
-        </Popover>
+        <CalendarPopover>
+          <Button variant="ghost" size="icon" className="relative">
+            <Calendar className="h-5 w-5" />
+          </Button>
+        </CalendarPopover>
 
         <Popover>
           <PopoverTrigger asChild>

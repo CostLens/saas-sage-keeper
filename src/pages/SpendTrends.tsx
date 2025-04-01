@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -37,7 +38,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mockSaaSData, generateSpendByCategory } from "@/lib/mockData";
+import { mockSaaSData } from "@/lib/mockData";
 import SpendAnalyticsChart from "@/components/charts/SpendAnalyticsChart";
 
 const SpendTrends = () => {
@@ -87,11 +88,14 @@ const SpendTrends = () => {
   
   const monthlySpendData = generateMonthlySpendData();
   
-  // Get spend by category data
-  const spendByCategory = generateSpendByCategory();
-
-  // Chart colors
-  const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#A28CFF'];
+  // Updated spend by category data with more realistic values
+  const spendByCategory = [
+    { name: "CRM", value: 35000, color: "#0088FE" },
+    { name: "Communication", value: 28000, color: "#00C49F" },
+    { name: "Marketing", value: 22000, color: "#FFBB28" },
+    { name: "Project Management", value: 18000, color: "#FF8042" },
+    { name: "IT Infrastructure", value: 15000, color: "#A28CFF" }
+  ];
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -224,7 +228,7 @@ const SpendTrends = () => {
                         label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
                       >
                         {spendByCategory.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                          <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
                       </Pie>
                       <Tooltip 

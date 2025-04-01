@@ -4,7 +4,8 @@ import { TrendChart } from "@/components/ui/trend-chart";
 import { SaaSData, generatePaymentTrendData } from "@/lib/mockData";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from "recharts";
+import { Badge } from "@/components/ui/badge";
+import { DollarSign } from "lucide-react";
 
 interface AnalyticsTabProps {
   saas: SaaSData;
@@ -13,14 +14,6 @@ interface AnalyticsTabProps {
 export function AnalyticsTab({ saas }: AnalyticsTabProps) {
   // Generate chart data
   const paymentData = generatePaymentTrendData(saas.id);
-
-  // Sample spend by category data
-  const spendByCategoryData = [
-    { name: "User Licenses", value: saas.price * 0.65, color: "#0088FE" },
-    { name: "Services", value: saas.price * 0.15, color: "#00C49F" },
-    { name: "Support", value: saas.price * 0.12, color: "#FFBB28" },
-    { name: "Training", value: saas.price * 0.08, color: "#FF8042" }
-  ];
 
   // Format currency
   const formatCurrency = (value: number) => {
@@ -46,54 +39,33 @@ export function AnalyticsTab({ saas }: AnalyticsTabProps) {
         height={300}
       />
       
-      {/* Spend by Category Chart */}
+      {/* Payment History */}
       <Card>
         <CardHeader className="flex flex-row items-center justify-between pb-2">
           <div>
-            <CardTitle className="text-xl">Spend by Category</CardTitle>
+            <CardTitle className="text-xl">Payment History</CardTitle>
             <CardDescription>
-              SaaS spend distribution across categories
+              Recent payment transactions
             </CardDescription>
           </div>
-          <Select defaultValue="value">
-            <SelectTrigger className="w-[150px]">
-              <SelectValue placeholder="Show by" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="value">By Value</SelectItem>
-              <SelectItem value="percentage">By Percentage</SelectItem>
-            </SelectContent>
-          </Select>
         </CardHeader>
         <CardContent>
-          <div className="h-[300px]">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={spendByCategoryData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  outerRadius={100}
-                  fill="#8884d8"
-                  dataKey="value"
-                  label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                >
-                  {spendByCategoryData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip 
-                  formatter={(value: number) => formatCurrency(value)}
-                  contentStyle={{ 
-                    borderRadius: '8px',
-                    boxShadow: '0 0 10px rgba(0,0,0,0.1)',
-                    border: '1px solid var(--border)'
-                  }} 
-                />
-                <Legend />
-              </PieChart>
-            </ResponsiveContainer>
+          <div className="space-y-4">
+            {paymentData.slice(-5).reverse().map((payment, index) => (
+              <div 
+                key={index} 
+                className="flex items-center justify-between p-3 rounded-md bg-background/50 border"
+              >
+                <div className="flex items-center gap-3">
+                  <DollarSign className="h-5 w-5 text-muted-foreground" />
+                  <div>
+                    <p className="font-medium">${payment.amount.toFixed(2)}</p>
+                    <p className="text-xs text-muted-foreground">{payment.name} payment</p>
+                  </div>
+                </div>
+                <Badge variant="outline" className="text-green-500">Paid</Badge>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>

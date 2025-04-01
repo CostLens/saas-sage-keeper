@@ -1,2 +1,2 @@
 
-export type EventType = 'renewal' | 'payment' | 'termination';
+export type EventType = 'renewal' | 'payment' | 'termination' | 'meeting';

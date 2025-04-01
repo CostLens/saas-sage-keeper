@@ -24,6 +24,10 @@ export function EventIndicator({ type }: EventIndicatorProps) {
       bgColorClass = "bg-amber-500";
       tooltipText = "Termination Deadline";
       break;
+    case 'meeting':
+      bgColorClass = "bg-blue-500";
+      tooltipText = "Meeting";
+      break;
   }
   
   return (

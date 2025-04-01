@@ -2,7 +2,7 @@
 import React from "react";
 import { CalendarEvent } from "./CalendarEvent";
 import { cn } from "@/lib/utils";
-import { CalendarClock, Wallet, Flag } from "lucide-react";
+import { CalendarClock, Wallet, Flag, Calendar } from "lucide-react";
 
 interface CalendarEventItemProps {
   event: CalendarEvent;
@@ -25,6 +25,10 @@ export function CalendarEventItem({ event, index }: CalendarEventItemProps) {
     case 'termination':
       bgColor = "bg-amber-500/10 dark:bg-amber-500/20";
       icon = <Flag className="h-3.5 w-3.5 text-amber-500" />;
+      break;
+    case 'meeting':
+      bgColor = "bg-blue-500/10 dark:bg-blue-500/20";
+      icon = <Calendar className="h-3.5 w-3.5 text-blue-500" />;
       break;
   }
   

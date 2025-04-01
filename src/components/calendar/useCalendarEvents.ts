@@ -1,6 +1,6 @@
 
 import { useState, useMemo } from "react";
-import { format, isSameDay } from "date-fns";
+import { format, isSameDay, addDays } from "date-fns";
 import { mockSaaSData } from "@/lib/mockData";
 import { 
   getUpcomingRenewals,
@@ -14,6 +14,28 @@ export function useCalendarEvents(date: Date | undefined) {
   const { renewals } = getUpcomingRenewals(mockSaaSData);
   const { paymentsData } = getUpcomingPayments(mockSaaSData);
   const { terminationsData } = getUpcomingTerminations(mockSaaSData);
+  
+  // Generate some mock meeting events
+  const meetingEvents: CalendarEvent[] = [
+    {
+      type: 'meeting',
+      date: addDays(new Date(), 2),
+      title: 'SaaS Vendor Review',
+      description: 'Quarterly review with Salesforce team'
+    },
+    {
+      type: 'meeting',
+      date: addDays(new Date(), 5),
+      title: 'Contract Negotiation',
+      description: 'Discussing renewal terms with HubSpot'
+    },
+    {
+      type: 'meeting',
+      date: addDays(new Date(), 8),
+      title: 'Budget Planning',
+      description: 'SaaS expenditure planning for Q3'
+    }
+  ];
   
   // Construct calendar events from all data sources
   const allEvents: CalendarEvent[] = useMemo(() => [
@@ -39,8 +61,9 @@ export function useCalendarEvents(date: Date | undefined) {
       date: new Date(item.contract.cancellationDeadline),
       title: `${item.name} termination deadline`,
       description: `Cancellation deadline for ${item.name}`
-    }))
-  ], [renewals, paymentsData, terminationsData]);
+    })),
+    ...meetingEvents
+  ], [renewals, paymentsData, terminationsData, meetingEvents]);
   
   // Filter events for the selected date
   const selectedDateEvents = date 

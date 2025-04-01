@@ -2,7 +2,7 @@
 import React from "react";
 import { TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { Settings, Flag, CreditCard, Link, Bell, HelpCircle } from "lucide-react";
+import { Settings, Flag, CreditCard, Link, Bell, HelpCircle, Users } from "lucide-react";
 
 interface TabItem {
   value: string;
@@ -19,6 +19,7 @@ export function TabNavigation() {
     { value: "subscription", label: "Subscription", icon: <CreditCard className="h-4 w-4" /> },
     { value: "integrations", label: "Integrations", icon: <Link className="h-4 w-4" /> },
     { value: "notifications", label: "Notifications", icon: <Bell className="h-4 w-4" /> },
+    { value: "users", label: "Users", icon: <Users className="h-4 w-4" /> },
     { value: "support", label: "Support", icon: <HelpCircle className="h-4 w-4" /> },
   ];
 

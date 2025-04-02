@@ -77,6 +77,14 @@ export function FeatureFlagsTab() {
     }
     return true;
   });
+  
+  const [showShadowITFeatures, setShowShadowITFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-shadow-it-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
 
   // Dark theme state
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
@@ -129,6 +137,9 @@ export function FeatureFlagsTab() {
       case "show-procurement-features":
         setShowProcurementFeatures(enabled);
         break;
+      case "show-shadow-it-features":
+        setShowShadowITFeatures(enabled);
+        break;
     }
     
     // Dispatch custom event for sidebar components to listen to
@@ -164,6 +175,7 @@ export function FeatureFlagsTab() {
         showDuplicateAppFeatures={showDuplicateAppFeatures}
         showCopilotFeatures={showCopilotFeatures}
         showProcurementFeatures={showProcurementFeatures}
+        showShadowITFeatures={showShadowITFeatures}
         onFeatureToggle={handleFeatureToggle}
       />
     </div>

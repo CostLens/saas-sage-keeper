@@ -1,73 +1,82 @@
 
-import React from "react";
-import { cn } from "@/lib/utils";
+import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { SidebarHeader } from "./sidebar/SidebarHeader";
 import { SidebarNavigation } from "./sidebar/SidebarNavigation";
-import { MobileMenuButton } from "./sidebar/MobileMenuButton";
+import { cn } from "@/lib/utils";
 import { MobileBackdrop } from "./sidebar/MobileBackdrop";
+import { MobileMenuButton } from "./sidebar/MobileMenuButton";
 import { useSidebarCollapsed } from "@/hooks/useSidebarCollapsed";
+import { useSidebarState } from "@/hooks/useSidebarState";
 import { useSidebarFeatures } from "@/hooks/useSidebarFeatures";
-import { TooltipProvider } from "@/components/ui/tooltip";
 
 interface SidebarProps {
-  className?: string;
+  children?: React.ReactNode;
 }
 
-const Sidebar = ({ className }: SidebarProps) => {
-  const { 
-    isCollapsed, 
-    isMobileOpen, 
-    setIsMobileOpen, 
-    toggleCollapse, 
-    isMobile 
-  } = useSidebarCollapsed();
+export const Sidebar = ({ children }: SidebarProps) => {
+  const { isCollapsed, setIsCollapsed } = useSidebarCollapsed();
+  const { isMobileOpen, setIsMobileOpen } = useSidebarState();
   
   const { 
     showUsageFeatures, 
-    showBoardingFeatures, 
+    showBoardingFeatures,
     showNegotiationFeatures,
     showBenchmarkingFeatures,
     showComplianceFeatures,
     showWorkflowFeatures,
     showDuplicateAppFeatures,
     showCopilotFeatures,
-    showProcurementFeatures
+    showProcurementFeatures,
+    showShadowITFeatures  // New feature flag from the hook
   } = useSidebarFeatures();
 
-  // Determine sidebar visibility class based on mobile and open state
-  const sidebarVisibilityClass = isMobile 
-    ? isMobileOpen 
-      ? "translate-x-0" 
-      : "-translate-x-full" 
-    : "";
+  const closeMobileMenu = () => setIsMobileOpen(false);
+
+  // Close mobile menu when resizing to larger screen
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsMobileOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [setIsMobileOpen]);
 
   return (
-    <TooltipProvider>
+    <>
+      {/* Mobile menu backdrop */}
+      <MobileBackdrop isOpen={isMobileOpen} onClick={closeMobileMenu} />
+
       {/* Mobile menu button */}
-      {isMobile && (
-        <MobileMenuButton 
-          isMobileOpen={isMobileOpen} 
-          toggleCollapse={toggleCollapse} 
+      <div className="lg:hidden fixed top-0 left-0 z-20 p-4">
+        <MobileMenuButton
+          onClick={() => setIsMobileOpen(!isMobileOpen)}
+          isOpen={isMobileOpen}
         />
-      )}
-      
+      </div>
+
+      {/* Logo for mobile view */}
+      <div className="lg:hidden fixed top-0 left-0 w-full flex justify-center p-3 bg-background z-10 border-b">
+        <Link to="/dashboard" className="text-xl font-bold" onClick={closeMobileMenu}>
+          SaaS App
+        </Link>
+      </div>
+
+      {/* Sidebar container */}
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex flex-col border-r bg-background/80 backdrop-blur-sm transition-all duration-300",
-          isMobile
-            ? `w-64 ${sidebarVisibilityClass}`
-            : isCollapsed ? "w-16" : "w-64",
-          className
+          "fixed inset-y-0 z-20 flex h-full flex-col border-r bg-background transition-all duration-300",
+          isCollapsed ? "w-[70px]" : "w-[240px]",
+          isMobileOpen ? "left-0" : "-left-full lg:left-0"
         )}
       >
-        <SidebarHeader 
-          isCollapsed={isMobile ? false : isCollapsed} 
-          toggleCollapse={toggleCollapse} 
-          isMobile={isMobile}
-        />
-
+        <SidebarHeader isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+        
         <SidebarNavigation 
-          isCollapsed={isMobile ? false : isCollapsed}
+          isCollapsed={isCollapsed}
           showUsageFeatures={showUsageFeatures}
           showBoardingFeatures={showBoardingFeatures}
           showNegotiationFeatures={showNegotiationFeatures}
@@ -77,16 +86,20 @@ const Sidebar = ({ className }: SidebarProps) => {
           showDuplicateAppFeatures={showDuplicateAppFeatures}
           showCopilotFeatures={showCopilotFeatures}
           showProcurementFeatures={showProcurementFeatures}
+          showShadowITFeatures={showShadowITFeatures} // Pass the feature flag
         />
       </aside>
-      
-      {/* Mobile backdrop overlay */}
-      <MobileBackdrop 
-        isMobileOpen={isMobile && isMobileOpen} 
-        onClose={() => setIsMobileOpen(false)} 
-      />
-    </TooltipProvider>
+
+      {/* Main content */}
+      <main
+        className={cn(
+          "min-h-screen transition-all duration-300 bg-gray-50 dark:bg-gray-900",
+          isCollapsed ? "lg:pl-[70px]" : "lg:pl-[240px]",
+          "pt-14 lg:pt-0"
+        )}
+      >
+        {children}
+      </main>
+    </>
   );
 };
-
-export { Sidebar };

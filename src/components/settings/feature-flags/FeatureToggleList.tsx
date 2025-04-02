@@ -13,6 +13,7 @@ interface FeatureToggleListProps {
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
+  showShadowITFeatures: boolean; // New feature flag
   // Toggle handlers
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
@@ -27,6 +28,7 @@ export function FeatureToggleList({
   showDuplicateAppFeatures,
   showCopilotFeatures,
   showProcurementFeatures,
+  showShadowITFeatures,
   onFeatureToggle
 }: FeatureToggleListProps) {
   
@@ -93,6 +95,13 @@ export function FeatureToggleList({
       title: "Procurement Intake",
       description: "Enables procurement intake forms and IT/Security questionnaires",
       checked: showProcurementFeatures
+    },
+    {
+      id: "shadow-it-features-toggle",
+      key: "show-shadow-it-features",
+      title: "Shadow IT",
+      description: "Enables Shadow IT detection and risk management features",
+      checked: showShadowITFeatures
     }
   ];
 

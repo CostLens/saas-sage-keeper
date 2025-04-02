@@ -10,6 +10,7 @@ import { Search, Filter, ArrowDownUp, Layers, Copy, Check, Download } from "luci
 import { mockSaaSData } from "@/lib/mockData";
 import { formatCurrency } from "@/lib/utils";
 import { toast } from "sonner";
+import { PortfolioAnalysisDialog } from "@/components/duplicate-app/PortfolioAnalysisDialog";
 
 interface OverlapGroup {
   category: string;
@@ -20,6 +21,7 @@ interface OverlapGroup {
 
 const DuplicateAppComparison = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [analysisDialogOpen, setAnalysisDialogOpen] = useState(false);
 
   // Define app categories and determine overlapping applications
   const overlapGroups: OverlapGroup[] = useMemo(() => [
@@ -73,6 +75,10 @@ const DuplicateAppComparison = () => {
     });
   };
 
+  const analyzePortfolio = () => {
+    setAnalysisDialogOpen(true);
+  };
+
   const consolidateApps = (category: string) => {
     toast.success(`Consolidation plan initiated for ${category}`, {
       description: "Stakeholders have been notified of the proposed plan"
@@ -98,7 +104,7 @@ const DuplicateAppComparison = () => {
               <Download className="h-4 w-4 mr-2" />
               Export Report
             </Button>
-            <Button>
+            <Button onClick={analyzePortfolio}>
               <Layers className="h-4 w-4 mr-2" />
               Analyze Portfolio
             </Button>
@@ -258,6 +264,15 @@ const DuplicateAppComparison = () => {
           </Card>
         ))}
       </div>
+      
+      <PortfolioAnalysisDialog 
+        open={analysisDialogOpen}
+        onOpenChange={setAnalysisDialogOpen}
+        categories={overlapGroups.map(group => group.category)}
+        totalApps={mockSaaSData.length}
+        duplicateApps={overlapGroups.reduce((sum, group) => sum + group.apps.length, 0)}
+        potentialSavings={totalPotentialSavings}
+      />
     </DashboardLayout>
   );
 };

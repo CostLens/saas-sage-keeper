@@ -15,7 +15,8 @@ import {
   Workflow,
   Brain,
   Merge,
-  Ticket
+  Ticket,
+  AlertTriangle
 } from "lucide-react";
 import { NavSection } from "./NavSection";
 
@@ -30,6 +31,7 @@ interface SidebarNavigationProps {
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
+  showShadowITFeatures: boolean; // New feature flag
 }
 
 export const SidebarNavigation = ({ 
@@ -42,7 +44,8 @@ export const SidebarNavigation = ({
   showWorkflowFeatures,
   showDuplicateAppFeatures,
   showCopilotFeatures,
-  showProcurementFeatures
+  showProcurementFeatures,
+  showShadowITFeatures  // New prop
 }: SidebarNavigationProps) => {
   
   // Build navigation items based on feature flags
@@ -56,6 +59,11 @@ export const SidebarNavigation = ({
     // Only show Duplicate App Comparison when feature flag is enabled
     if (showDuplicateAppFeatures) {
       items.push({ name: "Duplicate App Comparison", href: "/duplicate-app-comparison", icon: Merge });
+    }
+    
+    // Only show Shadow IT when feature flag is enabled
+    if (showShadowITFeatures) {
+      items.push({ name: "Shadow IT", href: "/shadow-it", icon: AlertTriangle });
     }
     
     // Only show AI Assistant when feature flag is enabled

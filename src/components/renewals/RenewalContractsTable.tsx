@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { SaaSData } from "@/lib/mockData";
 import { formatCurrency } from "@/lib/utils";
 import { NameColumn } from "@/components/saas-table/columns/NameColumn";
@@ -14,24 +14,21 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Mail, CalendarClock } from "lucide-react";
+import { Mail } from "lucide-react";
 import { toast } from "sonner";
+import { RenewalEmailDialog } from "./RenewalEmailDialog";
 
 interface RenewalContractsTableProps {
   contracts: SaaSData[];
 }
 
 export function RenewalContractsTable({ contracts }: RenewalContractsTableProps) {
-  const handleDraftEmail = (saas: SaaSData) => {
-    toast.success(`Email draft created for ${saas.name} renewal discussion`, {
-      description: "Draft available in your email client"
-    });
-  };
+  const [selectedContract, setSelectedContract] = useState<SaaSData | null>(null);
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
 
-  const handleStartRenewalWorkflow = (saas: SaaSData) => {
-    toast.success(`Renewal workflow initiated for ${saas.name}`, {
-      description: "Stakeholders have been notified"
-    });
+  const handleDraftEmail = (saas: SaaSData) => {
+    setSelectedContract(saas);
+    setEmailDialogOpen(true);
   };
 
   if (contracts.length === 0) {
@@ -43,62 +40,64 @@ export function RenewalContractsTable({ contracts }: RenewalContractsTableProps)
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>SaaS Application</TableHead>
-          <TableHead>Renewal Date</TableHead>
-          <TableHead>Current Price</TableHead>
-          <TableHead>License Utilization</TableHead>
-          <TableHead>Recommendation</TableHead>
-          <TableHead>Potential Savings</TableHead>
-          <TableHead>Actions</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {contracts.map((saas) => {
-          const recommendation = calculateRecommendation(saas);
-          return (
-            <TableRow key={saas.id}>
-              <TableCell>
-                <NameColumn row={saas} />
-              </TableCell>
-              <TableCell>{new Date(saas.renewalDate).toLocaleDateString()}</TableCell>
-              <TableCell>{formatCurrency(saas.price)}</TableCell>
-              <TableCell>
-                <LicenseUtilizationCell saas={saas} />
-              </TableCell>
-              <TableCell>
-                <RecommendationCell saas={saas} recommendation={recommendation} />
-              </TableCell>
-              <TableCell>
-                <SavingsCell recommendation={recommendation} />
-              </TableCell>
-              <TableCell>
-                <div className="flex space-x-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm" 
-                    onClick={() => handleDraftEmail(saas)}
-                  >
-                    <Mail className="h-4 w-4 mr-1" />
-                    <span className="hidden sm:inline">Email</span>
-                  </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleStartRenewalWorkflow(saas)}
-                  >
-                    <CalendarClock className="h-4 w-4 mr-1" />
-                    <span className="hidden sm:inline">Workflow</span>
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          );
-        })}
-      </TableBody>
-    </Table>
+    <>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>SaaS Application</TableHead>
+            <TableHead>Renewal Date</TableHead>
+            <TableHead>Current Price</TableHead>
+            <TableHead>License Utilization</TableHead>
+            <TableHead>Recommendation</TableHead>
+            <TableHead>Potential Savings</TableHead>
+            <TableHead>Actions</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {contracts.map((saas) => {
+            const recommendation = calculateRecommendation(saas);
+            return (
+              <TableRow key={saas.id}>
+                <TableCell>
+                  <NameColumn row={saas} />
+                </TableCell>
+                <TableCell>{new Date(saas.renewalDate).toLocaleDateString()}</TableCell>
+                <TableCell>{formatCurrency(saas.price)}</TableCell>
+                <TableCell>
+                  <LicenseUtilizationCell saas={saas} />
+                </TableCell>
+                <TableCell>
+                  <RecommendationCell saas={saas} recommendation={recommendation} />
+                </TableCell>
+                <TableCell>
+                  <SavingsCell recommendation={recommendation} />
+                </TableCell>
+                <TableCell>
+                  <div className="flex space-x-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => handleDraftEmail(saas)}
+                    >
+                      <Mail className="h-4 w-4 mr-1" />
+                      <span className="hidden sm:inline">Draft Email</span>
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            );
+          })}
+        </TableBody>
+      </Table>
+      
+      {selectedContract && (
+        <RenewalEmailDialog
+          open={emailDialogOpen}
+          onOpenChange={setEmailDialogOpen}
+          contract={selectedContract}
+        />
+      )}
+    </>
   );
 }
 

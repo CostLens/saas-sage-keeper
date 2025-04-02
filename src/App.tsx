@@ -26,6 +26,7 @@ import WorkflowBuilder from "./pages/WorkflowBuilder";
 import DuplicateAppComparison from "./pages/DuplicateAppComparison";
 import ContractNegotiation from "./pages/ContractNegotiation";
 import ProcurementIntake from "./pages/ProcurementIntake";
+import ShadowIT from "./pages/ShadowIT"; // Import the new Shadow IT page
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,9 @@ const App = () => {
     }
     if (localStorage.getItem("show-procurement-features") === null) {
       localStorage.setItem("show-procurement-features", "true");
+    }
+    if (localStorage.getItem("show-shadow-it-features") === null) {
+      localStorage.setItem("show-shadow-it-features", "true");
     }
     if (localStorage.getItem("dark-theme-enabled") === null) {
       localStorage.setItem("dark-theme-enabled", "false");
@@ -114,6 +118,11 @@ const App = () => {
     const savedValue = localStorage.getItem("show-procurement-features");
     return savedValue !== "false";
   });
+  
+  const [showShadowITFeatures, setShowShadowITFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-shadow-it-features");
+    return savedValue !== "false";
+  });
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -126,6 +135,7 @@ const App = () => {
       const duplicateAppValue = localStorage.getItem("show-duplicate-app-features");
       const copilotValue = localStorage.getItem("show-copilot-features");
       const procurementValue = localStorage.getItem("show-procurement-features");
+      const shadowITValue = localStorage.getItem("show-shadow-it-features");
       
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
@@ -136,6 +146,7 @@ const App = () => {
       setShowDuplicateAppFeatures(duplicateAppValue !== "false");
       setShowCopilotFeatures(copilotValue !== "false");
       setShowProcurementFeatures(procurementValue !== "false");
+      setShowShadowITFeatures(shadowITValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -148,6 +159,7 @@ const App = () => {
     window.addEventListener('duplicateAppFeaturesToggled', handleStorageChange);
     window.addEventListener('copilotFeaturesToggled', handleStorageChange);
     window.addEventListener('procurementFeaturesToggled', handleStorageChange);
+    window.addEventListener('shadowITFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -160,6 +172,7 @@ const App = () => {
       window.removeEventListener('duplicateAppFeaturesToggled', handleStorageChange);
       window.removeEventListener('copilotFeaturesToggled', handleStorageChange);
       window.removeEventListener('procurementFeaturesToggled', handleStorageChange);
+      window.removeEventListener('shadowITFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -202,6 +215,13 @@ const App = () => {
                 <Route path="/procurement-intake" element={<ProcurementIntake />} />
               ) : (
                 <Route path="/procurement-intake" element={<Navigate to="/dashboard" replace />} />
+              )}
+              
+              {/* Add the Shadow IT route with feature flag */}
+              {showShadowITFeatures ? (
+                <Route path="/shadow-it" element={<ShadowIT />} />
+              ) : (
+                <Route path="/shadow-it" element={<Navigate to="/dashboard" replace />} />
               )}
               
               <Route path="/contract-negotiation" element={<ContractNegotiation />} />

@@ -61,7 +61,7 @@ As we prepare for this renewal, I'd like to discuss some opportunities to optimi
 ${recommendation?.action === "Reduce" ? 
 `• License Optimization: Our current utilization data shows we're using ${contract.usage.activeUsers} out of ${contract.usage.totalLicenses} licenses (${contract.usage.utilizationRate}%). We'd like to adjust our license count to better match our actual usage.
 
-• Based on our analysis, we could reduce to ${recommendation.targetLicenses} licenses, which would result in a more appropriate subscription level for our needs.` : 
+• Based on our analysis, we could reduce to ${recommendation.newLicenses} licenses, which would result in a more appropriate subscription level for our needs.` : 
 `• While we're maintaining our current license count, we'd like to discuss pricing options that better align with our long-term commitment to ${contract.name}.`}
 
 • We're interested in exploring multi-year options if favorable terms can be provided.
@@ -88,7 +88,7 @@ After reviewing our current usage patterns, we've identified that we're signific
 • Utilization rate: ${contract.usage.utilizationRate}%
 • Current annual cost: ${currentPrice}
 
-Based on this analysis, we need to reduce our license count to ${recommendation?.targetLicenses || (contract.usage.activeUsers + 2)} to better align with our actual usage needs.
+Based on this analysis, we need to reduce our license count to ${recommendation?.newLicenses || (contract.usage.activeUsers + 2)} to better align with our actual usage needs.
 
 Could you please provide a revised quote with this adjusted license count? We'd also like to understand any potential volume discount options that might be available at this new tier.
 

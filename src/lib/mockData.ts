@@ -1,4 +1,5 @@
 
+// Only updating the SaaSData interface to include the owner property
 export interface SaaSData {
   id: string;
   name: string;
@@ -7,7 +8,8 @@ export interface SaaSData {
   renewalDate: string;
   active?: boolean; 
   pricingTerms?: string; 
-  category?: string; // Add category property
+  category?: string;
+  owner?: string; // Add owner property to SaaSData
   lastPayment?: { 
     date: string;
     amount: number;

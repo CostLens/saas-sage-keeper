@@ -15,8 +15,8 @@ interface SidebarProps {
 }
 
 export const Sidebar = ({ children }: SidebarProps) => {
-  const { isCollapsed, setIsCollapsed } = useSidebarCollapsed();
-  const { isMobileOpen, setIsMobileOpen } = useSidebarState();
+  const { isCollapsed, toggleCollapse, isMobileOpen, setIsMobileOpen } = useSidebarCollapsed();
+  const { sidebarCollapsed } = useSidebarState();
   
   const { 
     showUsageFeatures, 
@@ -28,7 +28,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
     showDuplicateAppFeatures,
     showCopilotFeatures,
     showProcurementFeatures,
-    showShadowITFeatures  // New feature flag from the hook
+    showShadowITFeatures  // Feature flag from the hook
   } = useSidebarFeatures();
 
   const closeMobileMenu = () => setIsMobileOpen(false);
@@ -48,13 +48,13 @@ export const Sidebar = ({ children }: SidebarProps) => {
   return (
     <>
       {/* Mobile menu backdrop */}
-      <MobileBackdrop isOpen={isMobileOpen} onClick={closeMobileMenu} />
+      <MobileBackdrop isMobileOpen={isMobileOpen} onClose={closeMobileMenu} />
 
       {/* Mobile menu button */}
       <div className="lg:hidden fixed top-0 left-0 z-20 p-4">
         <MobileMenuButton
-          onClick={() => setIsMobileOpen(!isMobileOpen)}
-          isOpen={isMobileOpen}
+          isMobileOpen={isMobileOpen}
+          toggleCollapse={toggleCollapse}
         />
       </div>
 
@@ -73,7 +73,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
           isMobileOpen ? "left-0" : "-left-full lg:left-0"
         )}
       >
-        <SidebarHeader isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
+        <SidebarHeader isCollapsed={isCollapsed} toggleCollapse={toggleCollapse} />
         
         <SidebarNavigation 
           isCollapsed={isCollapsed}

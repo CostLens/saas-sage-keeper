@@ -28,7 +28,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
     showDuplicateAppFeatures,
     showCopilotFeatures,
     showProcurementFeatures,
-    showShadowITFeatures  // Feature flag from the hook
+    showShadowITFeatures
   } = useSidebarFeatures();
 
   const closeMobileMenu = () => setIsMobileOpen(false);
@@ -86,20 +86,9 @@ export const Sidebar = ({ children }: SidebarProps) => {
           showDuplicateAppFeatures={showDuplicateAppFeatures}
           showCopilotFeatures={showCopilotFeatures}
           showProcurementFeatures={showProcurementFeatures}
-          showShadowITFeatures={showShadowITFeatures} // Pass the feature flag
+          showShadowITFeatures={showShadowITFeatures}
         />
       </aside>
-
-      {/* Main content */}
-      <main
-        className={cn(
-          "min-h-screen transition-all duration-300 bg-gray-50 dark:bg-gray-900",
-          isCollapsed ? "lg:pl-[70px]" : "lg:pl-[240px]",
-          "pt-14 lg:pt-0"
-        )}
-      >
-        {children}
-      </main>
     </>
   );
 };

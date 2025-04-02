@@ -1,3 +1,4 @@
+
 import React from "react";
 import { 
   LayoutDashboard, 
@@ -31,7 +32,7 @@ interface SidebarNavigationProps {
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
-  showShadowITFeatures: boolean; // New feature flag
+  showShadowITFeatures: boolean;
 }
 
 export const SidebarNavigation = ({ 
@@ -45,66 +46,32 @@ export const SidebarNavigation = ({
   showDuplicateAppFeatures,
   showCopilotFeatures,
   showProcurementFeatures,
-  showShadowITFeatures  // New prop
+  showShadowITFeatures
 }: SidebarNavigationProps) => {
   
-  // Build navigation items based on feature flags
+  // Build navigation items based on feature flags and the requested order
   const getPrimaryNavItems = () => {
-    const items = [
-      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-      { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
-      { name: "App Discovery", href: "/app-discovery", icon: Layers },
-      { name: "Insights", href: "/insights", icon: Lightbulb },
+    // Define all items in the desired order with their visibility logic
+    const orderedItems = [
+      { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, show: true },
+      { name: "Insights", href: "/insights", icon: Lightbulb, show: true },
+      { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp, show: true },
+      { name: "Usage Analytics", href: "/usage", icon: Gauge, show: showUsageFeatures },
+      { name: "App Discovery", href: "/app-discovery", icon: Layers, show: true },
+      { name: "Duplicate App Comparison", href: "/duplicate-app-comparison", icon: Merge, show: showDuplicateAppFeatures },
+      { name: "Shadow IT", href: "/shadow-it", icon: AlertTriangle, show: showShadowITFeatures },
+      { name: "Renewals", href: "/renewals", icon: CalendarClock, show: showNegotiationFeatures },
+      { name: "Benchmarking", href: "/benchmarking", icon: BarChart, show: showBenchmarkingFeatures },
+      { name: "Compliance", href: "/compliance", icon: ShieldCheck, show: showComplianceFeatures },
+      { name: "User Boarding", href: "/user-boarding", icon: UserCog, show: showBoardingFeatures },
+      { name: "Workflow Builder", href: "/workflow-builder", icon: Workflow, show: showWorkflowFeatures },
+      { name: "Repository", href: "/contracts", icon: FileText, show: true },
+      { name: "AI Assistant", href: "/ai-assistant", icon: Brain, show: showCopilotFeatures },
+      { name: "Procurement Intake", href: "/procurement-intake", icon: Ticket, show: showProcurementFeatures },
     ];
     
-    // Only show Duplicate App Comparison when feature flag is enabled
-    if (showDuplicateAppFeatures) {
-      items.push({ name: "Duplicate App Comparison", href: "/duplicate-app-comparison", icon: Merge });
-    }
-    
-    // Only show Shadow IT when feature flag is enabled
-    if (showShadowITFeatures) {
-      items.push({ name: "Shadow IT", href: "/shadow-it", icon: AlertTriangle });
-    }
-    
-    // Only show AI Assistant when feature flag is enabled
-    if (showCopilotFeatures) {
-      items.push({ name: "AI Assistant", href: "/ai-assistant", icon: Brain });
-    }
-    
-    // Only show Procurement Intake when feature flag is enabled
-    if (showProcurementFeatures) {
-      items.push({ name: "Procurement Intake", href: "/procurement-intake", icon: Ticket });
-    }
-    
-    if (showUsageFeatures) {
-      items.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });
-    }
-    
-    if (showBoardingFeatures) {
-      items.push({ name: "User Boarding", href: "/user-boarding", icon: UserCog });
-    }
-    
-    // Updated renewals and benchmarking navigation
-    if (showNegotiationFeatures) {
-      items.push({ name: "Renewals", href: "/renewals", icon: CalendarClock });
-    }
-    
-    if (showBenchmarkingFeatures) {
-      items.push({ name: "Benchmarking", href: "/benchmarking", icon: BarChart });
-    }
-    
-    if (showComplianceFeatures) {
-      items.push({ name: "Compliance", href: "/compliance", icon: ShieldCheck });
-    }
-    
-    if (showWorkflowFeatures) {
-      items.push({ name: "Workflow Builder", href: "/workflow-builder", icon: Workflow });
-    }
-    
-    items.push({ name: "Repository", href: "/contracts", icon: FileText });
-    
-    return items;
+    // Filter out items that shouldn't be shown based on feature flags
+    return orderedItems.filter(item => item.show);
   };
 
   const secondaryNavigation = [

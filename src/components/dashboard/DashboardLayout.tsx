@@ -16,7 +16,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       <Sidebar />
       <div 
         className={`flex-1 flex flex-col transition-all duration-300 ${
-          sidebarCollapsed ? 'ml-0 md:ml-16' : 'ml-0 md:ml-64'
+          sidebarCollapsed ? 'md:ml-[70px]' : 'md:ml-[240px]'
         }`}
       >
         <Header />

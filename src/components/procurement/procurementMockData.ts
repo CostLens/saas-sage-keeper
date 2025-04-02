@@ -11,6 +11,7 @@ export const mockProcurementTickets = [
     department: "Engineering",
     businessJustification: "Our team needs a better communication tool for remote work. Slack will improve collaboration across engineering teams and reduce email volume.",
     annualCost: "$12,000",
+    approver: "Mark Wilson"
   },
   {
     id: "PR002",
@@ -23,6 +24,7 @@ export const mockProcurementTickets = [
     department: "Marketing",
     businessJustification: "The marketing team needs access to professional design tools to create materials for upcoming campaigns.",
     annualCost: "$7,200",
+    approver: "Pending Approval"
   },
   {
     id: "PR003",
@@ -35,6 +37,7 @@ export const mockProcurementTickets = [
     department: "Sales",
     businessJustification: "We need a better CRM system to track our growing customer base and improve sales forecasting.",
     annualCost: "$24,000",
+    approver: "Pending Approval"
   },
   {
     id: "PR004",
@@ -47,6 +50,7 @@ export const mockProcurementTickets = [
     department: "Product",
     businessJustification: "Rejected due to overlap with existing project management tools. We already have Asana licenses that can fulfill these requirements.",
     annualCost: "$8,400",
+    approver: "Jane Doe"
   },
   {
     id: "PR005",
@@ -59,6 +63,7 @@ export const mockProcurementTickets = [
     department: "Operations",
     businessJustification: "We need a reliable video conferencing tool for client meetings and internal communications as we expand our remote workforce.",
     annualCost: "$15,000",
+    approver: "Sarah Johnson"
   },
   {
     id: "PR006",
@@ -71,6 +76,7 @@ export const mockProcurementTickets = [
     department: "Finance",
     businessJustification: "Our accounting team needs better financial management software to track expenses and prepare for the upcoming fiscal year.",
     annualCost: "$5,500",
+    approver: "Pending Approval"
   },
   {
     id: "PR007",
@@ -83,5 +89,6 @@ export const mockProcurementTickets = [
     department: "Engineering",
     businessJustification: "Our team needs a project management tool to better organize tasks and deadlines for the upcoming product launch.",
     annualCost: "$9,600",
+    approver: "Pending Approval"
   },
 ];

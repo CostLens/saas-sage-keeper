@@ -39,6 +39,7 @@ const formSchema = z.object({
   department: z.string().min(1, "Department is required"),
   priority: z.string().min(1, "Priority is required"),
   annualCost: z.string().min(1, "Annual cost is required"),
+  approver: z.string().min(1, "Approver is required"),
   businessJustification: z.string().min(10, "Please provide a detailed business justification"),
   acceptTerms: z.boolean().refine(val => val === true, {
     message: "You must accept the terms to submit this form",
@@ -58,6 +59,7 @@ export function ProcurementIntakeForm({ onSubmitSuccess }: ProcurementIntakeForm
       department: "",
       priority: "",
       annualCost: "",
+      approver: "",
       businessJustification: "",
       acceptTerms: false,
     },
@@ -188,6 +190,34 @@ export function ProcurementIntakeForm({ onSubmitSuccess }: ProcurementIntakeForm
                     <FormControl>
                       <Input placeholder="$" {...field} />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="approver"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Approver</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select approver" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="john.smith">John Smith (IT Director)</SelectItem>
+                        <SelectItem value="jane.doe">Jane Doe (Finance Director)</SelectItem>
+                        <SelectItem value="mark.wilson">Mark Wilson (CTO)</SelectItem>
+                        <SelectItem value="sarah.johnson">Sarah Johnson (COO)</SelectItem>
+                        <SelectItem value="david.williams">David Williams (CEO)</SelectItem>
+                      </SelectContent>
+                    </Select>
                     <FormMessage />
                   </FormItem>
                 )}

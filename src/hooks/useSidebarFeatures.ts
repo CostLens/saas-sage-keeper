@@ -18,9 +18,10 @@ export const FEATURE_KEYS = {
 const getInitialFeatureState = (key: string): boolean => {
   if (typeof window !== 'undefined') {
     const savedValue = localStorage.getItem(key);
-    return savedValue !== "false"; // Default to true if null
+    // Default to false if null or not set
+    return savedValue === "true";
   }
-  return true;
+  return false;
 };
 
 export function useSidebarFeatures() {
@@ -51,6 +52,16 @@ export function useSidebarFeatures() {
     
   const [showProcurementFeatures, setShowProcurementFeatures] = useState(() => 
     getInitialFeatureState(FEATURE_KEYS.PROCUREMENT));
+
+  // Initialize feature flags to false if they don't exist
+  useEffect(() => {
+    // For each feature flag, set it to false by default if it doesn't exist
+    Object.values(FEATURE_KEYS).forEach(key => {
+      if (localStorage.getItem(key) === null) {
+        localStorage.setItem(key, "false");
+      }
+    });
+  }, []);
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {

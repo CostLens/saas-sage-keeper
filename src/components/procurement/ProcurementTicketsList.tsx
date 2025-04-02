@@ -74,6 +74,11 @@ export function ProcurementTicketsList() {
       sortable: true,
     },
     {
+      id: "approver",
+      header: "Approved By",
+      cell: (row: any) => <span>{row.approver}</span>,
+    },
+    {
       id: "status",
       header: "Status",
       cell: (row: any) => (
@@ -130,6 +135,10 @@ export function ProcurementTicketsList() {
                 <div>
                   <h3 className="font-medium">Department</h3>
                   <p>{selectedTicket?.department}</p>
+                </div>
+                <div>
+                  <h3 className="font-medium">Approved By</h3>
+                  <p>{selectedTicket?.approver}</p>
                 </div>
                 <div>
                   <h3 className="font-medium">Status</h3>

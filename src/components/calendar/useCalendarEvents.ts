@@ -1,6 +1,6 @@
 
 import { useState, useMemo } from "react";
-import { format, isSameDay, addDays } from "date-fns";
+import { format, isSameDay, addDays, addWeeks, addMonths } from "date-fns";
 import { mockSaaSData } from "@/lib/mockData";
 import { 
   getUpcomingRenewals,
@@ -15,7 +15,73 @@ export function useCalendarEvents(date: Date | undefined) {
   const { paymentsData } = getUpcomingPayments(mockSaaSData);
   const { terminationsData } = getUpcomingTerminations(mockSaaSData);
   
-  // Generate some mock meeting events
+  // Generate additional mock renewal events
+  const additionalRenewals: CalendarEvent[] = [
+    {
+      type: 'renewal',
+      date: addDays(new Date(), 7),
+      title: 'Adobe Creative Cloud renewal',
+      description: 'Annual subscription renewal - $14,900'
+    },
+    {
+      type: 'renewal',
+      date: addDays(new Date(), 15),
+      title: 'Microsoft 365 renewal',
+      description: 'Annual subscription renewal - $22,500'
+    },
+    {
+      type: 'renewal',
+      date: addDays(new Date(), 30),
+      title: 'Jira renewal',
+      description: 'Annual subscription renewal - $8,750'
+    }
+  ];
+  
+  // Generate additional mock payment events
+  const additionalPayments: CalendarEvent[] = [
+    {
+      type: 'payment',
+      date: addDays(new Date(), 5),
+      title: 'Slack payment',
+      description: '$3,200 monthly payment due'
+    },
+    {
+      type: 'payment',
+      date: addDays(new Date(), 12),
+      title: 'AWS payment',
+      description: '$7,850 monthly payment due'
+    },
+    {
+      type: 'payment',
+      date: addDays(new Date(), 25),
+      title: 'Zoom payment',
+      description: '$1,500 monthly payment due'
+    }
+  ];
+  
+  // Generate additional mock termination events
+  const additionalTerminations: CalendarEvent[] = [
+    {
+      type: 'termination',
+      date: addDays(new Date(), 10),
+      title: 'Dropbox termination deadline',
+      description: 'Last day to cancel without renewal'
+    },
+    {
+      type: 'termination',
+      date: addDays(new Date(), 21),
+      title: 'Trello termination deadline',
+      description: 'Last day to cancel without renewal'
+    },
+    {
+      type: 'termination',
+      date: addWeeks(new Date(), 6),
+      title: 'Notion termination deadline',
+      description: 'Last day to cancel without renewal'
+    }
+  ];
+  
+  // Generate mock meeting events
   const meetingEvents: CalendarEvent[] = [
     {
       type: 'meeting',
@@ -53,7 +119,7 @@ export function useCalendarEvents(date: Date | undefined) {
         type: 'payment' as const,
         date: nextPaymentDate,
         title: `${item.name} payment`,
-        description: `$${item.price} payment due for ${item.name}`
+        description: `$${item.lastPayment.amount.toLocaleString()} payment due for ${item.name}`
       };
     }).filter(Boolean) as CalendarEvent[],
     ...terminationsData.map(item => ({
@@ -62,8 +128,11 @@ export function useCalendarEvents(date: Date | undefined) {
       title: `${item.name} termination deadline`,
       description: `Cancellation deadline for ${item.name}`
     })),
+    ...additionalRenewals,
+    ...additionalPayments,
+    ...additionalTerminations,
     ...meetingEvents
-  ], [renewals, paymentsData, terminationsData, meetingEvents]);
+  ], [renewals, paymentsData, terminationsData, additionalRenewals, additionalPayments, additionalTerminations, meetingEvents]);
   
   // Filter events for the selected date
   const selectedDateEvents = date 

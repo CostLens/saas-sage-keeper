@@ -1,113 +1,92 @@
 
 import { useState, useEffect } from "react";
 
+// Define feature keys for better maintainability
+export const FEATURE_KEYS = {
+  USAGE: "show-usage-features",
+  BOARDING: "show-boarding-features",
+  NEGOTIATION: "show-negotiation-features",
+  BENCHMARKING: "show-benchmarking-features",
+  COMPLIANCE: "show-compliance-features",
+  WORKFLOW: "show-workflow-features",
+  DUPLICATE_APP: "show-duplicate-app-features",
+  COPILOT: "show-copilot-features",
+};
+
+// Helper function to get initial state from localStorage
+const getInitialFeatureState = (key: string): boolean => {
+  if (typeof window !== 'undefined') {
+    const savedValue = localStorage.getItem(key);
+    return savedValue !== "false"; // Default to true if null
+  }
+  return true;
+};
+
 export function useSidebarFeatures() {
-  const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-usage-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
-
-  const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-boarding-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
-
-  const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-negotiation-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
-
-  const [showBenchmarkingFeatures, setShowBenchmarkingFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-benchmarking-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
+  // Set up feature flag states
+  const [showUsageFeatures, setShowUsageFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.USAGE));
   
-  const [showComplianceFeatures, setShowComplianceFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-compliance-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
+  const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.BOARDING));
   
-  const [showWorkflowFeatures, setShowWorkflowFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-workflow-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
+  const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.NEGOTIATION));
+  
+  const [showBenchmarkingFeatures, setShowBenchmarkingFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.BENCHMARKING));
+  
+  const [showComplianceFeatures, setShowComplianceFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.COMPLIANCE));
+  
+  const [showWorkflowFeatures, setShowWorkflowFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.WORKFLOW));
 
-  const [showDuplicateAppFeatures, setShowDuplicateAppFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-duplicate-app-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
+  const [showDuplicateAppFeatures, setShowDuplicateAppFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.DUPLICATE_APP));
 
-  const [showCopilotFeatures, setShowCopilotFeatures] = useState(() => {
-    if (typeof window !== 'undefined') {
-      const savedValue = localStorage.getItem("show-copilot-features");
-      return savedValue !== "false";
-    }
-    return true;
-  });
+  const [showCopilotFeatures, setShowCopilotFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.COPILOT));
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
     const handleStorageChange = () => {
-      const usageValue = localStorage.getItem("show-usage-features");
-      const boardingValue = localStorage.getItem("show-boarding-features");
-      const negotiationValue = localStorage.getItem("show-negotiation-features");
-      const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
-      const complianceValue = localStorage.getItem("show-compliance-features");
-      const workflowValue = localStorage.getItem("show-workflow-features");
-      const duplicateAppValue = localStorage.getItem("show-duplicate-app-features");
-      const copilotValue = localStorage.getItem("show-copilot-features");
-      
-      setShowUsageFeatures(usageValue !== "false");
-      setShowBoardingFeatures(boardingValue !== "false");
-      setShowNegotiationFeatures(negotiationValue !== "false");
-      setShowBenchmarkingFeatures(benchmarkingValue !== "false");
-      setShowComplianceFeatures(complianceValue !== "false");
-      setShowWorkflowFeatures(workflowValue !== "false");
-      setShowDuplicateAppFeatures(duplicateAppValue !== "false");
-      setShowCopilotFeatures(copilotValue !== "false");
+      setShowUsageFeatures(getInitialFeatureState(FEATURE_KEYS.USAGE));
+      setShowBoardingFeatures(getInitialFeatureState(FEATURE_KEYS.BOARDING));
+      setShowNegotiationFeatures(getInitialFeatureState(FEATURE_KEYS.NEGOTIATION));
+      setShowBenchmarkingFeatures(getInitialFeatureState(FEATURE_KEYS.BENCHMARKING));
+      setShowComplianceFeatures(getInitialFeatureState(FEATURE_KEYS.COMPLIANCE));
+      setShowWorkflowFeatures(getInitialFeatureState(FEATURE_KEYS.WORKFLOW));
+      setShowDuplicateAppFeatures(getInitialFeatureState(FEATURE_KEYS.DUPLICATE_APP));
+      setShowCopilotFeatures(getInitialFeatureState(FEATURE_KEYS.COPILOT));
     };
 
+    // Add event listeners
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('usageFeaturesToggled', handleStorageChange);
-    window.addEventListener('boardingFeaturesToggled', handleStorageChange);
-    window.addEventListener('negotiationFeaturesToggled', handleStorageChange);
-    window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
-    window.addEventListener('complianceFeaturesToggled', handleStorageChange);
-    window.addEventListener('workflowFeaturesToggled', handleStorageChange);
-    window.addEventListener('duplicateAppFeaturesToggled', handleStorageChange);
-    window.addEventListener('copilotFeaturesToggled', handleStorageChange);
+    
+    // Feature-specific event listeners
+    const eventNames = [
+      'usageFeaturesToggled',
+      'boardingFeaturesToggled',
+      'negotiationFeaturesToggled',
+      'benchmarkingFeaturesToggled',
+      'complianceFeaturesToggled',
+      'workflowFeaturesToggled',
+      'duplicateAppFeaturesToggled',
+      'copilotFeaturesToggled'
+    ];
+    
+    eventNames.forEach(event => {
+      window.addEventListener(event, handleStorageChange);
+    });
     
     return () => {
+      // Remove event listeners
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('usageFeaturesToggled', handleStorageChange);
-      window.removeEventListener('boardingFeaturesToggled', handleStorageChange);
-      window.removeEventListener('negotiationFeaturesToggled', handleStorageChange);
-      window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
-      window.removeEventListener('complianceFeaturesToggled', handleStorageChange);
-      window.removeEventListener('workflowFeaturesToggled', handleStorageChange);
-      window.removeEventListener('duplicateAppFeaturesToggled', handleStorageChange);
-      window.removeEventListener('copilotFeaturesToggled', handleStorageChange);
+      
+      eventNames.forEach(event => {
+        window.removeEventListener(event, handleStorageChange);
+      });
     };
   }, []);
 

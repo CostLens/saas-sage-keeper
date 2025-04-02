@@ -124,7 +124,7 @@ export function useCalendarEvents(date: Date | undefined) {
     }).filter(Boolean) as CalendarEvent[],
     ...terminationsData.map(item => ({
       type: 'termination' as const,
-      date: new Date(item.contract.cancellationDeadline || item.contract.endDate),
+      date: new Date(item.contract.cancellationDeadline),
       title: `${item.name} termination deadline`,
       description: `Cancellation deadline for ${item.name}`
     })),

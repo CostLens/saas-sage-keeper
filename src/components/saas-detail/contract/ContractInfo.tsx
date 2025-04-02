@@ -7,7 +7,7 @@ interface ContractInfoProps {
   term: string;
   autoRenewal: boolean;
   cancellationDeadline?: string;
-  hasTerminationClause?: boolean;
+  hasTerminationClause?: boolean; // Add this property
 }
 
 export function ContractInfo({ 
@@ -15,7 +15,7 @@ export function ContractInfo({
   term, 
   autoRenewal, 
   cancellationDeadline,
-  hasTerminationClause = false
+  hasTerminationClause = false // Default to false
 }: ContractInfoProps) {
   return (
     <div className="bg-muted/30 rounded-lg p-6">

@@ -48,7 +48,7 @@ export function ContractTab({ saas }: ContractTabProps) {
       id: "contract-3",
       title: `${saas.name} Current Contract`,
       dateRange: "Jan 2023 - Dec 2023",
-      signedDate: saas.contract.signedDate || saas.contract.startDate,
+      signedDate: saas.contract.signedDate,
       term: saas.contract.term,
       isRenewal: true,
       isOriginal: false,
@@ -94,9 +94,9 @@ export function ContractTab({ saas }: ContractTabProps) {
     <div className="space-y-6">
       {/* Current Contract Information */}
       <ContractInfo 
-        signedDate={saas.contract.signedDate || saas.contract.startDate}
+        signedDate={saas.contract.signedDate}
         term={saas.contract.term}
-        autoRenewal={saas.contract.autoRenew}
+        autoRenewal={saas.contract.autoRenewal}
         cancellationDeadline={saas.contract.cancellationDeadline}
         hasTerminationClause={saas.contract.hasTerminationClause}
       />

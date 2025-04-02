@@ -51,10 +51,8 @@ export function useDashboardData() {
   const terminationsData = saasData
     .filter(saas => 
       saas.contract && 
-      ((saas.contract.cancellationDeadline && 
-      new Date(saas.contract.cancellationDeadline) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)) ||
-      (!saas.contract.cancellationDeadline && 
-      new Date(saas.contract.endDate) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)))
+      saas.contract.cancellationDeadline && 
+      new Date(saas.contract.cancellationDeadline) < new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
     )
     .slice(0, 2);
 

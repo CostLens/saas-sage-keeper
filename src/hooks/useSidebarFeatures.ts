@@ -12,7 +12,7 @@ export const FEATURE_KEYS = {
   DUPLICATE_APP: "show-duplicate-app-features",
   COPILOT: "show-copilot-features",
   PROCUREMENT: "show-procurement-features",
-  SHADOW_IT: "show-shadow-it-features", // New feature flag
+  SHADOW_IT: "show-shadow-it-features",
 };
 
 // Helper function to get initial state from localStorage

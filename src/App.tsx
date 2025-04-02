@@ -26,41 +26,42 @@ import WorkflowBuilder from "./pages/WorkflowBuilder";
 import DuplicateAppComparison from "./pages/DuplicateAppComparison";
 import ContractNegotiation from "./pages/ContractNegotiation";
 import ProcurementIntake from "./pages/ProcurementIntake";
-import ShadowIT from "./pages/ShadowIT"; // Import the new Shadow IT page
+import ShadowIT from "./pages/ShadowIT";
 
 const queryClient = new QueryClient();
 
 const App = () => {
   useEffect(() => {
+    // Initialize all feature flags to false by default
     if (localStorage.getItem("show-usage-features") === null) {
-      localStorage.setItem("show-usage-features", "true");
+      localStorage.setItem("show-usage-features", "false");
     }
     if (localStorage.getItem("show-boarding-features") === null) {
-      localStorage.setItem("show-boarding-features", "true");
+      localStorage.setItem("show-boarding-features", "false");
     }
     if (localStorage.getItem("show-negotiation-features") === null) {
-      localStorage.setItem("show-negotiation-features", "true");
+      localStorage.setItem("show-negotiation-features", "false");
     }
     if (localStorage.getItem("show-benchmarking-features") === null) {
-      localStorage.setItem("show-benchmarking-features", "true");
+      localStorage.setItem("show-benchmarking-features", "false");
     }
     if (localStorage.getItem("show-compliance-features") === null) {
-      localStorage.setItem("show-compliance-features", "true");
+      localStorage.setItem("show-compliance-features", "false");
     }
     if (localStorage.getItem("show-workflow-features") === null) {
-      localStorage.setItem("show-workflow-features", "true");
+      localStorage.setItem("show-workflow-features", "false");
     }
     if (localStorage.getItem("show-duplicate-app-features") === null) {
-      localStorage.setItem("show-duplicate-app-features", "true");
+      localStorage.setItem("show-duplicate-app-features", "false");
     }
     if (localStorage.getItem("show-copilot-features") === null) {
-      localStorage.setItem("show-copilot-features", "true");
+      localStorage.setItem("show-copilot-features", "false");
     }
     if (localStorage.getItem("show-procurement-features") === null) {
-      localStorage.setItem("show-procurement-features", "true");
+      localStorage.setItem("show-procurement-features", "false");
     }
     if (localStorage.getItem("show-shadow-it-features") === null) {
-      localStorage.setItem("show-shadow-it-features", "true");
+      localStorage.setItem("show-shadow-it-features", "false");
     }
     if (localStorage.getItem("dark-theme-enabled") === null) {
       localStorage.setItem("dark-theme-enabled", "false");
@@ -217,7 +218,6 @@ const App = () => {
                 <Route path="/procurement-intake" element={<Navigate to="/dashboard" replace />} />
               )}
               
-              {/* Add the Shadow IT route with feature flag */}
               {showShadowITFeatures ? (
                 <Route path="/shadow-it" element={<ShadowIT />} />
               ) : (

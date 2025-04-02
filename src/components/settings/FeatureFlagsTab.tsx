@@ -5,85 +5,85 @@ import { ThemeCard } from "./feature-flags/ThemeCard";
 import { FeatureFlagsCard } from "./feature-flags/FeatureFlagsCard";
 
 export function FeatureFlagsTab() {
-  // Feature flags state
+  // Feature flags state - initialize all to false by default
   const [showUsageFeatures, setShowUsageFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-usage-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
   
   const [showBoardingFeatures, setShowBoardingFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-boarding-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
 
   const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-negotiation-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
 
   const [showBenchmarkingFeatures, setShowBenchmarkingFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-benchmarking-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
 
   const [showComplianceFeatures, setShowComplianceFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-compliance-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
   
   const [showWorkflowFeatures, setShowWorkflowFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-workflow-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
   
   const [showDuplicateAppFeatures, setShowDuplicateAppFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-duplicate-app-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true" 
     }
-    return true;
+    return false;
   });
   
   const [showCopilotFeatures, setShowCopilotFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-copilot-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
   
   const [showProcurementFeatures, setShowProcurementFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-procurement-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
   
   const [showShadowITFeatures, setShowShadowITFeatures] = useState(() => {
     if (typeof window !== 'undefined') {
       const savedValue = localStorage.getItem("show-shadow-it-features");
-      return savedValue !== "false";
+      return savedValue === "true"; // Default to false if not "true"
     }
-    return true;
+    return false;
   });
 
   // Dark theme state

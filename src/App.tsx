@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -26,6 +25,7 @@ import WorkflowBuilder from "./pages/WorkflowBuilder";
 import DuplicateAppComparison from "./pages/DuplicateAppComparison";
 import ContractNegotiation from "./pages/ContractNegotiation";
 import ProcurementIntake from "./pages/ProcurementIntake";
+import ShadowIT from "./pages/ShadowIT";
 
 const queryClient = new QueryClient();
 
@@ -177,6 +177,7 @@ const App = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/spend-trends" element={<SpendTrends />} />
               <Route path="/app-discovery" element={<AppDiscovery />} />
+              <Route path="/shadow-it" element={<ShadowIT />} />
               
               {showUsageFeatures ? (
                 <Route path="/usage" element={<Usage />} />

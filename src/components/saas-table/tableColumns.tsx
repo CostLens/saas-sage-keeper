@@ -12,6 +12,7 @@ import { UsageColumn } from "./columns/UsageColumn";
 import { PriceColumn } from "./columns/PriceColumn";
 import { PricingTermsColumn } from "./columns/PricingTermsColumn";
 import { PaymentDetailsColumn } from "./columns/PaymentDetailsColumn";
+import { AppOwnerColumn } from "./columns/AppOwnerColumn";
 
 export const getBaseColumns = () => {
   return [
@@ -26,6 +27,12 @@ export const getBaseColumns = () => {
       header: "Status",
       sortable: true,
       cell: (row: SaaSData) => <StatusColumn row={row} />,
+    },
+    {
+      id: "owner",
+      header: "App Owner",
+      sortable: true,
+      cell: (row: SaaSData) => <AppOwnerColumn row={row} />,
     },
     {
       id: "renewalDate",
@@ -83,7 +90,7 @@ export const getTableColumns = (showUsage: boolean) => {
   
   // Only add usage column if showUsage is true
   if (showUsage) {
-    baseColumns.splice(7, 0, {
+    baseColumns.splice(8, 0, {
       id: "usage",
       header: "Usage",
       sortable: true,

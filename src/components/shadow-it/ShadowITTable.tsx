@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { AlertTriangle, Shield, AlertCircle, Users, ChevronDown, ChevronUp, FileText, CheckCircle, XCircle } from "lucide-react";
 import { ShadowITData } from "@/hooks/useShadowITData";
 import { ShadowITDetailsDialog } from "./ShadowITDetailsDialog";
+import { ShadowITUsersDialog } from "./ShadowITUsersDialog";
 
 interface ShadowITTableProps {
   shadowITData: ShadowITData[];
@@ -24,6 +25,7 @@ export function ShadowITTable({ shadowITData, loading }: ShadowITTableProps) {
   const [expandedApp, setExpandedApp] = useState<string | null>(null);
   const [selectedApp, setSelectedApp] = useState<ShadowITData | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [usersDialogOpen, setUsersDialogOpen] = useState(false);
 
   const toggleExpand = (appId: string) => {
     if (expandedApp === appId) {
@@ -36,6 +38,11 @@ export function ShadowITTable({ shadowITData, loading }: ShadowITTableProps) {
   const handleOpenDetails = (app: ShadowITData) => {
     setSelectedApp(app);
     setDialogOpen(true);
+  };
+
+  const handleOpenUsers = (app: ShadowITData) => {
+    setSelectedApp(app);
+    setUsersDialogOpen(true);
   };
 
   const renderRiskBadge = (riskLevel: string) => {
@@ -126,7 +133,10 @@ export function ShadowITTable({ shadowITData, loading }: ShadowITTableProps) {
                     </TableCell>
                     <TableCell>{app.category}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-1">
+                      <div 
+                        className="flex items-center gap-1 hover:text-primary hover:underline cursor-pointer"
+                        onClick={() => handleOpenUsers(app)}
+                      >
                         <Users className="h-4 w-4 text-muted-foreground" />
                         {app.usersCount}
                       </div>
@@ -248,6 +258,14 @@ export function ShadowITTable({ shadowITData, loading }: ShadowITTableProps) {
           app={selectedApp}
           open={dialogOpen}
           onOpenChange={setDialogOpen}
+        />
+      )}
+
+      {selectedApp && (
+        <ShadowITUsersDialog
+          app={selectedApp}
+          open={usersDialogOpen}
+          onOpenChange={setUsersDialogOpen}
         />
       )}
     </>

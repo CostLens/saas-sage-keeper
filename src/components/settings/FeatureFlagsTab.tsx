@@ -56,6 +56,22 @@ export function FeatureFlagsTab() {
     }
     return true;
   });
+  
+  const [showDuplicateAppFeatures, setShowDuplicateAppFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-duplicate-app-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
+  
+  const [showCopilotFeatures, setShowCopilotFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-copilot-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
 
   // Dark theme state - default to false (off)
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
@@ -80,7 +96,7 @@ export function FeatureFlagsTab() {
     localStorage.setItem(feature, enabled.toString());
     
     // Dispatch custom event for sidebar components to listen to
-    const event = new CustomEvent(`${feature.replace('show-', '')}Toggled`, {
+    const event = new CustomEvent(`${feature.replace('show-', '').replace('-features', '')}Toggled`, {
       detail: { enabled }
     });
     window.dispatchEvent(event);
@@ -237,19 +253,38 @@ export function FeatureFlagsTab() {
           
           <div className="flex items-center justify-between space-x-2">
             <div className="flex flex-col space-y-1">
-              <Label htmlFor="workflow-features-toggle" className="font-medium">
-                Workflow Builder
+              <Label htmlFor="duplicate-app-features-toggle" className="font-medium">
+                Duplicate Application
               </Label>
               <p className="text-sm text-muted-foreground">
-                Enables workflow creation and management
+                Enables duplicate app detection and comparison features
               </p>
             </div>
             <Switch
-              id="workflow-features-toggle"
-              checked={showWorkflowFeatures}
+              id="duplicate-app-features-toggle"
+              checked={showDuplicateAppFeatures}
               onCheckedChange={(checked) => {
-                setShowWorkflowFeatures(checked);
-                handleFeatureToggle("show-workflow-features", checked);
+                setShowDuplicateAppFeatures(checked);
+                handleFeatureToggle("show-duplicate-app-features", checked);
+              }}
+            />
+          </div>
+
+          <div className="flex items-center justify-between space-x-2">
+            <div className="flex flex-col space-y-1">
+              <Label htmlFor="copilot-features-toggle" className="font-medium">
+                Co-Pilot
+              </Label>
+              <p className="text-sm text-muted-foreground">
+                Enables AI-powered assistant for procurement optimization
+              </p>
+            </div>
+            <Switch
+              id="copilot-features-toggle"
+              checked={showCopilotFeatures}
+              onCheckedChange={(checked) => {
+                setShowCopilotFeatures(checked);
+                handleFeatureToggle("show-copilot-features", checked);
               }}
             />
           </div>

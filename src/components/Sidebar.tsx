@@ -28,7 +28,9 @@ const Sidebar = ({ className }: SidebarProps) => {
     showNegotiationFeatures,
     showBenchmarkingFeatures,
     showComplianceFeatures,
-    showWorkflowFeatures
+    showWorkflowFeatures,
+    showDuplicateAppFeatures,
+    showCopilotFeatures
   } = useSidebarFeatures();
 
   // Determine sidebar visibility class based on mobile and open state
@@ -71,6 +73,8 @@ const Sidebar = ({ className }: SidebarProps) => {
           showBenchmarkingFeatures={showBenchmarkingFeatures}
           showComplianceFeatures={showComplianceFeatures}
           showWorkflowFeatures={showWorkflowFeatures}
+          showDuplicateAppFeatures={showDuplicateAppFeatures}
+          showCopilotFeatures={showCopilotFeatures}
         />
       </aside>
       

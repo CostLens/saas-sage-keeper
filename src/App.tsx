@@ -47,6 +47,12 @@ const App = () => {
     if (localStorage.getItem("show-workflow-features") === null) {
       localStorage.setItem("show-workflow-features", "true");
     }
+    if (localStorage.getItem("show-duplicate-app-features") === null) {
+      localStorage.setItem("show-duplicate-app-features", "true");
+    }
+    if (localStorage.getItem("show-copilot-features") === null) {
+      localStorage.setItem("show-copilot-features", "true");
+    }
     if (localStorage.getItem("dark-theme-enabled") === null) {
       localStorage.setItem("dark-theme-enabled", "false");
     }
@@ -89,6 +95,16 @@ const App = () => {
     return savedValue !== "false";
   });
 
+  const [showDuplicateAppFeatures, setShowDuplicateAppFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-duplicate-app-features");
+    return savedValue !== "false";
+  });
+
+  const [showCopilotFeatures, setShowCopilotFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-copilot-features");
+    return savedValue !== "false";
+  });
+
   useEffect(() => {
     const handleStorageChange = () => {
       const usageValue = localStorage.getItem("show-usage-features");
@@ -97,6 +113,8 @@ const App = () => {
       const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
       const complianceValue = localStorage.getItem("show-compliance-features");
       const workflowValue = localStorage.getItem("show-workflow-features");
+      const duplicateAppValue = localStorage.getItem("show-duplicate-app-features");
+      const copilotValue = localStorage.getItem("show-copilot-features");
       
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
@@ -104,6 +122,8 @@ const App = () => {
       setShowBenchmarkingFeatures(benchmarkingValue !== "false");
       setShowComplianceFeatures(complianceValue !== "false");
       setShowWorkflowFeatures(workflowValue !== "false");
+      setShowDuplicateAppFeatures(duplicateAppValue !== "false");
+      setShowCopilotFeatures(copilotValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -113,6 +133,8 @@ const App = () => {
     window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
     window.addEventListener('complianceFeaturesToggled', handleStorageChange);
     window.addEventListener('workflowFeaturesToggled', handleStorageChange);
+    window.addEventListener('duplicateAppFeaturesToggled', handleStorageChange);
+    window.addEventListener('copilotFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -122,6 +144,8 @@ const App = () => {
       window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
       window.removeEventListener('complianceFeaturesToggled', handleStorageChange);
       window.removeEventListener('workflowFeaturesToggled', handleStorageChange);
+      window.removeEventListener('duplicateAppFeaturesToggled', handleStorageChange);
+      window.removeEventListener('copilotFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -145,8 +169,16 @@ const App = () => {
                 <Route path="/usage" element={<Navigate to="/dashboard" replace />} />
               )}
               <Route path="/contracts" element={<ContractsRepository />} />
-              <Route path="/ai-assistant" element={<AIAssistant />} />
-              <Route path="/duplicate-app-comparison" element={<DuplicateAppComparison />} />
+              {showCopilotFeatures ? (
+                <Route path="/ai-assistant" element={<AIAssistant />} />
+              ) : (
+                <Route path="/ai-assistant" element={<Navigate to="/dashboard" replace />} />
+              )}
+              {showDuplicateAppFeatures ? (
+                <Route path="/duplicate-app-comparison" element={<DuplicateAppComparison />} />
+              ) : (
+                <Route path="/duplicate-app-comparison" element={<Navigate to="/dashboard" replace />} />
+              )}
               <Route path="/contract-negotiation" element={<ContractNegotiation />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />

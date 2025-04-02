@@ -50,6 +50,22 @@ export function useSidebarFeatures() {
     return true;
   });
 
+  const [showDuplicateAppFeatures, setShowDuplicateAppFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-duplicate-app-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
+
+  const [showCopilotFeatures, setShowCopilotFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-copilot-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
+
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
     const handleStorageChange = () => {
@@ -59,6 +75,8 @@ export function useSidebarFeatures() {
       const benchmarkingValue = localStorage.getItem("show-benchmarking-features");
       const complianceValue = localStorage.getItem("show-compliance-features");
       const workflowValue = localStorage.getItem("show-workflow-features");
+      const duplicateAppValue = localStorage.getItem("show-duplicate-app-features");
+      const copilotValue = localStorage.getItem("show-copilot-features");
       
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
@@ -66,6 +84,8 @@ export function useSidebarFeatures() {
       setShowBenchmarkingFeatures(benchmarkingValue !== "false");
       setShowComplianceFeatures(complianceValue !== "false");
       setShowWorkflowFeatures(workflowValue !== "false");
+      setShowDuplicateAppFeatures(duplicateAppValue !== "false");
+      setShowCopilotFeatures(copilotValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -75,6 +95,8 @@ export function useSidebarFeatures() {
     window.addEventListener('benchmarkingFeaturesToggled', handleStorageChange);
     window.addEventListener('complianceFeaturesToggled', handleStorageChange);
     window.addEventListener('workflowFeaturesToggled', handleStorageChange);
+    window.addEventListener('duplicateAppFeaturesToggled', handleStorageChange);
+    window.addEventListener('copilotFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -84,6 +106,8 @@ export function useSidebarFeatures() {
       window.removeEventListener('benchmarkingFeaturesToggled', handleStorageChange);
       window.removeEventListener('complianceFeaturesToggled', handleStorageChange);
       window.removeEventListener('workflowFeaturesToggled', handleStorageChange);
+      window.removeEventListener('duplicateAppFeaturesToggled', handleStorageChange);
+      window.removeEventListener('copilotFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -93,6 +117,8 @@ export function useSidebarFeatures() {
     showNegotiationFeatures,
     showBenchmarkingFeatures,
     showComplianceFeatures,
-    showWorkflowFeatures
+    showWorkflowFeatures,
+    showDuplicateAppFeatures,
+    showCopilotFeatures
   };
 }

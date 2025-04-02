@@ -26,6 +26,8 @@ interface SidebarNavigationProps {
   showBenchmarkingFeatures: boolean;
   showComplianceFeatures: boolean;
   showWorkflowFeatures: boolean;
+  showDuplicateAppFeatures: boolean;
+  showCopilotFeatures: boolean;
 }
 
 export const SidebarNavigation = ({ 
@@ -35,7 +37,9 @@ export const SidebarNavigation = ({
   showNegotiationFeatures,
   showBenchmarkingFeatures,
   showComplianceFeatures,
-  showWorkflowFeatures
+  showWorkflowFeatures,
+  showDuplicateAppFeatures,
+  showCopilotFeatures
 }: SidebarNavigationProps) => {
   
   // Build navigation items based on feature flags
@@ -44,9 +48,17 @@ export const SidebarNavigation = ({
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
       { name: "App Discovery", href: "/app-discovery", icon: Layers },
-      { name: "Duplicate App Comparison", href: "/duplicate-app-comparison", icon: Merge },
-      { name: "AI Assistant", href: "/ai-assistant", icon: Brain },
     ];
+    
+    // Only show Duplicate App Comparison when feature flag is enabled
+    if (showDuplicateAppFeatures) {
+      items.push({ name: "Duplicate App Comparison", href: "/duplicate-app-comparison", icon: Merge });
+    }
+    
+    // Only show AI Assistant when feature flag is enabled
+    if (showCopilotFeatures) {
+      items.push({ name: "AI Assistant", href: "/ai-assistant", icon: Brain });
+    }
     
     if (showUsageFeatures) {
       items.push({ name: "Usage Analytics", href: "/usage", icon: Gauge });

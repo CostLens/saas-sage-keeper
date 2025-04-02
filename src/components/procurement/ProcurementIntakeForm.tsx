@@ -10,6 +10,8 @@ import { formSchema, defaultValues, ProcurementFormValues } from "./form/procure
 import { ProcurementFormFields } from "./form/ProcurementFormFields";
 import { BusinessJustificationField } from "./form/BusinessJustificationField";
 import { TermsAcceptanceField } from "./form/TermsAcceptanceField";
+import { FormSubmitButton } from "./form/FormSubmitButton";
+import { FormCard } from "./form/FormCard";
 
 interface ProcurementIntakeFormProps {
   onSubmitSuccess?: () => void;
@@ -40,28 +42,21 @@ export function ProcurementIntakeForm({ onSubmitSuccess }: ProcurementIntakeForm
   };
 
   return (
-    <Card className="max-w-3xl mx-auto">
-      <CardHeader>
-        <CardTitle>New Procurement Request</CardTitle>
-        <CardDescription>
-          Fill out this form to request a new software or service
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <ProcurementFormFields form={form} />
-            
-            <BusinessJustificationField form={form} />
-            
-            <TermsAcceptanceField form={form} />
-            
-            <div className="flex justify-end">
-              <Button type="submit">Submit Request</Button>
-            </div>
-          </form>
-        </Form>
-      </CardContent>
-    </Card>
+    <FormCard
+      title="New Procurement Request"
+      description="Fill out this form to request a new software or service"
+    >
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <ProcurementFormFields form={form} />
+          
+          <BusinessJustificationField form={form} />
+          
+          <TermsAcceptanceField form={form} />
+          
+          <FormSubmitButton />
+        </form>
+      </Form>
+    </FormCard>
   );
 }

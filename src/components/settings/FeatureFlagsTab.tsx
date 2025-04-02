@@ -69,6 +69,14 @@ export function FeatureFlagsTab() {
     }
     return true;
   });
+  
+  const [showProcurementFeatures, setShowProcurementFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-procurement-features");
+      return savedValue !== "false";
+    }
+    return true;
+  });
 
   // Dark theme state
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
@@ -118,6 +126,9 @@ export function FeatureFlagsTab() {
       case "show-copilot-features":
         setShowCopilotFeatures(enabled);
         break;
+      case "show-procurement-features":
+        setShowProcurementFeatures(enabled);
+        break;
     }
     
     // Dispatch custom event for sidebar components to listen to
@@ -152,6 +163,7 @@ export function FeatureFlagsTab() {
         showWorkflowFeatures={showWorkflowFeatures}
         showDuplicateAppFeatures={showDuplicateAppFeatures}
         showCopilotFeatures={showCopilotFeatures}
+        showProcurementFeatures={showProcurementFeatures}
         onFeatureToggle={handleFeatureToggle}
       />
     </div>

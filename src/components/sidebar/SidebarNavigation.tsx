@@ -14,7 +14,8 @@ import {
   ShieldCheck,
   Workflow,
   Brain,
-  Merge
+  Merge,
+  Ticket
 } from "lucide-react";
 import { NavSection } from "./NavSection";
 
@@ -28,6 +29,7 @@ interface SidebarNavigationProps {
   showWorkflowFeatures: boolean;
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
+  showProcurementFeatures: boolean;
 }
 
 export const SidebarNavigation = ({ 
@@ -39,7 +41,8 @@ export const SidebarNavigation = ({
   showComplianceFeatures,
   showWorkflowFeatures,
   showDuplicateAppFeatures,
-  showCopilotFeatures
+  showCopilotFeatures,
+  showProcurementFeatures
 }: SidebarNavigationProps) => {
   
   // Build navigation items based on feature flags
@@ -58,6 +61,11 @@ export const SidebarNavigation = ({
     // Only show AI Assistant when feature flag is enabled
     if (showCopilotFeatures) {
       items.push({ name: "AI Assistant", href: "/ai-assistant", icon: Brain });
+    }
+    
+    // Only show Procurement Intake when feature flag is enabled
+    if (showProcurementFeatures) {
+      items.push({ name: "Procurement Intake", href: "/procurement-intake", icon: Ticket });
     }
     
     if (showUsageFeatures) {

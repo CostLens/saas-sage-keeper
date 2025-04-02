@@ -11,6 +11,7 @@ export const FEATURE_KEYS = {
   WORKFLOW: "show-workflow-features",
   DUPLICATE_APP: "show-duplicate-app-features",
   COPILOT: "show-copilot-features",
+  PROCUREMENT: "show-procurement-features", // New feature flag
 };
 
 // Helper function to get initial state from localStorage
@@ -47,6 +48,9 @@ export function useSidebarFeatures() {
 
   const [showCopilotFeatures, setShowCopilotFeatures] = useState(() => 
     getInitialFeatureState(FEATURE_KEYS.COPILOT));
+    
+  const [showProcurementFeatures, setShowProcurementFeatures] = useState(() => 
+    getInitialFeatureState(FEATURE_KEYS.PROCUREMENT));
 
   // Listen for storage changes to update UI accordingly
   useEffect(() => {
@@ -59,6 +63,7 @@ export function useSidebarFeatures() {
       setShowWorkflowFeatures(getInitialFeatureState(FEATURE_KEYS.WORKFLOW));
       setShowDuplicateAppFeatures(getInitialFeatureState(FEATURE_KEYS.DUPLICATE_APP));
       setShowCopilotFeatures(getInitialFeatureState(FEATURE_KEYS.COPILOT));
+      setShowProcurementFeatures(getInitialFeatureState(FEATURE_KEYS.PROCUREMENT));
     };
 
     // Add event listeners
@@ -73,7 +78,8 @@ export function useSidebarFeatures() {
       'complianceFeaturesToggled',
       'workflowFeaturesToggled',
       'duplicateAppFeaturesToggled',
-      'copilotFeaturesToggled'
+      'copilotFeaturesToggled',
+      'procurementFeaturesToggled'
     ];
     
     eventNames.forEach(event => {
@@ -98,6 +104,7 @@ export function useSidebarFeatures() {
     showComplianceFeatures,
     showWorkflowFeatures,
     showDuplicateAppFeatures,
-    showCopilotFeatures
+    showCopilotFeatures,
+    showProcurementFeatures
   };
 }

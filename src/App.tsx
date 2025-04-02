@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -24,6 +25,7 @@ import Compliance from "./pages/Compliance";
 import WorkflowBuilder from "./pages/WorkflowBuilder";
 import DuplicateAppComparison from "./pages/DuplicateAppComparison";
 import ContractNegotiation from "./pages/ContractNegotiation";
+import ProcurementIntake from "./pages/ProcurementIntake";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +54,9 @@ const App = () => {
     }
     if (localStorage.getItem("show-copilot-features") === null) {
       localStorage.setItem("show-copilot-features", "true");
+    }
+    if (localStorage.getItem("show-procurement-features") === null) {
+      localStorage.setItem("show-procurement-features", "true");
     }
     if (localStorage.getItem("dark-theme-enabled") === null) {
       localStorage.setItem("dark-theme-enabled", "false");
@@ -104,6 +109,11 @@ const App = () => {
     const savedValue = localStorage.getItem("show-copilot-features");
     return savedValue !== "false";
   });
+  
+  const [showProcurementFeatures, setShowProcurementFeatures] = useState(() => {
+    const savedValue = localStorage.getItem("show-procurement-features");
+    return savedValue !== "false";
+  });
 
   useEffect(() => {
     const handleStorageChange = () => {
@@ -115,6 +125,7 @@ const App = () => {
       const workflowValue = localStorage.getItem("show-workflow-features");
       const duplicateAppValue = localStorage.getItem("show-duplicate-app-features");
       const copilotValue = localStorage.getItem("show-copilot-features");
+      const procurementValue = localStorage.getItem("show-procurement-features");
       
       setShowUsageFeatures(usageValue !== "false");
       setShowBoardingFeatures(boardingValue !== "false");
@@ -124,6 +135,7 @@ const App = () => {
       setShowWorkflowFeatures(workflowValue !== "false");
       setShowDuplicateAppFeatures(duplicateAppValue !== "false");
       setShowCopilotFeatures(copilotValue !== "false");
+      setShowProcurementFeatures(procurementValue !== "false");
     };
 
     window.addEventListener('storage', handleStorageChange);
@@ -135,6 +147,7 @@ const App = () => {
     window.addEventListener('workflowFeaturesToggled', handleStorageChange);
     window.addEventListener('duplicateAppFeaturesToggled', handleStorageChange);
     window.addEventListener('copilotFeaturesToggled', handleStorageChange);
+    window.addEventListener('procurementFeaturesToggled', handleStorageChange);
     
     return () => {
       window.removeEventListener('storage', handleStorageChange);
@@ -146,6 +159,7 @@ const App = () => {
       window.removeEventListener('workflowFeaturesToggled', handleStorageChange);
       window.removeEventListener('duplicateAppFeaturesToggled', handleStorageChange);
       window.removeEventListener('copilotFeaturesToggled', handleStorageChange);
+      window.removeEventListener('procurementFeaturesToggled', handleStorageChange);
     };
   }, []);
 
@@ -163,51 +177,68 @@ const App = () => {
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/spend-trends" element={<SpendTrends />} />
               <Route path="/app-discovery" element={<AppDiscovery />} />
+              
               {showUsageFeatures ? (
                 <Route path="/usage" element={<Usage />} />
               ) : (
                 <Route path="/usage" element={<Navigate to="/dashboard" replace />} />
               )}
+              
               <Route path="/contracts" element={<ContractsRepository />} />
+              
               {showCopilotFeatures ? (
                 <Route path="/ai-assistant" element={<AIAssistant />} />
               ) : (
                 <Route path="/ai-assistant" element={<Navigate to="/dashboard" replace />} />
               )}
+              
               {showDuplicateAppFeatures ? (
                 <Route path="/duplicate-app-comparison" element={<DuplicateAppComparison />} />
               ) : (
                 <Route path="/duplicate-app-comparison" element={<Navigate to="/dashboard" replace />} />
               )}
+              
+              {showProcurementFeatures ? (
+                <Route path="/procurement-intake" element={<ProcurementIntake />} />
+              ) : (
+                <Route path="/procurement-intake" element={<Navigate to="/dashboard" replace />} />
+              )}
+              
               <Route path="/contract-negotiation" element={<ContractNegotiation />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/help" element={<Help />} />
               <Route path="/user-management" element={<UserManagement />} />
+              
               {showBoardingFeatures ? (
                 <Route path="/user-boarding" element={<UserBoarding />} />
               ) : (
                 <Route path="/user-boarding" element={<Navigate to="/dashboard" replace />} />
               )}
+              
               {showNegotiationFeatures ? (
                 <Route path="/renewals" element={<Renewals />} />
               ) : (
                 <Route path="/renewals" element={<Navigate to="/dashboard" replace />} />
               )}
+              
               {showBenchmarkingFeatures ? (
                 <Route path="/benchmarking" element={<Benchmarking />} />
               ) : (
                 <Route path="/benchmarking" element={<Navigate to="/dashboard" replace />} />
               )}
+              
               {showComplianceFeatures ? (
                 <Route path="/compliance" element={<Compliance />} />
               ) : (
                 <Route path="/compliance" element={<Navigate to="/dashboard" replace />} />
               )}
+              
               {showWorkflowFeatures ? (
                 <Route path="/workflow-builder" element={<WorkflowBuilder />} />
               ) : (
                 <Route path="/workflow-builder" element={<Navigate to="/dashboard" replace />} />
               )}
+              
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BookDemoModalProvider>

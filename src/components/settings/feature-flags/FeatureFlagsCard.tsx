@@ -12,6 +12,7 @@ interface FeatureFlagsCardProps {
   showWorkflowFeatures: boolean;
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
+  showProcurementFeatures: boolean;
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
 
@@ -24,6 +25,7 @@ export function FeatureFlagsCard({
   showWorkflowFeatures,
   showDuplicateAppFeatures,
   showCopilotFeatures,
+  showProcurementFeatures,
   onFeatureToggle
 }: FeatureFlagsCardProps) {
   return (
@@ -44,6 +46,7 @@ export function FeatureFlagsCard({
           showWorkflowFeatures={showWorkflowFeatures}
           showDuplicateAppFeatures={showDuplicateAppFeatures}
           showCopilotFeatures={showCopilotFeatures}
+          showProcurementFeatures={showProcurementFeatures}
           onFeatureToggle={onFeatureToggle}
         />
       </CardContent>

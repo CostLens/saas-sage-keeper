@@ -12,6 +12,7 @@ interface FeatureToggleListProps {
   showWorkflowFeatures: boolean;
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
+  showProcurementFeatures: boolean;
   // Toggle handlers
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
@@ -25,6 +26,7 @@ export function FeatureToggleList({
   showWorkflowFeatures,
   showDuplicateAppFeatures,
   showCopilotFeatures,
+  showProcurementFeatures,
   onFeatureToggle
 }: FeatureToggleListProps) {
   
@@ -65,6 +67,13 @@ export function FeatureToggleList({
       checked: showComplianceFeatures
     },
     {
+      id: "workflow-features-toggle",
+      key: "show-workflow-features",
+      title: "Workflow Builder",
+      description: "Enables workflow automation features",
+      checked: showWorkflowFeatures
+    },
+    {
       id: "duplicate-app-features-toggle",
       key: "show-duplicate-app-features",
       title: "Duplicate Application",
@@ -77,6 +86,13 @@ export function FeatureToggleList({
       title: "Co-Pilot",
       description: "Enables AI-powered assistant for procurement optimization",
       checked: showCopilotFeatures
+    },
+    {
+      id: "procurement-features-toggle",
+      key: "show-procurement-features",
+      title: "Procurement Intake",
+      description: "Enables procurement intake forms and IT/Security questionnaires",
+      checked: showProcurementFeatures
     }
   ];
 

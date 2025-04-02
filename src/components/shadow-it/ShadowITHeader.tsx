@@ -4,9 +4,11 @@ import { PageHeader } from "@/components/renewals/PageHeader";
 
 export function ShadowITHeader() {
   return (
-    <PageHeader
-      title="Shadow IT Applications"
-      description="Discover and manage applications used without IT department approval"
-    />
+    <div className="mb-6">
+      <h1 className="text-2xl font-bold tracking-tight">Shadow IT Applications</h1>
+      <p className="text-muted-foreground">
+        Discover and manage applications used without IT department approval
+      </p>
+    </div>
   );
 }

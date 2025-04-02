@@ -6,6 +6,8 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { AppOwnerColumn } from "@/components/saas-table/columns/AppOwnerColumn";
+import { SaaSData } from "@/lib/mockData";
 
 interface AppDiscoveryTableProps {
   data: AppDiscoveryData[];
@@ -27,6 +29,29 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
             <div className="text-sm text-muted-foreground">{row.category}</div>
           </div>
         </div>
+      ),
+    },
+    {
+      id: "owner",
+      header: "App Owner",
+      sortable: true,
+      cell: (row: AppDiscoveryData) => (
+        // Pass the row as a SaaSData object since AppOwnerColumn expects that type
+        <AppOwnerColumn row={{ 
+          id: row.id, 
+          name: row.name,
+          owner: row.owner,
+          // The minimum properties needed to work with AppOwnerColumn
+          description: "",
+          price: 0,
+          renewalDate: row.renewalDate || "",
+          contract: { signedDate: "", term: "", autoRenewal: false, cancellationDeadline: null },
+          usage: { activeUsers: 0, totalLicenses: 0, utilizationRate: 0 },
+          paymentHistory: [],
+          usageHistory: [],
+          tasks: [],
+          alerts: []
+        } as SaaSData} />
       ),
     },
     {

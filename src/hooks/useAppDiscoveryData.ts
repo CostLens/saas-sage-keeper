@@ -12,6 +12,7 @@ export interface AppDiscoveryData {
   averageUsage: number;
   firstPurchased: string;
   renewalDate: string | null;
+  owner: string | null; // Add owner property
 }
 
 export function useAppDiscoveryData() {
@@ -56,7 +57,8 @@ export function useAppDiscoveryData() {
           costToDate: totalPayments, // In a real app, this might differ from total payments
           averageUsage: avgUsage,
           firstPurchased: firstPurchaseDate.toISOString(),
-          renewalDate: saas.renewalDate !== "N/A" ? saas.renewalDate : null
+          renewalDate: saas.renewalDate !== "N/A" ? saas.renewalDate : null,
+          owner: saas.owner || null // Include owner data from mockSaaSData
         };
       });
       

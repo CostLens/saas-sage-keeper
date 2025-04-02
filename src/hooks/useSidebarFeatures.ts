@@ -20,13 +20,16 @@ export const FEATURE_KEYS = {
 export const getInitialFeatureState = (key: string): boolean => {
   if (typeof window !== 'undefined') {
     const savedValue = localStorage.getItem(key);
-    // Default to false if null or not set
+    // Default to false if null or not set, except for usage features
+    if (savedValue === null) {
+      return key === FEATURE_KEYS.USAGE;
+    }
     return savedValue === "true";
   }
-  return false;
+  return key === FEATURE_KEYS.USAGE; // Default Usage to true, others to false
 };
 
 export function useSidebarFeatures() {
-  // Use the feature flags context instead of directly managing state here
+  // Use the feature flags context
   return useFeatureFlags();
 }

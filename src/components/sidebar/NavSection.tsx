@@ -1,45 +1,24 @@
 
-import React from "react";
-import { LucideIcon } from "lucide-react";
-import { NavItem } from "./NavItem";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import React, { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
-interface NavItemType {
-  name: string;
-  href: string;
-  icon: LucideIcon;
-}
-
-interface NavSectionProps {
-  title?: string;
-  items: NavItemType[];
+export interface NavSectionProps {
   isCollapsed: boolean;
+  title: string;
+  children: ReactNode;
 }
 
-export const NavSection = ({ title, items, isCollapsed }: NavSectionProps) => {
+export function NavSection({ isCollapsed, title, children }: NavSectionProps) {
   return (
-    <div className={title ? "mt-6" : ""}>
-      {title && !isCollapsed && (
-        <div className="px-4 py-2">
-          <h2 className="text-xs font-semibold text-muted-foreground">
-            {title}
-          </h2>
-        </div>
+    <div className="px-3 py-2">
+      {!isCollapsed && (
+        <h2 className="mb-2 px-1 text-xs font-semibold tracking-tight text-muted-foreground">
+          {title}
+        </h2>
       )}
-      <nav className="grid gap-1 px-2">
-        <TooltipProvider>
-          {items.map((item) => (
-            <NavItem
-              key={item.name}
-              name={item.name}
-              href={item.href}
-              icon={item.icon}
-              isCollapsed={isCollapsed}
-              exact={item.href === "/dashboard"}
-            />
-          ))}
-        </TooltipProvider>
-      </nav>
+      <ul className="space-y-1">
+        {children}
+      </ul>
     </div>
   );
-};
+}

@@ -62,7 +62,7 @@ export function TerminationsCard({ terminationsData }: TerminationsCardProps) {
                           <div className="flex flex-col gap-1">
                             <span className="font-medium">{saas.name}</span>
                             <span className="text-xs text-muted-foreground">
-                              Deadline: {format(new Date(saas.contract.cancellationDeadline), 'MMM d, yyyy')}
+                              Deadline: {format(new Date(saas.contract.cancellationDeadline || saas.contract.endDate), 'MMM d, yyyy')}
                             </span>
                           </div>
                           <HoverCard>
@@ -85,11 +85,11 @@ export function TerminationsCard({ terminationsData }: TerminationsCardProps) {
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-muted-foreground">Auto Renewal:</span>
-                                    <span>{saas.contract.autoRenewal ? "Yes" : "No"}</span>
+                                    <span>{saas.contract.autoRenew ? "Yes" : "No"}</span>
                                   </div>
                                   <div className="flex justify-between">
                                     <span className="text-muted-foreground">Days Left:</span>
-                                    <span>{getDaysRemaining(new Date(saas.contract.cancellationDeadline))}</span>
+                                    <span>{getDaysRemaining(new Date(saas.contract.cancellationDeadline || saas.contract.endDate))}</span>
                                   </div>
                                 </div>
                               </div>

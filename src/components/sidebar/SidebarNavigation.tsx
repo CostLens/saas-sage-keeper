@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { NavSection } from "./NavSection";
@@ -51,43 +52,43 @@ export function SidebarNavigation({
   
   return (
     <div className="space-y-4 py-4 flex flex-col flex-1 overflow-auto">
-      <NavSection isCollapsed={isCollapsed} label="Overview">
+      <NavSection isCollapsed={isCollapsed} title="Overview">
         <NavItem 
           isCollapsed={isCollapsed} 
           icon={LayoutDashboard} 
-          label="Dashboard"
+          title="Dashboard"
           href="/dashboard"
           isActive={location.pathname === '/dashboard'}
         />
         <NavItem 
           isCollapsed={isCollapsed} 
           icon={TrendingUp} 
-          label="Spend Analytics"
+          title="Spend Analytics"
           href="/spend-trends"
           isActive={location.pathname === '/spend-trends'}
         />
         <NavItem 
           isCollapsed={isCollapsed} 
           icon={AlertTriangle} 
-          label="Shadow IT"
+          title="Shadow IT"
           href="/shadow-it"
           isActive={location.pathname === '/shadow-it'}
         />
       </NavSection>
       
       {showUsageFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="Usage Analytics">
+        <NavSection isCollapsed={isCollapsed} title="Usage Analytics">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={BarChart3} 
-            label="Usage"
+            title="Usage"
             href="/usage"
             isActive={location.pathname === '/usage'}
           />
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={Repeat2} 
-            label="Renewals"
+            title="Renewals"
             href="/renewals"
             isActive={location.pathname === '/renewals'}
           />
@@ -95,22 +96,22 @@ export function SidebarNavigation({
       )}
 
       {showBoardingFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="User Management">
+        <NavSection isCollapsed={isCollapsed} title="User Management">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={UserCog} 
-            label="User Boarding"
+            title="User Boarding"
             href="/user-boarding"
             isActive={location.pathname === '/user-boarding'}
           />
         </NavSection>
       )}
 
-      <NavSection isCollapsed={isCollapsed} label="Contracts">
+      <NavSection isCollapsed={isCollapsed} title="Contracts">
         <NavItem 
           isCollapsed={isCollapsed} 
           icon={FileText} 
-          label="Repository"
+          title="Repository"
           href="/contracts"
           isActive={location.pathname === '/contracts'}
         />
@@ -118,7 +119,7 @@ export function SidebarNavigation({
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={LineChart} 
-            label="Contract Negotiation"
+            title="Contract Negotiation"
             href="/contract-negotiation"
             isActive={location.pathname === '/contract-negotiation'}
           />
@@ -126,11 +127,11 @@ export function SidebarNavigation({
       </NavSection>
 
       {showCopilotFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="AI">
+        <NavSection isCollapsed={isCollapsed} title="AI">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={Bot} 
-            label="AI Assistant"
+            title="AI Assistant"
             href="/ai-assistant"
             isActive={location.pathname === '/ai-assistant'}
           />
@@ -138,11 +139,11 @@ export function SidebarNavigation({
       )}
 
       {showBenchmarkingFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="Benchmarking">
+        <NavSection isCollapsed={isCollapsed} title="Benchmarking">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={GitCompare} 
-            label="Benchmarking"
+            title="Benchmarking"
             href="/benchmarking"
             isActive={location.pathname === '/benchmarking'}
           />
@@ -150,11 +151,11 @@ export function SidebarNavigation({
       )}
 
       {showComplianceFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="Compliance">
+        <NavSection isCollapsed={isCollapsed} title="Compliance">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={ShieldAlert} 
-            label="Compliance"
+            title="Compliance"
             href="/compliance"
             isActive={location.pathname === '/compliance'}
           />
@@ -162,11 +163,11 @@ export function SidebarNavigation({
       )}
 
       {showWorkflowFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="Workflow">
+        <NavSection isCollapsed={isCollapsed} title="Workflow">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={Workflow} 
-            label="Workflow Builder"
+            title="Workflow Builder"
             href="/workflow-builder"
             isActive={location.pathname === '/workflow-builder'}
           />
@@ -174,11 +175,11 @@ export function SidebarNavigation({
       )}
 
       {showDuplicateAppFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="App Central">
+        <NavSection isCollapsed={isCollapsed} title="App Central">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={GitCompare} 
-            label="Duplicate App Comparison"
+            title="Duplicate App Comparison"
             href="/duplicate-app-comparison"
             isActive={location.pathname === '/duplicate-app-comparison'}
           />
@@ -186,22 +187,22 @@ export function SidebarNavigation({
       )}
       
       {showProcurementFeatures && (
-        <NavSection isCollapsed={isCollapsed} label="Procurement">
+        <NavSection isCollapsed={isCollapsed} title="Procurement">
           <NavItem 
             isCollapsed={isCollapsed} 
             icon={PlusCircle} 
-            label="Procurement Intake"
+            title="Procurement Intake"
             href="/procurement-intake"
             isActive={location.pathname === '/procurement-intake'}
           />
         </NavSection>
       )}
 
-      <NavSection isCollapsed={isCollapsed} label="Settings">
+      <NavSection isCollapsed={isCollapsed} title="Settings">
         <NavItem 
           isCollapsed={isCollapsed} 
           icon={Settings} 
-          label="Settings"
+          title="Settings"
           href="/settings"
           isActive={location.pathname === '/settings'}
         />

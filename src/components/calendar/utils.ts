@@ -63,8 +63,8 @@ export function getUpcomingTerminations(saasData: SaaSData[]) {
   
   // Filter terminations with deadlines in the next 30 days
   const terminationsData = saasData.filter(saas => {
-    if (saas.contract && saas.contract.cancellationDeadline) {
-      const deadlineDate = new Date(saas.contract.cancellationDeadline);
+    if (saas.contract) {
+      const deadlineDate = new Date(saas.contract.cancellationDeadline || saas.contract.endDate);
       return isAfter(deadlineDate, today) && isBefore(deadlineDate, thirtyDaysFromNow);
     }
     return false;

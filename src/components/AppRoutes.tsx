@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useFeatureFlags } from '@/contexts/FeatureFlagsContext';
@@ -25,6 +24,7 @@ import DuplicateAppComparison from "@/pages/DuplicateAppComparison";
 import ContractNegotiation from "@/pages/ContractNegotiation";
 import ProcurementIntake from "@/pages/ProcurementIntake";
 import ShadowIT from "@/pages/ShadowIT";
+import Insights from "@/pages/Insights";
 
 export function AppRoutes() {
   const {
@@ -48,6 +48,7 @@ export function AppRoutes() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/spend-trends" element={<SpendTrends />} />
       <Route path="/app-discovery" element={<AppDiscovery />} />
+      <Route path="/insights" element={<Insights />} />
       
       {showUsageFeatures ? (
         <Route path="/usage" element={<Usage />} />

@@ -1,4 +1,3 @@
-
 import React from "react";
 import { 
   LayoutDashboard, 
@@ -16,7 +15,8 @@ import {
   Brain,
   Merge,
   Ticket,
-  AlertTriangle
+  AlertTriangle,
+  Lightbulb
 } from "lucide-react";
 import { NavSection } from "./NavSection";
 
@@ -54,6 +54,7 @@ export const SidebarNavigation = ({
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
       { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp },
       { name: "App Discovery", href: "/app-discovery", icon: Layers },
+      { name: "Insights", href: "/insights", icon: Lightbulb },
     ];
     
     // Only show Duplicate App Comparison when feature flag is enabled

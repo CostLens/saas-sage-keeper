@@ -1,7 +1,7 @@
 
 import React from "react";
 import { StatCard } from "@/components/ui/stat-card";
-import { DollarSign, Users, TrendingDown, Apps, UserCheck } from "lucide-react";
+import { DollarSign, Users, TrendingDown, LayoutGrid, UserCheck } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { RenewalCard } from "@/components/calendar/RenewalCard";
 import { PaymentsCard } from "@/components/calendar/PaymentsCard";
@@ -78,7 +78,7 @@ export function StatsCardsSection({
             key="total-apps"
             title="Total Apps"
             value={totalApps}
-            icon={<Apps className="h-5 w-5" />}
+            icon={<LayoutGrid className="h-5 w-5" />}
             description="SaaS applications managed"
             className="h-full"
           />
@@ -130,7 +130,7 @@ export function StatsCardsSection({
           key="total-apps"
           title="Total Apps"
           value={totalApps}
-          icon={<Apps className="h-5 w-5" />}
+          icon={<LayoutGrid className="h-5 w-5" />}
           description="SaaS applications managed"
           className="h-full"
         />

@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Filter, TrendingDown, TrendingUp, AlertCircle, CheckCircle } from "lucide-react";
 import { mockSaaSData } from "@/lib/mockData";
 import { BenchmarkingTable, BenchmarkSaaSData, BenchmarkProps } from "@/components/benchmarking/BenchmarkingTable";
+import { PriceComparisonSection } from "@/components/benchmarking/PriceComparisonSection";
 import { formatCurrency } from "@/lib/utils";
 
 const Benchmarking = () => {
@@ -114,6 +115,9 @@ const Benchmarking = () => {
             </CardContent>
           </Card>
         </div>
+
+        {/* Price Comparison Section */}
+        <PriceComparisonSection />
 
         <Card>
           <CardHeader>

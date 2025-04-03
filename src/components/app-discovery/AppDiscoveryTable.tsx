@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { DataTable } from "@/components/ui/data-table";
 import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
 import { Badge } from "@/components/ui/badge";
@@ -8,12 +8,25 @@ import { Progress } from "@/components/ui/progress";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { AppOwnerColumn } from "@/components/saas-table/columns/AppOwnerColumn";
 import { SaaSData } from "@/lib/mockData";
+import { AppDetailsDialog } from "./AppDetailsDialog";
 
 interface AppDiscoveryTableProps {
   data: AppDiscoveryData[];
 }
 
 export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
+  const [selectedApp, setSelectedApp] = useState<AppDiscoveryData | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleRowClick = (app: AppDiscoveryData) => {
+    setSelectedApp(app);
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
+
   const columns = [
     {
       id: "name",
@@ -124,11 +137,19 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
   ];
 
   return (
-    <DataTable
-      data={data}
-      columns={columns}
-      searchable
-      searchField="name"
-    />
+    <>
+      <DataTable
+        data={data}
+        columns={columns}
+        searchable
+        searchField="name"
+        onRowClick={handleRowClick}
+      />
+      <AppDetailsDialog 
+        app={selectedApp} 
+        isOpen={isDialogOpen} 
+        onClose={handleCloseDialog} 
+      />
+    </>
   );
 }

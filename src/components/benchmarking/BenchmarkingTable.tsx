@@ -3,7 +3,7 @@ import React from "react";
 import { SaaSData } from "@/lib/mockData";
 import { formatCurrency } from "@/lib/utils";
 import { NameColumn } from "@/components/saas-table/columns/NameColumn";
-import { TrendingDown, TrendingUp, MinusIcon } from "lucide-react";
+import { TrendingDown, TrendingUp, MinusIcon, Database, Tag } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -13,6 +13,7 @@ import {
   TableRow
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { PricingTermsColumn } from "@/components/saas-table/columns/PricingTermsColumn";
 
 export interface BenchmarkProps {
   industryAvgPrice: number;
@@ -45,6 +46,7 @@ export function BenchmarkingTable({ benchmarkData }: BenchmarkingTableProps) {
         <TableRow>
           <TableHead>SaaS Application</TableHead>
           <TableHead>Your Price</TableHead>
+          <TableHead>Pricing Terms</TableHead>
           <TableHead>Market Average</TableHead>
           <TableHead className="text-center">Price Comparison</TableHead>
           <TableHead>Potential Savings</TableHead>
@@ -59,6 +61,9 @@ export function BenchmarkingTable({ benchmarkData }: BenchmarkingTableProps) {
             </TableCell>
             <TableCell className="font-medium">
               {formatCurrency(saas.price)}
+            </TableCell>
+            <TableCell>
+              <PricingTermsColumn row={saas} />
             </TableCell>
             <TableCell>
               {formatCurrency(saas.benchmarking.industryAvgPrice)}

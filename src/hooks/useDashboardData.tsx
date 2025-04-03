@@ -26,6 +26,12 @@ export function useDashboardData() {
     return sum;
   }, 0);
 
+  // Calculate total apps
+  const totalApps = saasData.length;
+  
+  // Simulate active employees (typically this would come from a real API)
+  const activeEmployees = 487;
+
   // Calculate upcoming renewals
   const upcomingRenewals = saasData
     .filter(saas => 
@@ -78,6 +84,8 @@ export function useDashboardData() {
     paymentsData,
     paymentsAmount,
     terminationsData,
+    totalApps,
+    activeEmployees,
     handleRefresh
   };
 }

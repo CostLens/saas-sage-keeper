@@ -1,7 +1,7 @@
 
 import React from "react";
 import { StatCard } from "@/components/ui/stat-card";
-import { DollarSign, Users, TrendingDown } from "lucide-react";
+import { DollarSign, Users, TrendingDown, Apps, UserCheck } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { RenewalCard } from "@/components/calendar/RenewalCard";
 import { PaymentsCard } from "@/components/calendar/PaymentsCard";
@@ -21,6 +21,8 @@ interface StatsCardsSectionProps {
   paymentsData: SaaSData[];
   paymentsAmount: number;
   terminationsData: SaaSData[];
+  totalApps: number;
+  activeEmployees: number;
 }
 
 export function StatsCardsSection({
@@ -36,11 +38,13 @@ export function StatsCardsSection({
   paymentsData,
   paymentsAmount,
   terminationsData,
+  totalApps,
+  activeEmployees,
 }: StatsCardsSectionProps) {
   if (showUsageFeatures) {
     return (
       <>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6">
           <StatCard
             key="total-spend"
             title="Total Annual SaaS Spend"
@@ -70,6 +74,22 @@ export function StatsCardsSection({
             description={`${unusedLicenses} unused licenses across all apps`}
             className="h-full"
           />
+          <StatCard
+            key="total-apps"
+            title="Total Apps"
+            value={totalApps}
+            icon={<Apps className="h-5 w-5" />}
+            description="SaaS applications managed"
+            className="h-full"
+          />
+          <StatCard
+            key="active-employees"
+            title="Active Employees"
+            value={activeEmployees}
+            icon={<UserCheck className="h-5 w-5" />}
+            description="Currently active employees"
+            className="h-full"
+          />
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
           <div className="h-full">
@@ -95,33 +115,53 @@ export function StatsCardsSection({
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 md:gap-6">
-      <StatCard
-        key="total-spend"
-        title="Total Annual SaaS Spend"
-        value={`$${totalSpend.toLocaleString()}`}
-        icon={<DollarSign className="h-4 w-4" />}
-        trend={{ value: 12, isPositive: false }}
-        description="12% increase from last year"
-        className="h-full"
-      />
-      <div className="h-full">
-        <RenewalCard 
-          renewals={upcomingRenewals} 
-          upcomingRenewalAmount={upcomingRenewalAmount} 
+    <>
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-6">
+        <StatCard
+          key="total-spend"
+          title="Total Annual SaaS Spend"
+          value={`$${totalSpend.toLocaleString()}`}
+          icon={<DollarSign className="h-4 w-4" />}
+          trend={{ value: 12, isPositive: false }}
+          description="12% increase from last year"
+          className="h-full"
+        />
+        <StatCard
+          key="total-apps"
+          title="Total Apps"
+          value={totalApps}
+          icon={<Apps className="h-5 w-5" />}
+          description="SaaS applications managed"
+          className="h-full"
+        />
+        <StatCard
+          key="active-employees"
+          title="Active Employees"
+          value={activeEmployees}
+          icon={<UserCheck className="h-5 w-5" />}
+          description="Currently active employees"
+          className="h-full"
         />
       </div>
-      <div className="h-full">
-        <PaymentsCard 
-          paymentsData={paymentsData} 
-          paymentsAmount={paymentsAmount} 
-        />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+        <div className="h-full">
+          <RenewalCard 
+            renewals={upcomingRenewals} 
+            upcomingRenewalAmount={upcomingRenewalAmount} 
+          />
+        </div>
+        <div className="h-full">
+          <PaymentsCard 
+            paymentsData={paymentsData} 
+            paymentsAmount={paymentsAmount} 
+          />
+        </div>
+        <div className="h-full">
+          <TerminationsCard 
+            terminationsData={terminationsData} 
+          />
+        </div>
       </div>
-      <div className="h-full">
-        <TerminationsCard 
-          terminationsData={terminationsData} 
-        />
-      </div>
-    </div>
+    </>
   );
 }

@@ -39,6 +39,8 @@ export function DashboardContent() {
         paymentsData={dashboardData.paymentsData}
         paymentsAmount={dashboardData.paymentsAmount}
         terminationsData={dashboardData.terminationsData}
+        totalApps={dashboardData.totalApps}
+        activeEmployees={dashboardData.activeEmployees}
       />
 
       <SaasApplicationsSection 

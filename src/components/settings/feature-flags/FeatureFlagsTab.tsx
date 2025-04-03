@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from "react";
 import { toast } from "sonner";
-import { ThemeCard } from "./feature-flags/ThemeCard";
-import { FeatureFlagsCard } from "./feature-flags/FeatureFlagsCard";
+import { ThemeCard } from "./ThemeCard";
+import { FeatureFlagsCard } from "./FeatureFlagsCard";
 import { useFeatureFlags } from "@/contexts/FeatureFlagsContext";
 import { FEATURE_KEYS } from "@/hooks/useSidebarFeatures";
 

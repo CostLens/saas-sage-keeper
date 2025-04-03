@@ -8,21 +8,20 @@ import {
   CardDescription 
 } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
-} from '@/components/ui/select';
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu';
 import { 
   Popover, 
   PopoverContent, 
   PopoverTrigger 
 } from '@/components/ui/popover';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Plus, X, Check, Info } from 'lucide-react';
+import { Plus, X, Info, ChevronDown } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 
 interface PricingOption {
@@ -48,7 +47,7 @@ export function PriceComparisonSection() {
     { id: '2', appName: 'Salesforce Platform', licenses: 15, term: '24' }
   ]);
   
-  // Mock pricing options
+  // Extended pricing options
   const pricingOptions: PricingOption[] = [
     {
       id: '1',
@@ -93,6 +92,33 @@ export function PriceComparisonSection() {
         '12': { min: 150, max: 170 },
         '24': { min: 130, max: 150 },
         '36': { min: 110, max: 130 }
+      }
+    },
+    {
+      id: '6',
+      name: 'Commerce Cloud',
+      monthlyPrices: {
+        '12': { min: 250, max: 300 },
+        '24': { min: 220, max: 270 },
+        '36': { min: 200, max: 240 }
+      }
+    },
+    {
+      id: '7',
+      name: 'Experience Cloud',
+      monthlyPrices: {
+        '12': { min: 160, max: 190 },
+        '24': { min: 140, max: 170 },
+        '36': { min: 120, max: 150 }
+      }
+    },
+    {
+      id: '8',
+      name: 'Analytics Cloud',
+      monthlyPrices: {
+        '12': { min: 175, max: 210 },
+        '24': { min: 155, max: 185 },
+        '36': { min: 135, max: 165 }
       }
     }
   ];
@@ -154,30 +180,34 @@ export function PriceComparisonSection() {
               <div key={item.id} className="p-4 border rounded-md bg-card">
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center gap-2">
-                    <div className="h-6 w-6 rounded-full bg-primary/10 flex items-center justify-center">
-                      <span className="text-xs font-medium text-primary">
+                    <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="font-medium text-primary">
                         {item.appName.substring(0, 1)}
                       </span>
                     </div>
-                    <Select 
-                      value={item.appName} 
-                      onValueChange={(value) => updateComparison(item.id, 'appName', value)}
-                    >
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Select application" />
-                      </SelectTrigger>
-                      <SelectContent>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-[220px] justify-between">
+                          {item.appName}
+                          <ChevronDown className="h-4 w-4 ml-2" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-[220px] max-h-[200px] overflow-y-auto">
                         {pricingOptions.map((option) => (
-                          <SelectItem key={option.id} value={option.name}>
+                          <DropdownMenuItem 
+                            key={option.id}
+                            onClick={() => updateComparison(item.id, 'appName', option.name)}
+                            className="cursor-pointer"
+                          >
                             {option.name}
-                          </SelectItem>
+                          </DropdownMenuItem>
                         ))}
-                      </SelectContent>
-                    </Select>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   <Button 
                     variant="ghost" 
-                    size="icon" 
+                    size="icon"
                     onClick={() => removeComparison(item.id)}
                   >
                     <X className="h-4 w-4" />
@@ -186,33 +216,46 @@ export function PriceComparisonSection() {
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div>
-                    <Label className="mb-2 block text-sm">License range</Label>
-                    <div className="flex items-center gap-2">
-                      <Input
-                        type="number"
-                        min="1"
-                        value={item.licenses}
-                        onChange={(e) => updateComparison(item.id, 'licenses', parseInt(e.target.value) || 1)}
-                        className="w-full"
-                      />
-                    </div>
+                    <Label className="mb-2 block">License range</Label>
+                    <Input
+                      type="number"
+                      min="1"
+                      value={item.licenses}
+                      onChange={(e) => updateComparison(item.id, 'licenses', parseInt(e.target.value) || 1)}
+                      className="w-full"
+                    />
                   </div>
                   
                   <div>
-                    <Label className="mb-2 block text-sm">Term length</Label>
-                    <Select 
-                      value={item.term} 
-                      onValueChange={(value: '12' | '24' | '36') => updateComparison(item.id, 'term', value)}
-                    >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="12">12 month term</SelectItem>
-                        <SelectItem value="24">24 month term</SelectItem>
-                        <SelectItem value="36">36 month term</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Label className="mb-2 block">Term length</Label>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" className="w-full justify-between">
+                          {item.term} month term
+                          <ChevronDown className="h-4 w-4 ml-2" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        <DropdownMenuItem 
+                          onClick={() => updateComparison(item.id, 'term', '12')} 
+                          className="cursor-pointer"
+                        >
+                          12 month term
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => updateComparison(item.id, 'term', '24')} 
+                          className="cursor-pointer"
+                        >
+                          24 month term
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onClick={() => updateComparison(item.id, 'term', '36')} 
+                          className="cursor-pointer"
+                        >
+                          36 month term
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
                   </div>
                   
                   <div className="bg-muted/40 p-3 rounded-md">

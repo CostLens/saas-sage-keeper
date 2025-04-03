@@ -3,7 +3,7 @@ import React from "react";
 import { SaaSData } from "@/lib/mockData";
 import { formatCurrency } from "@/lib/utils";
 import { NameColumn } from "@/components/saas-table/columns/NameColumn";
-import { TrendingDown, TrendingUp, MinusIcon, Database, Tag } from "lucide-react";
+import { TrendingDown, TrendingUp, MinusIcon, Database, Tag, Users } from "lucide-react";
 import {
   Table,
   TableBody,

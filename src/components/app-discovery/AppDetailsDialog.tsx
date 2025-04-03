@@ -10,11 +10,12 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
-import { X, Users, Calendar, CreditCard, BarChart2, CheckCircle } from "lucide-react";
+import { X, Users, Calendar, CreditCard, BarChart2, CheckCircle, AlertTriangle, BarChart } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { formatCurrency } from "@/lib/utils";
+import { Badge } from "@/components/ui/badge";
 
 interface AppDetailsDialogProps {
   app: AppDiscoveryData | null;
@@ -31,8 +32,8 @@ export function AppDetailsDialog({ app, isOpen, onClose }: AppDetailsDialogProps
         <DialogHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-10 w-10 rounded-md bg-primary/10 flex items-center justify-center">
-                <span className="font-medium text-xs text-primary">{app.name.substring(0, 2).toUpperCase()}</span>
+              <div className="h-12 w-12 rounded-md bg-primary/10 flex items-center justify-center">
+                <span className="font-medium text-xl text-primary">{app.name.substring(0, 2).toUpperCase()}</span>
               </div>
               <div>
                 <DialogTitle className="text-xl">{app.name}</DialogTitle>
@@ -201,21 +202,328 @@ export function AppDetailsDialog({ app, isOpen, onClose }: AppDetailsDialogProps
             </div>
           </TabsContent>
 
-          <TabsContent value="teams">
-            <div className="py-8 text-center text-muted-foreground">
-              Team usage information will be shown here
+          <TabsContent value="teams" className="pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-4">Team Distribution</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                        <span>Engineering</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.4)} users</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                        <span>Sales</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.3)} users</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-purple-500"></div>
+                        <span>Marketing</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.2)} users</span>
+                    </div>
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center gap-2">
+                        <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                        <span>Product</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.1)} users</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-4">Team Activity</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Engineering</span>
+                        <span>Active Daily</span>
+                      </div>
+                      <Progress value={92} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Sales</span>
+                        <span>Active Weekly</span>
+                      </div>
+                      <Progress value={75} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Marketing</span>
+                        <span>Active Monthly</span>
+                      </div>
+                      <Progress value={45} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between">
+                        <span>Product</span>
+                        <span>Inactive</span>
+                      </div>
+                      <Progress value={10} className="h-2" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="md:col-span-2">
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-4">Team Usage Trends</h3>
+                  <div className="grid grid-cols-3 gap-4">
+                    <div className="border rounded-md p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium">Engineering</h4>
+                        <BarChart className="h-4 w-4 text-blue-500" />
+                      </div>
+                      <p className="text-3xl font-bold text-blue-500">+12%</p>
+                      <p className="text-sm text-muted-foreground">vs. last month</p>
+                    </div>
+                    <div className="border rounded-md p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium">Sales</h4>
+                        <BarChart className="h-4 w-4 text-green-500" />
+                      </div>
+                      <p className="text-3xl font-bold text-green-500">+5%</p>
+                      <p className="text-sm text-muted-foreground">vs. last month</p>
+                    </div>
+                    <div className="border rounded-md p-4">
+                      <div className="flex items-center justify-between mb-2">
+                        <h4 className="font-medium">Marketing</h4>
+                        <BarChart className="h-4 w-4 text-red-500" />
+                      </div>
+                      <p className="text-3xl font-bold text-red-500">-3%</p>
+                      <p className="text-sm text-muted-foreground">vs. last month</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
-          <TabsContent value="features">
-            <div className="py-8 text-center text-muted-foreground">
-              Features information will be shown here
+          <TabsContent value="features" className="pt-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-4">Feature Utilization</h3>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span>Dashboard</span>
+                        <span className="font-medium">92%</span>
+                      </div>
+                      <Progress value={92} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span>Reporting</span>
+                        <span className="font-medium">78%</span>
+                      </div>
+                      <Progress value={78} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span>Analytics</span>
+                        <span className="font-medium">65%</span>
+                      </div>
+                      <Progress value={65} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span>Automation</span>
+                        <span className="font-medium">42%</span>
+                      </div>
+                      <Progress value={42} className="h-2" />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <span>API Integration</span>
+                        <span className="font-medium">23%</span>
+                      </div>
+                      <Progress value={23} className="h-2" />
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-4">Feature Adoption</h3>
+                  <div className="space-y-4">
+                    <div className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-900/20 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-green-500">High</Badge>
+                        <span>Dashboard</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.9)}% of users</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-green-50 dark:bg-green-900/20 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-green-500">High</Badge>
+                        <span>Reporting</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.85)}% of users</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-yellow-500">Medium</Badge>
+                        <span>Analytics</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.6)}% of users</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-red-50 dark:bg-red-900/20 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-red-500">Low</Badge>
+                        <span>Automation</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.4)}% of users</span>
+                    </div>
+                    <div className="flex justify-between items-center p-2 bg-red-50 dark:bg-red-900/20 rounded-md">
+                      <div className="flex items-center gap-2">
+                        <Badge className="bg-red-500">Low</Badge>
+                        <span>API Integration</span>
+                      </div>
+                      <span className="font-medium">{Math.round(app.averageUsage * 0.25)}% of users</span>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="md:col-span-2">
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-4">Unused Premium Features</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 p-3 border rounded-md">
+                      <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium">Advanced Analytics</h4>
+                        <p className="text-sm text-muted-foreground">This premium feature is included in your plan but only used by 2 users.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 border rounded-md">
+                      <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium">Custom Workflows</h4>
+                        <p className="text-sm text-muted-foreground">This premium feature is included in your plan but hasn't been configured.</p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 border rounded-md">
+                      <AlertTriangle className="h-5 w-5 text-amber-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium">API Access</h4>
+                        <p className="text-sm text-muted-foreground">This premium feature is included in your plan but only used by the admin account.</p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
 
-          <TabsContent value="recommendations">
-            <div className="py-8 text-center text-muted-foreground">
-              Recommendations will be shown here
+          <TabsContent value="recommendations" className="pt-4">
+            <div className="grid grid-cols-1 gap-6">
+              <Card className="bg-blue-50 dark:bg-blue-900/20 border-blue-200 dark:border-blue-800">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-800 rounded-md">
+                      <Users className="h-5 w-5 text-blue-700 dark:text-blue-300" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-blue-800 dark:text-blue-300">License Optimization</h3>
+                      <p className="text-sm text-blue-700 dark:text-blue-400 mt-1">
+                        You can save approximately {formatCurrency(app.totalPayments * 0.2)} by removing {Math.round(app.averageUsage * 0.2)} unused licenses.
+                      </p>
+                      <div className="mt-3">
+                        <Button className="bg-blue-600 hover:bg-blue-700">Optimize Licenses</Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-purple-50 dark:bg-purple-900/20 border-purple-200 dark:border-purple-800">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-purple-100 dark:bg-purple-800 rounded-md">
+                      <BarChart className="h-5 w-5 text-purple-700 dark:text-purple-300" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-purple-800 dark:text-purple-300">Feature Adoption</h3>
+                      <p className="text-sm text-purple-700 dark:text-purple-400 mt-1">
+                        Increase feature adoption by scheduling training sessions for underutilized features like API Integration 
+                        and Automation that have less than 50% usage.
+                      </p>
+                      <div className="mt-3">
+                        <Button className="bg-purple-600 hover:bg-purple-700">Schedule Training</Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+                <CardContent className="pt-6">
+                  <div className="flex items-start gap-3">
+                    <div className="p-2 bg-green-100 dark:bg-green-800 rounded-md">
+                      <CreditCard className="h-5 w-5 text-green-700 dark:text-green-300" />
+                    </div>
+                    <div>
+                      <h3 className="font-semibold text-green-800 dark:text-green-300">Contract Negotiation</h3>
+                      <p className="text-sm text-green-700 dark:text-green-400 mt-1">
+                        Your contract renewal is coming up in {app.renewalDate ? Math.ceil((new Date(app.renewalDate).getTime() - new Date().getTime()) / (1000 * 3600 * 24)) : 90} days. 
+                        Based on your usage patterns, you could negotiate a better rate and save up to {formatCurrency(app.totalPayments * 0.15)} annually.
+                      </p>
+                      <div className="mt-3">
+                        <Button className="bg-green-600 hover:bg-green-700">Prepare for Negotiation</Button>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card>
+                <CardContent className="pt-6">
+                  <h3 className="font-semibold mb-4">Additional Recommendations</h3>
+                  <div className="space-y-3">
+                    <div className="flex items-start gap-3 p-3 border rounded-md">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium">Downgrade Plan</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Consider downgrading to a lower-tier plan since premium features aren't being fully utilized.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 border rounded-md">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium">Consolidate Teams</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Marketing team shows low usage. Consider consolidating their access with another department.
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex items-start gap-3 p-3 border rounded-md">
+                      <CheckCircle className="h-5 w-5 text-green-500 mt-0.5" />
+                      <div>
+                        <h4 className="font-medium">Recurring Training</h4>
+                        <p className="text-sm text-muted-foreground">
+                          Set up monthly training sessions to improve adoption of underutilized features.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </TabsContent>
         </Tabs>

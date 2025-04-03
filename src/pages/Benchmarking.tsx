@@ -116,9 +116,6 @@ const Benchmarking = () => {
           </Card>
         </div>
 
-        {/* Price Comparison Section */}
-        <PriceComparisonSection />
-
         <Card>
           <CardHeader>
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center">
@@ -156,6 +153,9 @@ const Benchmarking = () => {
             <BenchmarkingTable benchmarkData={benchmarkData} />
           </CardContent>
         </Card>
+
+        {/* Price Comparison Section - Now below the benchmarking table */}
+        <PriceComparisonSection />
       </div>
     </DashboardLayout>
   );

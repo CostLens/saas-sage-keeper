@@ -1,9 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { Badge } from "@/components/ui/badge";
 import { Brain, SendHorizontal } from "lucide-react";
 import { ChatMessage } from "@/components/ai-assistant/types";
 import { ChatMessageItem } from "@/components/ai-assistant/ChatMessageItem";

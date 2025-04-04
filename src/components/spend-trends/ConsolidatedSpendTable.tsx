@@ -76,7 +76,7 @@ export function ConsolidatedSpendTable({ data, onRowClick }: ConsolidatedSpendTa
           <div className="flex items-center gap-2">
             <div>{renewalDate ? renewalDate.toLocaleDateString() : "N/A"}</div>
             {daysUntilRenewal !== null && daysUntilRenewal <= 30 && (
-              <Badge variant={daysUntilRenewal <= 7 ? "destructive" : "warning"}>
+              <Badge variant={daysUntilRenewal <= 7 ? "destructive" : "secondary"}>
                 {daysUntilRenewal} days
               </Badge>
             )}

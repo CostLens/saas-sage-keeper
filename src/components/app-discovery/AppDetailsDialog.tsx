@@ -2,7 +2,8 @@
 import React from "react";
 import { 
   Dialog, 
-  DialogContent
+  DialogContent,
+  DialogHeader
 } from "@/components/ui/dialog";
 import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -24,9 +25,7 @@ export function AppDetailsDialog({ app, isOpen, onClose }: AppDetailsDialogProps
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto" hideCloseButton>
-        <DialogHeader>
-          <AppDialogHeader app={app} onClose={onClose} />
-        </DialogHeader>
+        <AppDialogHeader app={app} onClose={onClose} />
 
         <Tabs defaultValue="overview" className="mt-6">
           <TabsList className="grid grid-cols-4 w-full">

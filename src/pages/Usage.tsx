@@ -8,6 +8,10 @@ import { UsageFilters } from "@/components/usage/UsageFilters";
 import { UsageTabs } from "@/components/usage/UsageTabs";
 import { exportUsageReport } from "@/components/usage/UsageAnalyticsService";
 import { calculateUsageStatistics, categorizeAppsByUsage } from "@/components/usage/UsageAnalyticsHelpers";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { FeaturesTab } from "@/components/usage/FeaturesTab";
+import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
 
 const Usage = () => {
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
@@ -24,7 +28,7 @@ const Usage = () => {
   const [filterCategory, setFilterCategory] = useState<"all" | "high" | "optimal" | "low">("all");
   const [activeTab, setActiveTab] = useState("overview");
   const [selectedApp, setSelectedApp] = useState(mockSaaSData[0]);
-  const [featuresTabVisible, setFeaturesTabVisible] = useState(false);
+  const [showAppDetails, setShowAppDetails] = useState(false);
   
   useEffect(() => {
     const handleSidebarChange = (event: CustomEvent) => {
@@ -88,8 +92,11 @@ const Usage = () => {
 
   const handleRowClick = (app: any) => {
     setSelectedApp(app);
-    setFeaturesTabVisible(true);
-    setActiveTab("features");
+    setShowAppDetails(true);
+  };
+
+  const handleBackToList = () => {
+    setShowAppDetails(false);
   };
 
   return (
@@ -102,34 +109,70 @@ const Usage = () => {
         <main className="flex-1 p-6 space-y-8 animate-fade-in">
           <UsageHeader onExport={handleExport} />
 
-          <UsageFilters
-            searchQuery={searchQuery}
-            setSearchQuery={setSearchQuery}
-            timeRange={timeRange}
-            setTimeRange={setTimeRange}
-            dateRange={dateRange}
-            setDateRange={setDateRange}
-            filterCategory={filterCategory}
-            setFilterCategory={setFilterCategory}
-          />
+          {!showAppDetails ? (
+            <>
+              <UsageFilters
+                searchQuery={searchQuery}
+                setSearchQuery={setSearchQuery}
+                timeRange={timeRange}
+                setTimeRange={setTimeRange}
+                dateRange={dateRange}
+                setDateRange={setDateRange}
+                filterCategory={filterCategory}
+                setFilterCategory={setFilterCategory}
+              />
 
-          <UsageTabs
-            activeTab={activeTab}
-            setActiveTab={setActiveTab}
-            utilizationRate={utilizationRate}
-            activeUsers={activeUsers}
-            totalLicenses={totalLicenses}
-            unusedLicenses={unusedLicenses}
-            lowUsageAppsCount={lowUsageApps.length}
-            highUsageApps={highUsageApps}
-            optimalUsageApps={optimalUsageApps}
-            lowUsageApps={lowUsageApps}
-            filteredData={filteredData}
-            featuresTabVisible={featuresTabVisible}
-            selectedApp={selectedApp}
-            handleRowClick={handleRowClick}
-            setFeaturesTabVisible={setFeaturesTabVisible}
-          />
+              <UsageTabs
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                utilizationRate={utilizationRate}
+                activeUsers={activeUsers}
+                totalLicenses={totalLicenses}
+                unusedLicenses={unusedLicenses}
+                lowUsageAppsCount={lowUsageApps.length}
+                highUsageApps={highUsageApps}
+                optimalUsageApps={optimalUsageApps}
+                lowUsageApps={lowUsageApps}
+                filteredData={filteredData}
+                handleRowClick={handleRowClick}
+              />
+            </>
+          ) : (
+            <Card>
+              <CardHeader>
+                <div className="flex justify-between items-center">
+                  <CardTitle>{selectedApp.name} Usage Analysis</CardTitle>
+                  <Button 
+                    variant="outline"
+                    onClick={handleBackToList}
+                  >
+                    Back to Usage Overview
+                  </Button>
+                </div>
+              </CardHeader>
+              <CardContent>
+                <FeaturesTab app={{
+                  id: parseInt(selectedApp.id),
+                  name: selectedApp.name,
+                  description: selectedApp.description,
+                  category: selectedApp.category || "Software",
+                  publisher: selectedApp.name,
+                  averageUsage: selectedApp.usage.utilizationRate || 0,
+                  activeUsers: selectedApp.usage.activeUsers,
+                  totalLicenses: selectedApp.usage.totalLicenses || 0,
+                  costPerYear: selectedApp.price,
+                  status: "Approved",
+                  lastUsed: "Today",
+                  purchaseDate: selectedApp.contract?.signedDate || new Date().toISOString(),
+                  departments: ["All Departments"],
+                  website: "",
+                  totalPayments: selectedApp.price * 2,
+                  costToDate: selectedApp.price * 1.5,
+                  firstPurchased: selectedApp.contract?.signedDate || new Date().toISOString(),
+                }} />
+              </CardContent>
+            </Card>
+          )}
         </main>
       </div>
     </div>

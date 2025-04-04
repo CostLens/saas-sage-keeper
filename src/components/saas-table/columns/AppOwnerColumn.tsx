@@ -32,6 +32,12 @@ export function AppOwnerColumn({ row }: { row: SaaSData }) {
     }
   };
 
+  const handleEditClick = (e: React.MouseEvent) => {
+    // Stop event propagation to prevent row click event
+    e.stopPropagation();
+    setIsDialogOpen(true);
+  };
+
   return (
     <>
       <div className="flex items-center gap-2">
@@ -43,7 +49,7 @@ export function AppOwnerColumn({ row }: { row: SaaSData }) {
               variant="ghost" 
               size="icon" 
               className="h-5 w-5 rounded-full opacity-50 hover:opacity-100"
-              onClick={() => setIsDialogOpen(true)}
+              onClick={handleEditClick}
             >
               <Edit2 className="h-3 w-3" />
             </Button>

@@ -6,7 +6,9 @@ import { DashboardContent } from "@/components/dashboard/DashboardContent";
 const Dashboard = () => {
   return (
     <DashboardLayout>
-      <DashboardContent />
+      <div className="w-full">
+        <DashboardContent />
+      </div>
     </DashboardLayout>
   );
 };

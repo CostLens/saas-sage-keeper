@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
-import { mockSaaSData } from "@/lib/mockData";  // Corrected import
+import { mockSaaSData } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -10,20 +10,28 @@ import { Label } from "@/components/ui/label";
 import LicenseUtilizationChart from "@/components/charts/LicenseUtilizationChart";
 import { UsageOverviewCards } from "@/components/usage/UsageOverviewCards";
 import { UtilizationCategories } from "@/components/usage/UtilizationCategories";
+import { ApplicationUsageTable } from "@/components/usage/ApplicationUsageTable";
 import { calculateUsageStatistics, categorizeAppsByUsage } from "@/components/usage/UsageAnalyticsHelpers";
 import { toast } from "sonner";
-import { 
-  Calendar, 
-  Download, 
-  Filter, 
-  Search, 
-  SlidersHorizontal
+import {
+  Calendar,
+  Download,
+  Filter,
+  Search,
+  SlidersHorizontal,
+  List
 } from "lucide-react";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { Calendar as CalendarComponent } from "@/components/ui/calendar";
 import { format } from "date-fns";
 
@@ -40,6 +48,7 @@ const Usage = () => {
   });
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<"all" | "high" | "optimal" | "low">("all");
+  const [activeTab, setActiveTab] = useState("overview");
   
   useEffect(() => {
     const handleSidebarChange = (event: CustomEvent) => {
@@ -71,7 +80,6 @@ const Usage = () => {
         fromDate = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
         break;
       case "custom":
-        // Keep existing custom date range
         return;
     }
     
@@ -236,21 +244,42 @@ const Usage = () => {
             </CardContent>
           </Card>
 
-          <UsageOverviewCards 
-            utilizationRate={utilizationRate}
-            activeUsers={activeUsers}
-            totalLicenses={totalLicenses}
-            unusedLicenses={unusedLicenses}
-            lowUsageAppsCount={lowUsageApps.length}
-          />
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="mb-4">
+              <TabsTrigger value="overview" className="flex items-center gap-1">
+                <SlidersHorizontal className="h-4 w-4" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="applications" className="flex items-center gap-1"> 
+                <List className="h-4 w-4" />
+                Applications
+              </TabsTrigger>
+            </TabsList>
+            
+            <TabsContent value="overview">
+              <div className="space-y-8">
+                <UsageOverviewCards 
+                  utilizationRate={utilizationRate}
+                  activeUsers={activeUsers}
+                  totalLicenses={totalLicenses}
+                  unusedLicenses={unusedLicenses}
+                  lowUsageAppsCount={lowUsageApps.length}
+                />
 
-          <LicenseUtilizationChart />
+                <LicenseUtilizationChart />
 
-          <UtilizationCategories 
-            highUsageApps={highUsageApps}
-            optimalUsageApps={optimalUsageApps}
-            lowUsageApps={lowUsageApps}
-          />
+                <UtilizationCategories 
+                  highUsageApps={highUsageApps}
+                  optimalUsageApps={optimalUsageApps}
+                  lowUsageApps={lowUsageApps}
+                />
+              </div>
+            </TabsContent>
+            
+            <TabsContent value="applications">
+              <ApplicationUsageTable data={filteredData} />
+            </TabsContent>
+          </Tabs>
         </main>
       </div>
     </div>

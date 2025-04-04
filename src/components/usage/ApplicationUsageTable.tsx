@@ -13,9 +13,10 @@ import { SaaSData } from "@/lib/mockData";
 
 interface ApplicationUsageTableProps {
   data: SaaSData[];
+  onRowClick?: (app: SaaSData) => void;
 }
 
-export function ApplicationUsageTable({ data }: ApplicationUsageTableProps) {
+export function ApplicationUsageTable({ data, onRowClick }: ApplicationUsageTableProps) {
   const columns = [
     {
       id: "name",
@@ -132,7 +133,7 @@ export function ApplicationUsageTable({ data }: ApplicationUsageTableProps) {
           columns={columns} 
           searchable={true}
           searchField="name"
-          onRowClick={(app) => console.log("App clicked:", app)}
+          onRowClick={onRowClick}
         />
       </CardContent>
     </Card>

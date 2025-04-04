@@ -10,7 +10,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DialogHeader as AppDialogHeader } from "./details/DialogHeader";
 import { OverviewTab } from "./details/OverviewTab";
 import { TeamsTab } from "./details/TeamsTab";
-import { FeaturesTab } from "./details/FeaturesTab";
 import { RecommendationsTab } from "./details/RecommendationsTab";
 import { SentimentTab } from "./details/SentimentTab";
 
@@ -31,10 +30,9 @@ export function AppDetailsDialog({ app, isOpen, onClose }: AppDetailsDialogProps
         </DialogHeader>
 
         <Tabs defaultValue="overview" className="mt-6">
-          <TabsList className="grid grid-cols-5 w-full">
+          <TabsList className="grid grid-cols-4 w-full">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             <TabsTrigger value="teams">Teams</TabsTrigger>
-            <TabsTrigger value="features">Features</TabsTrigger>
             <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
             <TabsTrigger value="sentiment">Sentiment</TabsTrigger>
           </TabsList>
@@ -45,10 +43,6 @@ export function AppDetailsDialog({ app, isOpen, onClose }: AppDetailsDialogProps
 
           <TabsContent value="teams" className="pt-4">
             <TeamsTab app={app} />
-          </TabsContent>
-
-          <TabsContent value="features" className="pt-4">
-            <FeaturesTab app={app} />
           </TabsContent>
 
           <TabsContent value="recommendations" className="pt-4">

@@ -1,9 +1,10 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
 import { mockSaaSData } from "@/lib/mockData";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
@@ -11,7 +12,7 @@ import LicenseUtilizationChart from "@/components/charts/LicenseUtilizationChart
 import { UsageOverviewCards } from "@/components/usage/UsageOverviewCards";
 import { UtilizationCategories } from "@/components/usage/UtilizationCategories";
 import { ApplicationUsageTable } from "@/components/usage/ApplicationUsageTable";
-import { FeaturesTab } from "@/components/app-discovery/details/FeaturesTab";
+import { FeaturesTab } from "@/components/usage/FeaturesTab";
 import { calculateUsageStatistics, categorizeAppsByUsage } from "@/components/usage/UsageAnalyticsHelpers";
 import { toast } from "sonner";
 import {
@@ -140,6 +141,7 @@ const Usage = () => {
   const handleRowClick = (app: any) => {
     setSelectedApp(app);
     setFeaturesTabVisible(true);
+    setActiveTab("features");
   };
 
   return (
@@ -291,24 +293,26 @@ const Usage = () => {
             
             <TabsContent value="applications">
               <ApplicationUsageTable 
-                data={filteredData} 
+                data={filteredData}
+                onRowClick={handleRowClick}
               />
             </TabsContent>
 
             <TabsContent value="features">
               {featuresTabVisible ? (
                 <Card>
-                  <CardContent className="p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-xl font-semibold">{selectedApp.name} Features</h2>
+                  <CardHeader>
+                    <div className="flex justify-between items-center">
+                      <CardTitle>{selectedApp.name} Features</CardTitle>
                       <Button 
                         variant="outline"
                         onClick={() => setFeaturesTabVisible(false)}
                       >
-                        Back to Applications
+                        Back to Application List
                       </Button>
                     </div>
-                    
+                  </CardHeader>
+                  <CardContent>
                     <FeaturesTab app={{
                       id: parseInt(selectedApp.id),
                       name: selectedApp.name,

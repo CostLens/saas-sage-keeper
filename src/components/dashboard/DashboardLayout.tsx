@@ -20,8 +20,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         }`}
       >
         <Header />
-        <main className="flex-1 p-4 md:p-6 space-y-6 md:space-y-8 animate-fade-in overflow-auto max-w-full">
-          <div className="max-w-full">
+        <main className="flex-1 p-4 md:p-6 space-y-6 md:space-y-8 animate-fade-in overflow-auto">
+          <div className="w-full max-w-full pr-4">
             {children}
           </div>
         </main>

@@ -9,7 +9,6 @@ import { UsageTabs } from "@/components/usage/UsageTabs";
 import { exportUsageReport } from "@/components/usage/UsageAnalyticsService";
 import { calculateUsageStatistics, categorizeAppsByUsage } from "@/components/usage/UsageAnalyticsHelpers";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { FeaturesTab } from "@/components/usage/FeaturesTab";
 import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
 
@@ -107,7 +106,11 @@ const Usage = () => {
       }`}>
         <Header />
         <main className="flex-1 p-6 space-y-8 animate-fade-in">
-          <UsageHeader onExport={handleExport} />
+          <UsageHeader 
+            onExport={handleExport} 
+            showBackButton={showAppDetails} 
+            onBackClick={handleBackToList} 
+          />
 
           {!showAppDetails ? (
             <>
@@ -140,15 +143,7 @@ const Usage = () => {
           ) : (
             <Card>
               <CardHeader>
-                <div className="flex justify-between items-center">
-                  <CardTitle>{selectedApp.name} Usage Analysis</CardTitle>
-                  <Button 
-                    variant="outline"
-                    onClick={handleBackToList}
-                  >
-                    Back to Usage Overview
-                  </Button>
-                </div>
+                <CardTitle>{selectedApp.name} Usage Analysis</CardTitle>
               </CardHeader>
               <CardContent>
                 <FeaturesTab app={{

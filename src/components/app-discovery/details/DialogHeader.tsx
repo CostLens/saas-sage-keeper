@@ -1,15 +1,16 @@
 
 import React from "react";
 import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
-import { DialogTitle, DialogDescription, DialogClose } from "@/components/ui/dialog";
+import { DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { X } from "lucide-react";
 
 interface DialogHeaderProps {
   app: AppDiscoveryData;
+  onClose?: () => void;
 }
 
-export function DialogHeader({ app }: DialogHeaderProps) {
+export function DialogHeader({ app, onClose }: DialogHeaderProps) {
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-3">
@@ -21,11 +22,11 @@ export function DialogHeader({ app }: DialogHeaderProps) {
           <DialogDescription>{app.category}</DialogDescription>
         </div>
       </div>
-      <DialogClose asChild>
-        <Button variant="ghost" size="icon">
+      {onClose && (
+        <Button variant="ghost" size="icon" onClick={onClose}>
           <X className="h-4 w-4" />
         </Button>
-      </DialogClose>
+      )}
     </div>
   );
 }

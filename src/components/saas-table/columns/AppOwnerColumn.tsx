@@ -35,6 +35,7 @@ export function AppOwnerColumn({ row }: { row: SaaSData }) {
   const handleEditClick = (e: React.MouseEvent) => {
     // Stop event propagation to prevent row click event
     e.stopPropagation();
+    e.preventDefault(); // Add this to prevent any default behavior
     setIsDialogOpen(true);
   };
 

@@ -13,8 +13,9 @@ import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { format } from "date-fns";
-import { Calendar as CalendarIcon, MessageSquare, Star, Download } from "lucide-react";
+import { Calendar as CalendarIcon, MessageSquare, Star, Download, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface SentimentTabProps {
   app: AppDiscoveryData;
@@ -71,6 +72,43 @@ const mockSentimentData = {
     { rating: 8, percentage: 32 },
     { rating: 9, percentage: 9 },
     { rating: 10, percentage: 0 }
+  ],
+  // Added survey questions
+  surveyQuestions: [
+    {
+      id: 1,
+      question: "How likely are you to recommend this app to a colleague?",
+      type: "rating",
+      scale: "0-10",
+      required: true
+    },
+    {
+      id: 2,
+      question: "How critical is this app to your daily work?",
+      type: "rating",
+      scale: "1-5",
+      required: true
+    },
+    {
+      id: 3,
+      question: "Which features do you use most frequently?",
+      type: "multi-select",
+      options: ["Dashboard", "Reporting", "Analytics", "Automation", "API Integration"],
+      required: true
+    },
+    {
+      id: 4,
+      question: "What improvements would you like to see?",
+      type: "text",
+      required: false
+    },
+    {
+      id: 5,
+      question: "How satisfied are you with the app's performance?",
+      type: "rating",
+      scale: "1-5",
+      required: true
+    }
   ]
 }
 
@@ -79,6 +117,7 @@ export function SentimentTab({ app }: SentimentTabProps) {
   const [openSurveyDialog, setOpenSurveyDialog] = useState(false);
   const [surveyFrequency, setSurveyFrequency] = useState("quarterly");
   const [surveyDate, setSurveyDate] = useState<Date | undefined>(new Date());
+  const [showSurveyQuestionsDialog, setShowSurveyQuestionsDialog] = useState(false);
   
   const handleExportCSV = () => {
     toast({
@@ -92,6 +131,10 @@ export function SentimentTab({ app }: SentimentTabProps) {
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-semibold">User Sentiment</h2>
         <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={() => setShowSurveyQuestionsDialog(true)}>
+            <Eye className="h-4 w-4 mr-2" />
+            View Survey Questions
+          </Button>
           <Button variant="outline" size="sm" onClick={handleExportCSV}>
             <Download className="h-4 w-4 mr-2" />
             Export to CSV
@@ -231,6 +274,111 @@ export function SentimentTab({ app }: SentimentTabProps) {
         </CardContent>
       </Card>
 
+      {/* Survey Questions Dialog */}
+      <Dialog open={showSurveyQuestionsDialog} onOpenChange={setShowSurveyQuestionsDialog}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>{app.name} Survey Questions</DialogTitle>
+          </DialogHeader>
+          <div className="mt-4">
+            <Tabs defaultValue="current">
+              <TabsList className="w-full">
+                <TabsTrigger value="current" className="flex-1">Current Questions</TabsTrigger>
+                <TabsTrigger value="edit" className="flex-1">Edit Questions</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="current">
+                <div className="space-y-4 mt-4">
+                  {mockSentimentData.surveyQuestions.map((q, index) => (
+                    <div key={q.id} className="p-4 border rounded-md">
+                      <div className="flex justify-between items-start">
+                        <div className="font-medium">Q{index + 1}: {q.question}</div>
+                        <Badge variant="outline">{q.required ? "Required" : "Optional"}</Badge>
+                      </div>
+                      <div className="mt-2 text-sm text-muted-foreground">
+                        Type: {q.type.charAt(0).toUpperCase() + q.type.slice(1)}
+                        {q.scale && <span> (Scale: {q.scale})</span>}
+                        {q.options && (
+                          <div className="mt-1">
+                            Options: {q.options.join(", ")}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="edit">
+                <div className="mt-4">
+                  <div className="space-y-4">
+                    {mockSentimentData.surveyQuestions.map((q, index) => (
+                      <div key={q.id} className="p-4 border rounded-md">
+                        <div className="flex justify-between items-start mb-2">
+                          <Label htmlFor={`question-${q.id}`}>Question {index + 1}</Label>
+                          <Select defaultValue={q.required ? "required" : "optional"}>
+                            <SelectTrigger className="w-[120px]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="required">Required</SelectItem>
+                              <SelectItem value="optional">Optional</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <Input id={`question-${q.id}`} defaultValue={q.question} className="mb-2" />
+                        <div className="flex gap-2 items-center mt-2">
+                          <Select defaultValue={q.type}>
+                            <SelectTrigger className="w-[150px]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="rating">Rating</SelectItem>
+                              <SelectItem value="text">Text</SelectItem>
+                              <SelectItem value="multi-select">Multi-select</SelectItem>
+                              <SelectItem value="single-select">Single-select</SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {q.type === "rating" && (
+                            <Select defaultValue={q.scale}>
+                              <SelectTrigger className="w-[120px]">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="0-10">Scale 0-10</SelectItem>
+                                <SelectItem value="1-5">Scale 1-5</SelectItem>
+                                <SelectItem value="1-7">Scale 1-7</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          )}
+                          <Button variant="destructive" size="sm" className="ml-auto">Remove</Button>
+                        </div>
+                      </div>
+                    ))}
+                    <Button className="w-full">+ Add Question</Button>
+                  </div>
+                </div>
+              </TabsContent>
+            </Tabs>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setShowSurveyQuestionsDialog(false)}>
+              Close
+            </Button>
+            <Button onClick={() => {
+              setShowSurveyQuestionsDialog(false);
+              toast({
+                title: "Survey questions saved",
+                description: "Your changes to the survey have been saved"
+              });
+            }}>
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Survey Dialog */}
       <Dialog open={openSurveyDialog} onOpenChange={setOpenSurveyDialog}>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>

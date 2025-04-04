@@ -17,14 +17,32 @@ interface AppDiscoveryTableProps {
 export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
   const [selectedApp, setSelectedApp] = useState<AppDiscoveryData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [preventRowClick, setPreventRowClick] = useState(false);
 
   const handleRowClick = (app: AppDiscoveryData) => {
-    setSelectedApp(app);
-    setIsDialogOpen(true);
+    // Only open the dialog if we're not preventing row clicks
+    if (!preventRowClick) {
+      setSelectedApp(app);
+      setIsDialogOpen(true);
+    }
+    // Reset the flag after handling the click
+    setPreventRowClick(false);
   };
 
   const handleCloseDialog = () => {
     setIsDialogOpen(false);
+  };
+
+  // Listen for mousedown events that might be owner edit clicks
+  const handleMouseDown = (e: React.MouseEvent) => {
+    // Check if the click target is an edit button or inside a dialog
+    if (
+      e.target instanceof Element &&
+      (e.target.closest('button[class*="rounded-full"]') || 
+       e.target.closest('[role="dialog"]'))
+    ) {
+      setPreventRowClick(true);
+    }
   };
 
   const columns = [
@@ -138,13 +156,15 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
 
   return (
     <>
-      <DataTable
-        data={data}
-        columns={columns}
-        searchable
-        searchField="name"
-        onRowClick={handleRowClick}
-      />
+      <div onMouseDown={handleMouseDown}>
+        <DataTable
+          data={data}
+          columns={columns}
+          searchable
+          searchField="name"
+          onRowClick={handleRowClick}
+        />
+      </div>
       <AppDetailsDialog 
         app={selectedApp} 
         isOpen={isDialogOpen} 

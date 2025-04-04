@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -315,7 +314,7 @@ const Usage = () => {
                       name: selectedApp.name,
                       description: selectedApp.description,
                       category: selectedApp.category || "Software",
-                      publisher: selectedApp.vendor || "Unknown",
+                      publisher: selectedApp.name,
                       averageUsage: selectedApp.usage.utilizationRate || 0,
                       activeUsers: selectedApp.usage.activeUsers,
                       totalLicenses: selectedApp.usage.totalLicenses || 0,

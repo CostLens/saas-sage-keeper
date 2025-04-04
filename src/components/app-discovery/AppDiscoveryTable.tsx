@@ -49,12 +49,10 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
       header: "App Owner",
       sortable: true,
       cell: (row: AppDiscoveryData) => (
-        // Convert AppDiscoveryData to SaaSData for AppOwnerColumn
         <AppOwnerColumn row={{
-          id: String(row.id), // Convert number to string
+          id: String(row.id), 
           name: row.name,
           owner: row.owner || "Unassigned",
-          // The minimum properties needed to work with AppOwnerColumn
           description: row.description,
           price: row.costPerYear,
           renewalDate: row.renewalDate || "",
@@ -64,7 +62,7 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
           usageHistory: [],
           tasks: [],
           alerts: []
-        } as unknown as SaaSData} />
+        } as SaaSData} />
       ),
     },
     {

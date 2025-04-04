@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { Sidebar } from "@/components/Sidebar";
@@ -11,6 +12,7 @@ import LicenseUtilizationChart from "@/components/charts/LicenseUtilizationChart
 import { UsageOverviewCards } from "@/components/usage/UsageOverviewCards";
 import { UtilizationCategories } from "@/components/usage/UtilizationCategories";
 import { ApplicationUsageTable } from "@/components/usage/ApplicationUsageTable";
+import { FeaturesTab } from "@/components/app-discovery/details/FeaturesTab";
 import { calculateUsageStatistics, categorizeAppsByUsage } from "@/components/usage/UsageAnalyticsHelpers";
 import { toast } from "sonner";
 import {
@@ -19,7 +21,8 @@ import {
   Filter,
   Search,
   SlidersHorizontal,
-  List
+  List,
+  LayoutGrid
 } from "lucide-react";
 import {
   Popover,
@@ -49,6 +52,8 @@ const Usage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<"all" | "high" | "optimal" | "low">("all");
   const [activeTab, setActiveTab] = useState("overview");
+  const [selectedApp, setSelectedApp] = useState(mockSaaSData[0]);
+  const [featuresTabVisible, setFeaturesTabVisible] = useState(false);
   
   useEffect(() => {
     const handleSidebarChange = (event: CustomEvent) => {
@@ -131,6 +136,11 @@ const Usage = () => {
     document.body.removeChild(link);
     
     toast.success("Usage report exported successfully");
+  };
+
+  const handleRowClick = (app: any) => {
+    setSelectedApp(app);
+    setFeaturesTabVisible(true);
   };
 
   return (
@@ -254,6 +264,10 @@ const Usage = () => {
                 <List className="h-4 w-4" />
                 Applications
               </TabsTrigger>
+              <TabsTrigger value="features" className="flex items-center gap-1">
+                <LayoutGrid className="h-4 w-4" />
+                Features
+              </TabsTrigger>
             </TabsList>
             
             <TabsContent value="overview">
@@ -277,7 +291,60 @@ const Usage = () => {
             </TabsContent>
             
             <TabsContent value="applications">
-              <ApplicationUsageTable data={filteredData} />
+              <ApplicationUsageTable 
+                data={filteredData} 
+              />
+            </TabsContent>
+
+            <TabsContent value="features">
+              {featuresTabVisible ? (
+                <Card>
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-xl font-semibold">{selectedApp.name} Features</h2>
+                      <Button 
+                        variant="outline"
+                        onClick={() => setFeaturesTabVisible(false)}
+                      >
+                        Back to Applications
+                      </Button>
+                    </div>
+                    
+                    <FeaturesTab app={{
+                      id: parseInt(selectedApp.id),
+                      name: selectedApp.name,
+                      description: selectedApp.description,
+                      category: selectedApp.category || "Software",
+                      publisher: selectedApp.vendor || "Unknown",
+                      averageUsage: selectedApp.usage.utilizationRate || 0,
+                      activeUsers: selectedApp.usage.activeUsers,
+                      totalLicenses: selectedApp.usage.totalLicenses || 0,
+                      costPerYear: selectedApp.price,
+                      status: "Approved",
+                      lastUsed: "Today",
+                      purchaseDate: selectedApp.contract?.signedDate || new Date().toISOString(),
+                      departments: ["All Departments"],
+                      website: "",
+                      totalPayments: selectedApp.price * 2,
+                      costToDate: selectedApp.price * 1.5,
+                      firstPurchased: selectedApp.contract?.signedDate || new Date().toISOString(),
+                    }} />
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card>
+                  <CardContent className="py-10 text-center">
+                    <h3 className="text-lg font-medium mb-2">Select an application to view features</h3>
+                    <p className="text-muted-foreground mb-4">Go to the Applications tab and click on any app to view its feature details</p>
+                    <Button 
+                      variant="outline" 
+                      onClick={() => setActiveTab("applications")}
+                    >
+                      Go to Applications
+                    </Button>
+                  </CardContent>
+                </Card>
+              )}
             </TabsContent>
           </Tabs>
         </main>

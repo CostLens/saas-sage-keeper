@@ -132,6 +132,7 @@ export function ApplicationUsageTable({ data }: ApplicationUsageTableProps) {
           columns={columns} 
           searchable={true}
           searchField="name"
+          onRowClick={(app) => console.log("App clicked:", app)}
         />
       </CardContent>
     </Card>

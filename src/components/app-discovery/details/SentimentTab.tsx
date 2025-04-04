@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
 import { Card, CardContent } from "@/components/ui/card";
@@ -242,22 +241,23 @@ export function SentimentTab({ app }: SentimentTabProps) {
               <Label htmlFor="frequency" className="col-span-1">
                 Frequency
               </Label>
-              <Select 
-                value={surveyFrequency} 
-                onValueChange={setSurveyFrequency}
-                className="col-span-3"
-              >
-                <SelectTrigger id="frequency">
-                  <SelectValue placeholder="Select frequency" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="monthly">Monthly</SelectItem>
-                  <SelectItem value="quarterly">Quarterly</SelectItem>
-                  <SelectItem value="biannually">Bi-annually</SelectItem>
-                  <SelectItem value="annually">Annually</SelectItem>
-                  <SelectItem value="oneTime">One-time</SelectItem>
-                </SelectContent>
-              </Select>
+              <div className="col-span-3">
+                <Select 
+                  value={surveyFrequency} 
+                  onValueChange={setSurveyFrequency}
+                >
+                  <SelectTrigger id="frequency">
+                    <SelectValue placeholder="Select frequency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="monthly">Monthly</SelectItem>
+                    <SelectItem value="quarterly">Quarterly</SelectItem>
+                    <SelectItem value="biannually">Bi-annually</SelectItem>
+                    <SelectItem value="annually">Annually</SelectItem>
+                    <SelectItem value="oneTime">One-time</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
             <div className="grid grid-cols-4 items-center gap-4">
               <Label className="col-span-1">Start Date</Label>

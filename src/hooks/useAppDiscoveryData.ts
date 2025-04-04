@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -20,13 +19,17 @@ export interface AppDiscoveryData {
   website: string;
   features?: string[];
   alternatives?: { name: string; matchScore: number }[];
+  totalPayments: number;
+  costToDate: number;
+  firstPurchased: string;
+  renewalDate?: string;
+  owner?: string;
 }
 
 export function useAppDiscoveryData() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
 
-  // Mock data for app discovery
   const saasData: AppDiscoveryData[] = [
     {
       id: 1,
@@ -47,7 +50,12 @@ export function useAppDiscoveryData() {
       alternatives: [
         { name: "Microsoft Teams", matchScore: 92 },
         { name: "Discord", matchScore: 78 }
-      ]
+      ],
+      totalPayments: 85000,
+      costToDate: 63750,
+      firstPurchased: "2021-04-15",
+      renewalDate: "2024-04-15",
+      owner: "Sarah Johnson"
     },
     {
       id: 2,
@@ -69,7 +77,12 @@ export function useAppDiscoveryData() {
       alternatives: [
         { name: "HubSpot", matchScore: 85 },
         { name: "Zoho CRM", matchScore: 76 }
-      ]
+      ],
+      totalPayments: 540000,
+      costToDate: 360000,
+      firstPurchased: "2020-07-22",
+      renewalDate: "2024-07-22",
+      owner: "Michael Chen"
     },
     {
       id: 3,
@@ -90,7 +103,12 @@ export function useAppDiscoveryData() {
       alternatives: [
         { name: "Affinity Suite", matchScore: 79 },
         { name: "Sketch", matchScore: 65 }
-      ]
+      ],
+      totalPayments: 59000,
+      costToDate: 44250,
+      firstPurchased: "2022-01-10",
+      renewalDate: "2024-01-10",
+      owner: "Emma Rodriguez"
     },
     {
       id: 4,
@@ -111,7 +129,12 @@ export function useAppDiscoveryData() {
       alternatives: [
         { name: "Freshdesk", matchScore: 88 },
         { name: "Intercom", matchScore: 72 }
-      ]
+      ],
+      totalPayments: 64000,
+      costToDate: 48000,
+      firstPurchased: "2021-11-05",
+      renewalDate: "2024-11-05",
+      owner: "Daniel Kim"
     },
     {
       id: 5,
@@ -133,7 +156,12 @@ export function useAppDiscoveryData() {
         { name: "Google Drive", matchScore: 94 },
         { name: "Microsoft OneDrive", matchScore: 91 },
         { name: "Box", matchScore: 89 }
-      ]
+      ],
+      totalPayments: 90000,
+      costToDate: 81000,
+      firstPurchased: "2019-08-17",
+      renewalDate: "2024-08-17",
+      owner: "Alex Thompson"
     },
     {
       id: 6,
@@ -155,7 +183,12 @@ export function useAppDiscoveryData() {
         { name: "Monday.com", matchScore: 87 },
         { name: "ClickUp", matchScore: 82 },
         { name: "Trello", matchScore: 75 }
-      ]
+      ],
+      totalPayments: 57600,
+      costToDate: 43200,
+      firstPurchased: "2022-03-01",
+      renewalDate: "2024-03-01",
+      owner: "Jessica Lee"
     }
   ];
 

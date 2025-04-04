@@ -49,22 +49,22 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
       header: "App Owner",
       sortable: true,
       cell: (row: AppDiscoveryData) => (
-        // Pass the row as a SaaSData object since AppOwnerColumn expects that type
-        <AppOwnerColumn row={{ 
-          id: row.id, 
+        // Convert AppDiscoveryData to SaaSData for AppOwnerColumn
+        <AppOwnerColumn row={{
+          id: String(row.id), // Convert number to string
           name: row.name,
-          owner: row.owner,
+          owner: row.owner || "Unassigned",
           // The minimum properties needed to work with AppOwnerColumn
-          description: "",
-          price: 0,
+          description: row.description,
+          price: row.costPerYear,
           renewalDate: row.renewalDate || "",
           contract: { signedDate: "", term: "", autoRenewal: false, cancellationDeadline: null },
-          usage: { activeUsers: 0, totalLicenses: 0, utilizationRate: 0 },
+          usage: { activeUsers: row.activeUsers, totalLicenses: row.totalLicenses, utilizationRate: Math.round((row.activeUsers / row.totalLicenses) * 100) },
           paymentHistory: [],
           usageHistory: [],
           tasks: [],
           alerts: []
-        } as SaaSData} />
+        } as unknown as SaaSData} />
       ),
     },
     {
@@ -73,8 +73,10 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
       sortable: true,
       cell: (row: AppDiscoveryData) => (
         <Badge 
-          variant={row.status === 'Active' ? 'success' : 
-                 row.status === 'Inactive' ? 'destructive' : 'outline'}
+          variant={
+            row.status === 'Approved' ? 'success' : 
+            row.status === 'Restricted' ? 'destructive' : 'outline'
+          }
         >
           {row.status}
         </Badge>

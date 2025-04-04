@@ -54,7 +54,7 @@ export function ApplicationUsageTable({ data }: ApplicationUsageTableProps) {
           ? Math.round((item.usage.activeUsers / item.usage.totalLicenses) * 100) 
           : 0;
         
-        let badgeVariant = "default";
+        let badgeVariant: "default" | "success" | "secondary" | "destructive" | "outline" = "default";
         if (utilization > 90) badgeVariant = "success";
         else if (utilization >= 50 && utilization <= 90) badgeVariant = "secondary";
         else if (utilization < 50) badgeVariant = "destructive";
@@ -82,7 +82,7 @@ export function ApplicationUsageTable({ data }: ApplicationUsageTableProps) {
           : 0;
         
         let status = "Optimal";
-        let badgeVariant = "secondary";
+        let badgeVariant: "default" | "success" | "secondary" | "destructive" | "outline" = "secondary";
         
         if (utilization > 90) {
           status = "High";

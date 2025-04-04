@@ -104,12 +104,12 @@ const AIAssistant = () => {
                 Suggested Queries
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-2">
+            <CardContent className="space-y-2 overflow-hidden">
               {suggestedPrompts.map((prompt, index) => (
                 <Button 
                   key={index} 
                   variant="outline" 
-                  className="w-full justify-start text-left h-auto py-2"
+                  className="w-full justify-start text-left h-auto py-2 text-wrap break-words whitespace-normal"
                   onClick={() => handlePromptClick(prompt)}
                 >
                   {prompt}

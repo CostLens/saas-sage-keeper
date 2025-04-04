@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ComplianceData } from "@/hooks/useComplianceData";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FileCheck, Download, ShieldCheck } from "lucide-react";
+import { FileCheck, Download, ShieldCheck, AlertTriangle } from "lucide-react";
 
 interface ComplianceCertificationsTableProps {
   data: ComplianceData[];
@@ -32,7 +32,7 @@ export function ComplianceCertificationsTable({ data }: ComplianceCertifications
   // Function to export the compliance data as CSV
   const exportToCSV = () => {
     // Create CSV header
-    const headers = ['Application', 'HIPAA', 'GDPR', 'CCPA', 'ISO 27001', 'SOC 2', 'PCI DSS'];
+    const headers = ['Application', 'HIPAA', 'GDPR', 'CCPA', 'ISO 27001', 'SOC 2', 'PCI DSS', 'Risk Level'];
     
     // Map data to CSV rows, only showing "Certified" values
     const rows = filteredData.map(item => {
@@ -41,6 +41,7 @@ export function ComplianceCertificationsTable({ data }: ComplianceCertifications
         const cert = item.certifications.find(c => c.name === certName);
         row.push(cert && cert.status === "Certified" ? "Yes" : "No");
       });
+      row.push(calculateRiskLevel(item.certifications));
       return row;
     });
     
@@ -60,6 +61,33 @@ export function ComplianceCertificationsTable({ data }: ComplianceCertifications
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  };
+
+  // Calculate risk level based on certifications
+  const calculateRiskLevel = (certifications: ComplianceData['certifications']) => {
+    const certifiedCount = certifications.filter(cert => cert.status === "Certified").length;
+    const totalCount = certifications.length;
+    
+    if (certifiedCount === 0) return "Critical";
+    if (certifiedCount / totalCount < 0.3) return "High";
+    if (certifiedCount / totalCount < 0.7) return "Medium";
+    return "Low";
+  };
+
+  // Get badge variant and icon based on risk level
+  const getRiskBadge = (riskLevel: string) => {
+    switch (riskLevel) {
+      case "Critical":
+        return { variant: "destructive" as const, icon: <AlertTriangle className="h-3 w-3 mr-1" /> };
+      case "High":
+        return { variant: "destructive" as const, icon: <AlertTriangle className="h-3 w-3 mr-1" /> };
+      case "Medium":
+        return { variant: "secondary" as const, icon: <AlertTriangle className="h-3 w-3 mr-1" /> };
+      case "Low":
+        return { variant: "outline" as const, icon: <ShieldCheck className="h-3 w-3 mr-1" /> };
+      default:
+        return { variant: "outline" as const, icon: <ShieldCheck className="h-3 w-3 mr-1" /> };
+    }
   };
 
   return (
@@ -95,32 +123,43 @@ export function ComplianceCertificationsTable({ data }: ComplianceCertifications
               <TableHead>ISO 27001</TableHead>
               <TableHead>SOC 2</TableHead>
               <TableHead>PCI DSS</TableHead>
+              <TableHead>Risk</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredData.length > 0 ? (
-              filteredData.map((item) => (
-                <TableRow key={item.id}>
-                  <TableCell className="font-medium">{item.name}</TableCell>
-                  {["HIPAA", "GDPR", "CCPA", "ISO 27001", "SOC 2", "PCI DSS"].map((certName) => {
-                    const cert = item.certifications.find(c => c.name === certName);
-                    return (
-                      <TableCell key={certName}>
-                        {cert && cert.status === "Certified" ? (
-                          <Badge className="bg-green-500">
-                            <ShieldCheck className="h-3 w-3 mr-1" /> Certified
-                          </Badge>
-                        ) : (
-                          <span className="text-muted-foreground">-</span>
-                        )}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              ))
+              filteredData.map((item) => {
+                const riskLevel = calculateRiskLevel(item.certifications);
+                const { variant: riskVariant, icon: riskIcon } = getRiskBadge(riskLevel);
+                
+                return (
+                  <TableRow key={item.id}>
+                    <TableCell className="font-medium">{item.name}</TableCell>
+                    {["HIPAA", "GDPR", "CCPA", "ISO 27001", "SOC 2", "PCI DSS"].map((certName) => {
+                      const cert = item.certifications.find(c => c.name === certName);
+                      return (
+                        <TableCell key={certName}>
+                          {cert && cert.status === "Certified" ? (
+                            <Badge className="bg-green-500">
+                              <ShieldCheck className="h-3 w-3 mr-1" /> Certified
+                            </Badge>
+                          ) : (
+                            <span className="text-muted-foreground">-</span>
+                          )}
+                        </TableCell>
+                      );
+                    })}
+                    <TableCell>
+                      <Badge variant={riskVariant}>
+                        {riskIcon} {riskLevel}
+                      </Badge>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
             ) : (
               <TableRow>
-                <TableCell colSpan={7} className="text-center py-4">
+                <TableCell colSpan={8} className="text-center py-4">
                   No compliance data found matching your search.
                 </TableCell>
               </TableRow>

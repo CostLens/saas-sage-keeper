@@ -76,7 +76,7 @@ export function FeaturesTab({ app }: FeaturesTabProps) {
             </div>
             <div className="flex justify-between items-center p-2 bg-yellow-50 dark:bg-yellow-900/20 rounded-md">
               <div className="flex items-center gap-2">
-                <Badge variant="warning" className="bg-yellow-500">Medium</Badge>
+                <Badge variant="secondary" className="bg-yellow-500">Medium</Badge>
                 <span>Analytics</span>
               </div>
               <span className="font-medium">{Math.round(app.averageUsage * 0.6)}% of users</span>

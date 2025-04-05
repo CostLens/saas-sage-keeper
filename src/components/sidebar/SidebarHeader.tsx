@@ -17,7 +17,7 @@ export const SidebarHeader = ({ isCollapsed, toggleCollapse, isMobile = false }:
         <Link to="/dashboard" className="flex items-center gap-2">
           <div className="w-8 h-8 flex items-center justify-center">
             <img 
-              src="/lovable-uploads/4efda508-f87e-4b11-a806-b08971bca4a2.png" 
+              src="/lovable-uploads/334e2e04-bd61-46d7-83c2-8e9fcc8d7406.png" 
               alt="Velto Logo" 
               className="w-8 h-auto"
             />
@@ -29,7 +29,7 @@ export const SidebarHeader = ({ isCollapsed, toggleCollapse, isMobile = false }:
         <Link to="/dashboard" className="mx-auto">
           <div className="w-8 h-8 flex items-center justify-center">
             <img 
-              src="/lovable-uploads/4efda508-f87e-4b11-a806-b08971bca4a2.png" 
+              src="/lovable-uploads/334e2e04-bd61-46d7-83c2-8e9fcc8d7406.png" 
               alt="Velto Logo" 
               className="w-8 h-auto"
             />

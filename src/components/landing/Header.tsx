@@ -13,10 +13,14 @@ const Header = () => {
       <div className="container mx-auto px-4 md:px-6">
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center gap-2">
-            <div className="bg-gradient-to-r from-green-400 to-blue-500 h-8 w-8 rounded-lg flex items-center justify-center">
-              <span className="font-bold text-white text-sm">IQ</span>
+            <div className="h-8 w-8 flex items-center justify-center">
+              <img 
+                src="/lovable-uploads/4efda508-f87e-4b11-a806-b08971bca4a2.png" 
+                alt="Velto Logo" 
+                className="w-8 h-auto"
+              />
             </div>
-            <span className="font-bold text-xl">XpendIQ</span>
+            <span className="font-bold text-xl">Velto</span>
           </div>
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" asChild>

@@ -15,16 +15,24 @@ export const SidebarHeader = ({ isCollapsed, toggleCollapse, isMobile = false }:
     <div className="flex h-16 items-center border-b px-4 justify-between">
       {!isCollapsed && (
         <Link to="/dashboard" className="flex items-center gap-2">
-          <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
-            <span className="font-bold text-white text-xl">IQ</span>
+          <div className="w-8 h-8 flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/4efda508-f87e-4b11-a806-b08971bca4a2.png" 
+              alt="Velto Logo" 
+              className="w-8 h-auto"
+            />
           </div>
-          <span className="font-bold text-xl tracking-tight">XpendIQ</span>
+          <span className="font-bold text-xl tracking-tight">Velto</span>
         </Link>
       )}
       {isCollapsed && (
         <Link to="/dashboard" className="mx-auto">
-          <div className="rounded-md bg-gradient-to-r from-green-400 to-blue-500 p-1.5 w-8 h-8 flex items-center justify-center">
-            <span className="font-bold text-white text-xl">IQ</span>
+          <div className="w-8 h-8 flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/4efda508-f87e-4b11-a806-b08971bca4a2.png" 
+              alt="Velto Logo" 
+              className="w-8 h-auto"
+            />
           </div>
         </Link>
       )}

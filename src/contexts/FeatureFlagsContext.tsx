@@ -13,6 +13,7 @@ interface FeatureFlagsContextType {
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
   showShadowITFeatures: boolean;
+  showDiscoveryExtendedFeatures: boolean;
 }
 
 const FeatureFlagsContext = createContext<FeatureFlagsContextType>({
@@ -25,7 +26,8 @@ const FeatureFlagsContext = createContext<FeatureFlagsContextType>({
   showDuplicateAppFeatures: false,
   showCopilotFeatures: false,
   showProcurementFeatures: false,
-  showShadowITFeatures: false
+  showShadowITFeatures: false,
+  showDiscoveryExtendedFeatures: false
 });
 
 export const useFeatureFlags = () => useContext(FeatureFlagsContext);
@@ -41,6 +43,7 @@ export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [showCopilotFeatures, setShowCopilotFeatures] = useState(false);
   const [showProcurementFeatures, setShowProcurementFeatures] = useState(false);
   const [showShadowITFeatures, setShowShadowITFeatures] = useState(false);
+  const [showDiscoveryExtendedFeatures, setShowDiscoveryExtendedFeatures] = useState(false);
 
   useEffect(() => {
     // Initialize feature flags with Usage Analytics set to true by default
@@ -68,6 +71,7 @@ export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ 
     setShowCopilotFeatures(localStorage.getItem(FEATURE_KEYS.COPILOT) === "true");
     setShowProcurementFeatures(localStorage.getItem(FEATURE_KEYS.PROCUREMENT) === "true");
     setShowShadowITFeatures(localStorage.getItem(FEATURE_KEYS.SHADOW_IT) === "true");
+    setShowDiscoveryExtendedFeatures(localStorage.getItem(FEATURE_KEYS.DISCOVERY_EXTENDED) === "true");
   }, []);
 
   // Create a function to update feature flags
@@ -102,6 +106,9 @@ export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ 
         break;
       case FEATURE_KEYS.SHADOW_IT:
         setShowShadowITFeatures(value);
+        break;
+      case FEATURE_KEYS.DISCOVERY_EXTENDED:
+        setShowDiscoveryExtendedFeatures(value);
         break;
     }
   };
@@ -149,7 +156,8 @@ export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ 
         showDuplicateAppFeatures,
         showCopilotFeatures,
         showProcurementFeatures,
-        showShadowITFeatures
+        showShadowITFeatures,
+        showDiscoveryExtendedFeatures
       }}
     >
       {children}

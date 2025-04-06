@@ -85,6 +85,14 @@ export function FeatureFlagsTab() {
     }
     return false;
   });
+  
+  const [showDiscoveryExtendedFeatures, setShowDiscoveryExtendedFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-discovery-extended-features");
+      return savedValue === "true"; // Default to false if not "true"
+    }
+    return false;
+  });
 
   // Dark theme state
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
@@ -140,6 +148,9 @@ export function FeatureFlagsTab() {
       case "show-shadow-it-features":
         setShowShadowITFeatures(enabled);
         break;
+      case "show-discovery-extended-features":
+        setShowDiscoveryExtendedFeatures(enabled);
+        break;
     }
     
     // Dispatch custom event for sidebar components to listen to
@@ -176,6 +187,7 @@ export function FeatureFlagsTab() {
         showCopilotFeatures={showCopilotFeatures}
         showProcurementFeatures={showProcurementFeatures}
         showShadowITFeatures={showShadowITFeatures}
+        showDiscoveryExtendedFeatures={showDiscoveryExtendedFeatures}
         onFeatureToggle={handleFeatureToggle}
       />
     </div>

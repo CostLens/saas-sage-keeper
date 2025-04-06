@@ -1,23 +1,16 @@
 
 import React, { useState, useEffect } from "react";
-import { Header } from "@/components/Header";
-import { Sidebar } from "@/components/Sidebar";
+import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
 import { mockSaaSData } from "@/lib/mockData";
 import { UsageHeader } from "@/components/usage/UsageHeader";
 import { UsageFilters } from "@/components/usage/UsageFilters";
 import { UsageTabs } from "@/components/usage/UsageTabs";
 import { exportUsageReport } from "@/components/usage/UsageAnalyticsService";
 import { calculateUsageStatistics, categorizeAppsByUsage } from "@/components/usage/UsageAnalyticsHelpers";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { FeaturesTab } from "@/components/usage/FeaturesTab";
+import { AppDetailsDialog } from "@/components/app-discovery/AppDetailsDialog";
 import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
 
 const Usage = () => {
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-    const saved = localStorage.getItem("sidebar-collapsed");
-    return saved ? JSON.parse(saved) : false;
-  });
-  
   const [timeRange, setTimeRange] = useState<"30days" | "90days" | "6months" | "1year" | "custom">("30days");
   const [dateRange, setDateRange] = useState({
     from: new Date(new Date().setDate(new Date().getDate() - 30)),
@@ -26,21 +19,9 @@ const Usage = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterCategory, setFilterCategory] = useState<"all" | "high" | "optimal" | "low">("all");
   const [activeTab, setActiveTab] = useState("overview");
-  const [selectedApp, setSelectedApp] = useState(mockSaaSData[0]);
+  const [selectedApp, setSelectedApp] = useState<AppDiscoveryData | null>(null);
   const [showAppDetails, setShowAppDetails] = useState(false);
   
-  useEffect(() => {
-    const handleSidebarChange = (event: CustomEvent) => {
-      setIsSidebarCollapsed(event.detail.isCollapsed);
-    };
-    
-    window.addEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
-    
-    return () => {
-      window.removeEventListener('sidebarStateChanged', handleSidebarChange as EventListener);
-    };
-  }, []);
-
   useEffect(() => {
     const today = new Date();
     let fromDate = new Date();
@@ -90,87 +71,81 @@ const Usage = () => {
   };
 
   const handleRowClick = (app: any) => {
-    setSelectedApp(app);
+    // Convert SaaSData to AppDiscoveryData format
+    const appDiscoveryData: AppDiscoveryData = {
+      id: parseInt(app.id),
+      name: app.name,
+      description: app.description || '',
+      category: app.category || 'Software',
+      publisher: app.name,
+      averageUsage: app.usage.utilizationRate || 0,
+      activeUsers: app.usage.activeUsers,
+      totalLicenses: app.usage.totalLicenses || 0,
+      costPerYear: app.price,
+      totalPayments: app.price * 2,
+      costToDate: app.price * 1.5,
+      status: "Approved",
+      firstPurchased: app.contract?.signedDate || new Date().toISOString(),
+      lastUsed: "Today",
+      renewalDate: app.renewalDate,
+      owner: app.owner || "Unassigned",
+      departments: ["All Departments"],
+      website: "",
+      purchaseDate: app.contract?.signedDate || new Date().toISOString(),
+    };
+    
+    setSelectedApp(appDiscoveryData);
     setShowAppDetails(true);
   };
 
-  const handleBackToList = () => {
+  const handleCloseDialog = () => {
     setShowAppDetails(false);
   };
 
   return (
-    <div className="min-h-screen flex flex-col md:flex-row">
-      <Sidebar />
-      <div className={`flex-1 flex flex-col transition-all duration-300 ${
-        isSidebarCollapsed ? 'ml-16' : 'ml-64'
-      }`}>
-        <Header />
-        <main className="flex-1 p-6 space-y-8 animate-fade-in">
-          <UsageHeader 
-            onExport={handleExport} 
-            showBackButton={showAppDetails} 
-            onBackClick={handleBackToList} 
+    <DashboardLayout>
+      <div className="flex-1 p-6 space-y-8 animate-fade-in">
+        <UsageHeader 
+          onExport={handleExport} 
+          showBackButton={false}
+          onBackClick={() => setShowAppDetails(false)} 
+        />
+
+        <UsageFilters
+          searchQuery={searchQuery}
+          setSearchQuery={setSearchQuery}
+          timeRange={timeRange}
+          setTimeRange={setTimeRange}
+          dateRange={dateRange}
+          setDateRange={setDateRange}
+          filterCategory={filterCategory}
+          setFilterCategory={setFilterCategory}
+        />
+
+        <UsageTabs
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          utilizationRate={utilizationRate}
+          activeUsers={activeUsers}
+          totalLicenses={totalLicenses}
+          unusedLicenses={unusedLicenses}
+          lowUsageAppsCount={lowUsageApps.length}
+          highUsageApps={highUsageApps}
+          optimalUsageApps={optimalUsageApps}
+          lowUsageApps={lowUsageApps}
+          filteredData={filteredData}
+          handleRowClick={handleRowClick}
+        />
+        
+        {selectedApp && (
+          <AppDetailsDialog 
+            app={selectedApp} 
+            isOpen={showAppDetails} 
+            onClose={handleCloseDialog}
           />
-
-          {!showAppDetails ? (
-            <>
-              <UsageFilters
-                searchQuery={searchQuery}
-                setSearchQuery={setSearchQuery}
-                timeRange={timeRange}
-                setTimeRange={setTimeRange}
-                dateRange={dateRange}
-                setDateRange={setDateRange}
-                filterCategory={filterCategory}
-                setFilterCategory={setFilterCategory}
-              />
-
-              <UsageTabs
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-                utilizationRate={utilizationRate}
-                activeUsers={activeUsers}
-                totalLicenses={totalLicenses}
-                unusedLicenses={unusedLicenses}
-                lowUsageAppsCount={lowUsageApps.length}
-                highUsageApps={highUsageApps}
-                optimalUsageApps={optimalUsageApps}
-                lowUsageApps={lowUsageApps}
-                filteredData={filteredData}
-                handleRowClick={handleRowClick}
-              />
-            </>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>{selectedApp.name} Usage Analysis</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <FeaturesTab app={{
-                  id: parseInt(selectedApp.id),
-                  name: selectedApp.name,
-                  description: selectedApp.description,
-                  category: selectedApp.category || "Software",
-                  publisher: selectedApp.name,
-                  averageUsage: selectedApp.usage.utilizationRate || 0,
-                  activeUsers: selectedApp.usage.activeUsers,
-                  totalLicenses: selectedApp.usage.totalLicenses || 0,
-                  costPerYear: selectedApp.price,
-                  status: "Approved",
-                  lastUsed: "Today",
-                  purchaseDate: selectedApp.contract?.signedDate || new Date().toISOString(),
-                  departments: ["All Departments"],
-                  website: "",
-                  totalPayments: selectedApp.price * 2,
-                  costToDate: selectedApp.price * 1.5,
-                  firstPurchased: selectedApp.contract?.signedDate || new Date().toISOString(),
-                }} />
-              </CardContent>
-            </Card>
-          )}
-        </main>
+        )}
       </div>
-    </div>
+    </DashboardLayout>
   );
 };
 

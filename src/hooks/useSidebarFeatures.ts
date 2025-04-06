@@ -14,6 +14,7 @@ export const FEATURE_KEYS = {
   COPILOT: "show-copilot-features",
   PROCUREMENT: "show-procurement-features",
   SHADOW_IT: "show-shadow-it-features",
+  DISCOVERY_EXTENDED: "show-discovery-extended-features",
 };
 
 // Helper function to get initial state from localStorage (kept for backward compatibility)

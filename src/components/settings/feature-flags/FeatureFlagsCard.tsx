@@ -13,7 +13,8 @@ interface FeatureFlagsCardProps {
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
-  showShadowITFeatures: boolean; // New feature flag
+  showShadowITFeatures: boolean;
+  showDiscoveryExtendedFeatures: boolean; // New feature flag
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
 
@@ -28,6 +29,7 @@ export function FeatureFlagsCard({
   showCopilotFeatures,
   showProcurementFeatures,
   showShadowITFeatures,
+  showDiscoveryExtendedFeatures,
   onFeatureToggle
 }: FeatureFlagsCardProps) {
   return (
@@ -50,6 +52,7 @@ export function FeatureFlagsCard({
           showCopilotFeatures={showCopilotFeatures}
           showProcurementFeatures={showProcurementFeatures}
           showShadowITFeatures={showShadowITFeatures}
+          showDiscoveryExtendedFeatures={showDiscoveryExtendedFeatures}
           onFeatureToggle={onFeatureToggle}
         />
       </CardContent>

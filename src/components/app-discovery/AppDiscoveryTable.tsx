@@ -9,6 +9,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { AppOwnerColumn } from "@/components/saas-table/columns/AppOwnerColumn";
 import { SaaSData } from "@/lib/mockData";
 import { AppDetailsDialog } from "./AppDetailsDialog";
+import { useFeatureFlags } from "@/contexts/FeatureFlagsContext";
 
 interface AppDiscoveryTableProps {
   data: AppDiscoveryData[];
@@ -18,10 +19,11 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
   const [selectedApp, setSelectedApp] = useState<AppDiscoveryData | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [preventRowClick, setPreventRowClick] = useState(false);
+  const { showUsageFeatures, showDiscoveryExtendedFeatures } = useFeatureFlags();
 
   const handleRowClick = (app: AppDiscoveryData) => {
-    // Only open the dialog if we're not preventing row clicks
-    if (!preventRowClick) {
+    // Only open the dialog if we're not preventing row clicks and the feature flag is enabled
+    if (!preventRowClick && showDiscoveryExtendedFeatures) {
       setSelectedApp(app);
       setIsDialogOpen(true);
     }
@@ -114,7 +116,7 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
         <div className="font-medium">{formatCurrency(row.costToDate)}</div>
       ),
     },
-    {
+    ...(showUsageFeatures ? [{
       id: "averageUsage",
       header: "Avg. Usage",
       sortable: true,
@@ -135,7 +137,7 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
           </Tooltip>
         </TooltipProvider>
       ),
-    },
+    }] : []),
     {
       id: "firstPurchased",
       header: "First Purchased",
@@ -165,11 +167,13 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
           onRowClick={handleRowClick}
         />
       </div>
-      <AppDetailsDialog 
-        app={selectedApp} 
-        isOpen={isDialogOpen} 
-        onClose={handleCloseDialog} 
-      />
+      {showDiscoveryExtendedFeatures && selectedApp && (
+        <AppDetailsDialog 
+          app={selectedApp} 
+          isOpen={isDialogOpen} 
+          onClose={handleCloseDialog} 
+        />
+      )}
     </>
   );
 }

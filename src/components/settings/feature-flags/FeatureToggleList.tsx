@@ -13,7 +13,8 @@ interface FeatureToggleListProps {
   showDuplicateAppFeatures: boolean;
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
-  showShadowITFeatures: boolean; // New feature flag
+  showShadowITFeatures: boolean;
+  showDiscoveryExtendedFeatures: boolean; // New feature flag
   // Toggle handlers
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
@@ -29,6 +30,7 @@ export function FeatureToggleList({
   showCopilotFeatures,
   showProcurementFeatures,
   showShadowITFeatures,
+  showDiscoveryExtendedFeatures,
   onFeatureToggle
 }: FeatureToggleListProps) {
   
@@ -102,6 +104,13 @@ export function FeatureToggleList({
       title: "Shadow IT",
       description: "Enables Shadow IT detection and risk management features",
       checked: showShadowITFeatures
+    },
+    {
+      id: "discovery-extended-features-toggle",
+      key: "show-discovery-extended-features",
+      title: "Discovery Extended",
+      description: "Enables detailed application discovery features including detailed view popups",
+      checked: showDiscoveryExtendedFeatures
     }
   ];
 

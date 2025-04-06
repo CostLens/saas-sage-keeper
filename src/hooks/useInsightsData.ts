@@ -17,6 +17,8 @@ export interface InsightData {
 export function useInsightsData() {
   const [criticalInsights, setCriticalInsights] = useState<InsightData[]>([]);
   const [recommendedInsights, setRecommendedInsights] = useState<InsightData[]>([]);
+  const [dismissedInsights, setDismissedInsights] = useState<InsightData[]>([]);
+  const [resolvedInsights, setResolvedInsights] = useState<InsightData[]>([]);
 
   useEffect(() => {
     // Generate insights based on mock data
@@ -97,20 +99,44 @@ export function useInsightsData() {
   }, []);
 
   const dismissInsight = (id: string) => {
-    setCriticalInsights(prev => prev.filter(insight => insight.id !== id));
-    setRecommendedInsights(prev => prev.filter(insight => insight.id !== id));
+    // Find the insight in either critical or recommended
+    const criticalMatch = criticalInsights.find(insight => insight.id === id);
+    const recommendedMatch = recommendedInsights.find(insight => insight.id === id);
+    
+    // Add to dismissed insights
+    if (criticalMatch) {
+      setDismissedInsights(prev => [...prev, criticalMatch]);
+      setCriticalInsights(prev => prev.filter(insight => insight.id !== id));
+    } else if (recommendedMatch) {
+      setDismissedInsights(prev => [...prev, recommendedMatch]);
+      setRecommendedInsights(prev => prev.filter(insight => insight.id !== id));
+    }
+    
     toast.success("Insight dismissed");
   };
 
   const resolveInsight = (id: string) => {
-    setCriticalInsights(prev => prev.filter(insight => insight.id !== id));
-    setRecommendedInsights(prev => prev.filter(insight => insight.id !== id));
+    // Find the insight in either critical or recommended
+    const criticalMatch = criticalInsights.find(insight => insight.id === id);
+    const recommendedMatch = recommendedInsights.find(insight => insight.id === id);
+    
+    // Add to resolved insights
+    if (criticalMatch) {
+      setResolvedInsights(prev => [...prev, criticalMatch]);
+      setCriticalInsights(prev => prev.filter(insight => insight.id !== id));
+    } else if (recommendedMatch) {
+      setResolvedInsights(prev => [...prev, recommendedMatch]);
+      setRecommendedInsights(prev => prev.filter(insight => insight.id !== id));
+    }
+    
     toast.success("Insight marked as resolved");
   };
 
   return {
     criticalInsights,
     recommendedInsights,
+    dismissedInsights,
+    resolvedInsights,
     dismissInsight,
     resolveInsight
   };

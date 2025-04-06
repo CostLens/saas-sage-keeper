@@ -3,11 +3,11 @@ import React, { useState } from "react";
 import { InsightsHeader } from "./InsightsHeader";
 import { useInsightsData } from "@/hooks/useInsightsData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card } from "@/components/ui/card";
-import { TrendingUp, AlertTriangle, LineChart, BadgeDollarSign } from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { BadgeDollarSign } from "lucide-react";
 import { DataTable } from "@/components/ui/data-table";
 import { Button } from "@/components/ui/button";
-import { CheckCircle, X, ArrowUpRight } from "lucide-react";
+import { CheckCircle, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 
@@ -15,11 +15,16 @@ export function InsightsContent() {
   const { 
     criticalInsights, 
     recommendedInsights,
+    dismissedInsights,
+    resolvedInsights,
     dismissInsight,
     resolveInsight 
   } = useInsightsData();
 
-  const totalSavings = [...criticalInsights, ...recommendedInsights].reduce(
+  // Combine critical and recommended insights for "All Insights" tab
+  const allInsights = [...criticalInsights, ...recommendedInsights];
+  
+  const totalSavings = allInsights.reduce(
     (sum, insight) => sum + insight.potentialSavings, 
     0
   );
@@ -103,131 +108,68 @@ export function InsightsContent() {
     }
   ];
 
+  // Columns for dismissed and resolved insights (no actions needed)
+  const historyColumns = insightsColumns.filter(col => col.id !== "actions");
+
   return (
     <div className="space-y-6">
       <InsightsHeader totalSavings={totalSavings} />
       
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-          <div className="bg-red-100 p-3 rounded-full mb-2">
-            <AlertTriangle className="h-6 w-6 text-red-500" />
-          </div>
-          <p className="text-sm text-muted-foreground">Critical Issues</p>
-          <p className="text-2xl font-bold">{criticalInsights.length}</p>
-        </Card>
-        
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-          <div className="bg-amber-100 p-3 rounded-full mb-2">
-            <LineChart className="h-6 w-6 text-amber-500" />
-          </div>
-          <p className="text-sm text-muted-foreground">Recommendations</p>
-          <p className="text-2xl font-bold">{recommendedInsights.length}</p>
-        </Card>
-        
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-          <div className="bg-green-100 p-3 rounded-full mb-2">
+      {/* Potential Savings Card */}
+      <Card className="p-4 mb-6">
+        <div className="flex items-center gap-4">
+          <div className="bg-green-100 p-3 rounded-full">
             <BadgeDollarSign className="h-6 w-6 text-green-500" />
           </div>
-          <p className="text-sm text-muted-foreground">Potential Savings</p>
-          <p className="text-2xl font-bold">${totalSavings.toFixed(2)}/mo</p>
-        </Card>
-        
-        <Card className="p-4 flex flex-col items-center justify-center text-center">
-          <div className="bg-blue-100 p-3 rounded-full mb-2">
-            <TrendingUp className="h-6 w-6 text-blue-500" />
+          <div>
+            <p className="text-sm text-muted-foreground">Potential Monthly Savings</p>
+            <p className="text-2xl font-bold">${totalSavings.toFixed(2)}</p>
           </div>
-          <p className="text-sm text-muted-foreground">ROI Impact</p>
-          <p className="text-2xl font-bold">High</p>
-        </Card>
-      </div>
+        </div>
+      </Card>
       
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="all">All Insights</TabsTrigger>
-          <TabsTrigger value="critical">Critical ({criticalInsights.length})</TabsTrigger>
-          <TabsTrigger value="recommended">Recommended ({recommendedInsights.length})</TabsTrigger>
+          <TabsTrigger value="all">All Insights ({allInsights.length})</TabsTrigger>
+          <TabsTrigger value="dismissed">Dismissed ({dismissedInsights.length})</TabsTrigger>
+          <TabsTrigger value="resolved">Resolved ({resolvedInsights.length})</TabsTrigger>
         </TabsList>
         
         <TabsContent value="all" className="space-y-6 mt-6">
-          {criticalInsights.length > 0 && (
-            <div>
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  High Priority
-                </div>
-                <h2 className="text-2xl font-bold">Critical Savings Opportunities</h2>
-              </div>
-              
-              <DataTable
-                data={criticalInsights}
-                columns={insightsColumns}
-              />
-            </div>
-          )}
-          
-          {recommendedInsights.length > 0 && (
-            <div className="mt-8">
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="bg-amber-400 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  Medium Priority
-                </div>
-                <h2 className="text-2xl font-bold">Recommended Optimizations</h2>
-              </div>
-              
-              <DataTable
-                data={recommendedInsights}
-                columns={insightsColumns}
-              />
-            </div>
-          )}
-          
-          {criticalInsights.length === 0 && recommendedInsights.length === 0 && (
+          {allInsights.length > 0 ? (
+            <DataTable
+              data={allInsights}
+              columns={insightsColumns}
+            />
+          ) : (
             <Card className="p-6 text-center">
               <p className="text-muted-foreground">No insights available at this time. Check back later.</p>
             </Card>
           )}
         </TabsContent>
         
-        <TabsContent value="critical" className="space-y-6 mt-6">
-          {criticalInsights.length > 0 ? (
-            <div>
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="bg-red-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  High Priority
-                </div>
-                <h2 className="text-2xl font-bold">Critical Savings Opportunities</h2>
-              </div>
-              
-              <DataTable
-                data={criticalInsights}
-                columns={insightsColumns}
-              />
-            </div>
+        <TabsContent value="dismissed" className="space-y-6 mt-6">
+          {dismissedInsights.length > 0 ? (
+            <DataTable
+              data={dismissedInsights}
+              columns={historyColumns}
+            />
           ) : (
             <Card className="p-6 text-center">
-              <p className="text-muted-foreground">No critical insights available at this time.</p>
+              <p className="text-muted-foreground">No dismissed insights.</p>
             </Card>
           )}
         </TabsContent>
         
-        <TabsContent value="recommended" className="space-y-6 mt-6">
-          {recommendedInsights.length > 0 ? (
-            <div>
-              <div className="flex items-center space-x-4 mb-4">
-                <div className="bg-amber-400 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  Medium Priority
-                </div>
-                <h2 className="text-2xl font-bold">Recommended Optimizations</h2>
-              </div>
-              
-              <DataTable
-                data={recommendedInsights}
-                columns={insightsColumns}
-              />
-            </div>
+        <TabsContent value="resolved" className="space-y-6 mt-6">
+          {resolvedInsights.length > 0 ? (
+            <DataTable
+              data={resolvedInsights}
+              columns={historyColumns}
+            />
           ) : (
             <Card className="p-6 text-center">
-              <p className="text-muted-foreground">No recommended insights available at this time.</p>
+              <p className="text-muted-foreground">No resolved insights.</p>
             </Card>
           )}
         </TabsContent>

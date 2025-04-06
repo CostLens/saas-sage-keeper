@@ -13,11 +13,6 @@ export function InsightsHeader({ totalSavings }: InsightsHeaderProps) {
         <p className="text-muted-foreground">
           Actionable recommendations to optimize your SaaS spend
         </p>
-        {totalSavings > 0 && (
-          <div className="mt-2 sm:mt-0 bg-green-50 text-green-700 px-4 py-2 rounded-md font-medium">
-            Potential savings: ${totalSavings.toFixed(2)}/mo
-          </div>
-        )}
       </div>
     </div>
   );

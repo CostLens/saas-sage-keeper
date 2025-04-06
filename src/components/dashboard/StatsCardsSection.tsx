@@ -52,7 +52,7 @@ export function StatsCardsSection({
 
   // Updated KPI cards at the top based on the screenshot
   const renderKpiCards = () => (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
       {/* Total Annual SaaS Spend Card */}
       <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
         <div className="flex justify-between items-start">
@@ -111,6 +111,47 @@ export function StatsCardsSection({
           </div>
           <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
             <TrendingDown className="h-5 w-5 text-blue-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Total Apps Card */}
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-sm font-normal text-muted-foreground mb-1">
+              Total Apps
+            </h3>
+            <div className="flex items-baseline gap-2">
+              <p className="text-3xl font-bold">{totalApps}</p>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              Across all departments
+            </p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+            <LayoutGrid className="h-5 w-5 text-blue-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Active People Card */}
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-sm font-normal text-muted-foreground mb-1">
+              Total Active People
+            </h3>
+            <div className="flex items-baseline gap-2">
+              <p className="text-3xl font-bold">{activeEmployees}</p>
+              <span className="text-sm font-medium text-green-500">+5%</span>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              5% growth since last quarter
+            </p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+            <UserCheck className="h-5 w-5 text-blue-500" />
           </div>
         </div>
       </div>

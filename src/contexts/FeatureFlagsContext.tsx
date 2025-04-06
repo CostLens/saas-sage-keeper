@@ -33,7 +33,7 @@ const FeatureFlagsContext = createContext<FeatureFlagsContextType>({
 export const useFeatureFlags = () => useContext(FeatureFlagsContext);
 
 export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [showUsageFeatures, setShowUsageFeatures] = useState(true); // Set to true by default
+  const [showUsageFeatures, setShowUsageFeatures] = useState(false); // Set to false by default
   const [showBoardingFeatures, setShowBoardingFeatures] = useState(false);
   const [showNegotiationFeatures, setShowNegotiationFeatures] = useState(false);
   const [showBenchmarkingFeatures, setShowBenchmarkingFeatures] = useState(false);
@@ -46,12 +46,11 @@ export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [showDiscoveryExtendedFeatures, setShowDiscoveryExtendedFeatures] = useState(false);
 
   useEffect(() => {
-    // Initialize feature flags with Usage Analytics set to true by default
+    // Initialize feature flags with all set to false by default
     Object.entries(FEATURE_KEYS).forEach(([key, value]) => {
-      // If localStorage doesn't have this key, set default value
+      // If localStorage doesn't have this key, set default value to false
       if (localStorage.getItem(value) === null) {
-        const defaultValue = key === 'USAGE' ? 'true' : 'false';
-        localStorage.setItem(value, defaultValue);
+        localStorage.setItem(value, 'false');
       }
     });
     

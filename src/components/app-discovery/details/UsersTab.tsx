@@ -1,17 +1,14 @@
 
 import React, { useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
-import { SaaSData } from "@/lib/mockData";
-import { useQuery } from "@tanstack/react-query";
-import { getHrmsUsers } from "@/lib/hrmsService";
+import { AppDiscoveryData } from "@/hooks/useAppDiscoveryData";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-interface UserActivityTabProps {
-  saas: SaaSData;
+interface UsersTabProps {
+  app: AppDiscoveryData;
 }
 
 // Mock user activity data
@@ -80,57 +77,13 @@ const mockUserActivity = [
     active60Days: false,
     active90Days: false,
     avatarUrl: ""
-  },
-  {
-    id: "user-6",
-    full_name: "Jennifer Taylor",
-    email: "jennifer.taylor@company.com",
-    department: "Product",
-    status: "active",
-    lastLogin: "2023-05-10",
-    active7Days: true,
-    active30Days: true,
-    active60Days: true,
-    active90Days: true,
-    avatarUrl: ""
-  },
-  {
-    id: "user-7",
-    full_name: "Robert Martin",
-    email: "robert.martin@company.com",
-    department: "Engineering",
-    status: "active",
-    lastLogin: "2023-05-01",
-    active7Days: false,
-    active30Days: true,
-    active60Days: true,
-    active90Days: true,
-    avatarUrl: ""
-  },
-  {
-    id: "user-8",
-    full_name: "Jessica Anderson",
-    email: "jessica.anderson@company.com",
-    department: "Customer Support",
-    status: "on_leave",
-    lastLogin: "2023-04-15",
-    active7Days: false,
-    active30Days: false,
-    active60Days: true,
-    active90Days: true,
-    avatarUrl: ""
   }
 ];
 
-export function UserActivityTab({ saas }: UserActivityTabProps) {
+export function UsersTab({ app }: UsersTabProps) {
   const [activeTimeFilter, setActiveTimeFilter] = useState<"7days" | "30days" | "60days" | "90days">("7days");
-  
-  const { data: hrmsUsers, isLoading } = useQuery({
-    queryKey: ["hrmsUsers"],
-    queryFn: getHrmsUsers,
-  });
 
-  // Use mock data instead of API data for this demo
+  // Use mock data
   const displayUsers = mockUserActivity;
 
   const renderActiveStatus = (user: any) => {
@@ -164,26 +117,21 @@ export function UserActivityTab({ saas }: UserActivityTabProps) {
     );
   };
 
-  if (isLoading) {
-    return <div className="p-4 text-center">Loading user data...</div>;
-  }
-
   return (
-    <Card className="border-none shadow-none">
-      <CardHeader className="pb-2">
-        <div className="flex items-center justify-between">
-          <CardTitle className="text-base font-medium">User Access & Activity</CardTitle>
-          <Tabs value={activeTimeFilter} onValueChange={(value) => setActiveTimeFilter(value as any)}>
-            <TabsList>
-              <TabsTrigger value="7days">7 Days</TabsTrigger>
-              <TabsTrigger value="30days">30 Days</TabsTrigger>
-              <TabsTrigger value="60days">60 Days</TabsTrigger>
-              <TabsTrigger value="90days">90 Days</TabsTrigger>
-            </TabsList>
-          </Tabs>
-        </div>
-      </CardHeader>
-      <CardContent>
+    <div className="p-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h3 className="text-lg font-medium">User Access & Activity</h3>
+        <Tabs value={activeTimeFilter} onValueChange={(value) => setActiveTimeFilter(value as any)}>
+          <TabsList>
+            <TabsTrigger value="7days">7 Days</TabsTrigger>
+            <TabsTrigger value="30days">30 Days</TabsTrigger>
+            <TabsTrigger value="60days">60 Days</TabsTrigger>
+            <TabsTrigger value="90days">90 Days</TabsTrigger>
+          </TabsList>
+        </Tabs>
+      </div>
+      
+      <div className="border rounded-lg overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -241,7 +189,7 @@ export function UserActivityTab({ saas }: UserActivityTabProps) {
             })}
           </TableBody>
         </Table>
-      </CardContent>
-    </Card>
+      </div>
+    </div>
   );
 }

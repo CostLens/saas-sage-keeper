@@ -9,14 +9,16 @@ interface UserManagementHeaderProps {
 
 export function UserManagementHeader({ onInviteUser }: UserManagementHeaderProps) {
   return (
-    <div className="flex flex-col sm:flex-row justify-between sm:items-center space-y-2 sm:space-y-0">
+    <div className="flex flex-col sm:flex-row justify-between sm:items-center w-full">
       <div>
         <CardTitle>User Management</CardTitle>
         <CardDescription>
           Manage users and their access levels
         </CardDescription>
       </div>
-      <InviteUserDialog onInviteUser={onInviteUser} />
+      <div className="mt-3 sm:mt-0">
+        <InviteUserDialog onInviteUser={onInviteUser} />
+      </div>
     </div>
   );
 }

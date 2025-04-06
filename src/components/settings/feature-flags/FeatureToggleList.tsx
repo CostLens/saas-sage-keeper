@@ -1,9 +1,9 @@
 
 import React from "react";
 import { FeatureFlag } from "./FeatureFlag";
+import { FEATURE_KEYS } from "@/hooks/useSidebarFeatures";
 
 interface FeatureToggleListProps {
-  // Feature flags
   showUsageFeatures: boolean;
   showBoardingFeatures: boolean;
   showNegotiationFeatures: boolean;
@@ -14,8 +14,8 @@ interface FeatureToggleListProps {
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
   showShadowITFeatures: boolean;
-  showDiscoveryExtendedFeatures: boolean; // New feature flag
-  // Toggle handlers
+  showDiscoveryExtendedFeatures: boolean;
+  showInsightsFeatures: boolean;
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
 
@@ -31,101 +31,106 @@ export function FeatureToggleList({
   showProcurementFeatures,
   showShadowITFeatures,
   showDiscoveryExtendedFeatures,
-  onFeatureToggle
+  showInsightsFeatures,
+  onFeatureToggle,
 }: FeatureToggleListProps) {
-  
   const features = [
     {
-      id: "usage-features-toggle",
-      key: "show-usage-features",
-      title: "Usage Analytics",
-      description: "Enables usage analytics features",
-      checked: showUsageFeatures
+      id: FEATURE_KEYS.USAGE,
+      name: "Usage Analytics",
+      enabled: showUsageFeatures,
+      description:
+        "Enable detailed usage analytics and license utilization tracking",
     },
     {
-      id: "boarding-features-toggle",
-      key: "show-boarding-features",
-      title: "User Boarding",
-      description: "Enables user boarding features",
-      checked: showBoardingFeatures
+      id: FEATURE_KEYS.BOARDING,
+      name: "User Boarding",
+      enabled: showBoardingFeatures,
+      description:
+        "Enable user onboarding and offboarding workflows",
     },
     {
-      id: "negotiation-features-toggle",
-      key: "show-negotiation-features",
-      title: "Renewals & Negotiation",
-      description: "Enables contract negotiation features",
-      checked: showNegotiationFeatures
+      id: FEATURE_KEYS.NEGOTIATION,
+      name: "Contract Negotiation",
+      enabled: showNegotiationFeatures,
+      description:
+        "Enable contract negotiation and optimization tools",
     },
     {
-      id: "benchmarking-features-toggle",
-      key: "show-benchmarking-features",
-      title: "Benchmarking",
-      description: "Enables benchmarking features",
-      checked: showBenchmarkingFeatures
+      id: FEATURE_KEYS.BENCHMARKING,
+      name: "Benchmarking",
+      enabled: showBenchmarkingFeatures,
+      description:
+        "Enable price benchmarking tools and market comparisons",
     },
     {
-      id: "compliance-features-toggle",
-      key: "show-compliance-features",
-      title: "Compliance",
-      description: "Enables compliance certifications tracking",
-      checked: showComplianceFeatures
+      id: FEATURE_KEYS.COMPLIANCE,
+      name: "Compliance",
+      enabled: showComplianceFeatures,
+      description:
+        "Enable compliance monitoring and certification tracking",
     },
     {
-      id: "workflow-features-toggle",
-      key: "show-workflow-features",
-      title: "Workflow Builder",
-      description: "Enables workflow automation features",
-      checked: showWorkflowFeatures
+      id: FEATURE_KEYS.WORKFLOW,
+      name: "Workflow Builder",
+      enabled: showWorkflowFeatures,
+      description:
+        "Enable creating and managing custom workflows",
     },
     {
-      id: "duplicate-app-features-toggle",
-      key: "show-duplicate-app-features",
-      title: "Duplicate Application",
-      description: "Enables duplicate app detection and comparison features",
-      checked: showDuplicateAppFeatures
+      id: FEATURE_KEYS.DUPLICATE_APP,
+      name: "Duplicate App Detection",
+      enabled: showDuplicateAppFeatures,
+      description:
+        "Enable detection and comparison of duplicate applications",
     },
     {
-      id: "copilot-features-toggle",
-      key: "show-copilot-features",
-      title: "Co-Pilot",
-      description: "Enables AI-powered assistant for procurement optimization",
-      checked: showCopilotFeatures
+      id: FEATURE_KEYS.COPILOT,
+      name: "AI Copilot",
+      enabled: showCopilotFeatures,
+      description:
+        "Enable AI-driven suggestions and automations",
     },
     {
-      id: "procurement-features-toggle",
-      key: "show-procurement-features",
-      title: "Procurement Intake",
-      description: "Enables procurement intake forms and IT/Security questionnaires",
-      checked: showProcurementFeatures
+      id: FEATURE_KEYS.PROCUREMENT,
+      name: "Procurement",
+      enabled: showProcurementFeatures,
+      description:
+        "Enable procurement request flows and approval processes",
     },
     {
-      id: "shadow-it-features-toggle",
-      key: "show-shadow-it-features",
-      title: "Shadow IT",
-      description: "Enables Shadow IT detection and risk management features",
-      checked: showShadowITFeatures
+      id: FEATURE_KEYS.SHADOW_IT,
+      name: "Shadow IT Detection",
+      enabled: showShadowITFeatures,
+      description:
+        "Enable detection and management of unauthorized applications",
     },
     {
-      id: "discovery-extended-features-toggle",
-      key: "show-discovery-extended-features",
-      title: "Discovery Extended",
-      description: "Enables detailed application discovery features including detailed view popups",
-      checked: showDiscoveryExtendedFeatures
-    }
+      id: FEATURE_KEYS.DISCOVERY_EXTENDED,
+      name: "Extended App Discovery",
+      enabled: showDiscoveryExtendedFeatures,
+      description:
+        "Enable advanced application discovery features and integrations",
+    },
+    {
+      id: FEATURE_KEYS.INSIGHTS,
+      name: "AI-Powered Insights",
+      enabled: showInsightsFeatures,
+      description:
+        "Enable AI-generated insights and recommendations for your SaaS portfolio",
+    },
   ];
 
   return (
     <div className="space-y-4">
-      {features.map(feature => (
+      {features.map((feature) => (
         <FeatureFlag
           key={feature.id}
+          name={feature.name}
           id={feature.id}
-          title={feature.title}
+          checked={feature.enabled}
+          onChange={(checked) => onFeatureToggle(feature.id, checked)}
           description={feature.description}
-          checked={feature.checked}
-          onCheckedChange={(checked) => {
-            onFeatureToggle(feature.key, checked);
-          }}
         />
       ))}
     </div>

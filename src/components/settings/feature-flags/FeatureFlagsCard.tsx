@@ -14,7 +14,8 @@ interface FeatureFlagsCardProps {
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
   showShadowITFeatures: boolean;
-  showDiscoveryExtendedFeatures: boolean; // New feature flag
+  showDiscoveryExtendedFeatures: boolean;
+  showInsightsFeatures: boolean;
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
 
@@ -30,6 +31,7 @@ export function FeatureFlagsCard({
   showProcurementFeatures,
   showShadowITFeatures,
   showDiscoveryExtendedFeatures,
+  showInsightsFeatures,
   onFeatureToggle
 }: FeatureFlagsCardProps) {
   return (
@@ -53,6 +55,7 @@ export function FeatureFlagsCard({
           showProcurementFeatures={showProcurementFeatures}
           showShadowITFeatures={showShadowITFeatures}
           showDiscoveryExtendedFeatures={showDiscoveryExtendedFeatures}
+          showInsightsFeatures={showInsightsFeatures}
           onFeatureToggle={onFeatureToggle}
         />
       </CardContent>

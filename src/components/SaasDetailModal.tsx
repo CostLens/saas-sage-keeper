@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { SaaSData } from "@/lib/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Users as UsersIcon } from "lucide-react";
 import { KeyInfoCards } from "./saas-detail/KeyInfoCards";
 import { AnalyticsTab } from "./saas-detail/AnalyticsTab";
 import { ContractTab } from "./saas-detail/ContractTab";
@@ -24,7 +23,7 @@ interface SaasDetailModalProps {
 export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalProps) {
   const [showUsageFeatures, setShowUsageFeatures] = useState(false);
   
-  React.useEffect(() => {
+  useEffect(() => {
     const savedValue = localStorage.getItem("show-usage-features");
     setShowUsageFeatures(savedValue === "true");
     
@@ -60,17 +59,17 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
 
           {/* Tabs for different data views */}
           <Tabs defaultValue="analytics" className="w-full">
-            <TabsList className="grid grid-cols-3 mb-6">
+            <TabsList className={`${showUsageFeatures ? 'grid grid-cols-3' : 'grid grid-cols-2 justify-center mx-auto'} mb-6`}>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="contract">Contract Details</TabsTrigger>
               {showUsageFeatures && <TabsTrigger value="users">Users</TabsTrigger>}
             </TabsList>
             
-            <TabsContent value="analytics">
+            <TabsContent value="analytics" className={`${!showUsageFeatures && 'flex justify-center'}`}>
               <AnalyticsTab saas={saas} />
             </TabsContent>
             
-            <TabsContent value="contract">
+            <TabsContent value="contract" className={`${!showUsageFeatures && 'flex justify-center'}`}>
               <ContractTab saas={saas} />
             </TabsContent>
             

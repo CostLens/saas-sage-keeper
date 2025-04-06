@@ -93,6 +93,14 @@ export function FeatureFlagsTab() {
     }
     return false;
   });
+  
+  const [showInsightsFeatures, setShowInsightsFeatures] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedValue = localStorage.getItem("show-insights-features");
+      return savedValue === "true"; // Default to false if not "true"
+    }
+    return false;
+  });
 
   // Dark theme state
   const [darkThemeEnabled, setDarkThemeEnabled] = useState(() => {
@@ -151,6 +159,9 @@ export function FeatureFlagsTab() {
       case "show-discovery-extended-features":
         setShowDiscoveryExtendedFeatures(enabled);
         break;
+      case "show-insights-features":
+        setShowInsightsFeatures(enabled);
+        break;
     }
     
     // Dispatch custom event for sidebar components to listen to
@@ -188,6 +199,7 @@ export function FeatureFlagsTab() {
         showProcurementFeatures={showProcurementFeatures}
         showShadowITFeatures={showShadowITFeatures}
         showDiscoveryExtendedFeatures={showDiscoveryExtendedFeatures}
+        showInsightsFeatures={showInsightsFeatures}
         onFeatureToggle={handleFeatureToggle}
       />
     </div>

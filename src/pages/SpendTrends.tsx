@@ -29,6 +29,9 @@ const SpendTrends = () => {
   // Track active tab
   const [activeTab, setActiveTab] = useState<"overview" | "table">("overview");
   
+  // Track selected year
+  const [selectedYear, setSelectedYear] = useState("2023-2024");
+  
   // Listen for sidebar state changes
   useEffect(() => {
     const handleSidebarChange = (event: CustomEvent) => {
@@ -50,6 +53,11 @@ const SpendTrends = () => {
   const handleBackToOverview = () => {
     setShowAppDetails(false);
   };
+  
+  const handleYearChange = (year: string) => {
+    setSelectedYear(year);
+    // In a real app, this would trigger data fetching for the selected year
+  };
 
   return (
     <div className="min-h-screen flex">
@@ -57,7 +65,7 @@ const SpendTrends = () => {
       <div className={`flex-1 flex flex-col ${isSidebarCollapsed ? 'ml-16' : 'ml-64'} transition-all duration-300`}>
         <Header />
         <main className="flex-1 p-6 space-y-8 animate-fade-in">
-          <SpendHeader />
+          <SpendHeader selectedYear={selectedYear} onYearChange={handleYearChange} />
 
           {!showAppDetails ? (
             <>

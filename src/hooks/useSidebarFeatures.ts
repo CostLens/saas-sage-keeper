@@ -15,19 +15,20 @@ export const FEATURE_KEYS = {
   PROCUREMENT: "show-procurement-features",
   SHADOW_IT: "show-shadow-it-features",
   DISCOVERY_EXTENDED: "show-discovery-extended-features",
+  INSIGHTS: "show-insights-features",
 };
 
 // Helper function to get initial state from localStorage (kept for backward compatibility)
 export const getInitialFeatureState = (key: string): boolean => {
   if (typeof window !== 'undefined') {
     const savedValue = localStorage.getItem(key);
-    // Default to false if null or not set, except for usage features
+    // Default to false for all features
     if (savedValue === null) {
-      return key === FEATURE_KEYS.USAGE;
+      return false;
     }
     return savedValue === "true";
   }
-  return key === FEATURE_KEYS.USAGE; // Default Usage to true, others to false
+  return false; // Default all to false
 };
 
 export function useSidebarFeatures() {

@@ -1,7 +1,7 @@
 
 import React from "react";
 import { StatCard } from "@/components/ui/stat-card";
-import { DollarSign, Users, TrendingDown, LayoutGrid, UserCheck, ArrowUp } from "lucide-react";
+import { DollarSign, Users, TrendingDown, LayoutGrid, UserCheck } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { RenewalCard } from "@/components/calendar/RenewalCard";
 import { PaymentsCard } from "@/components/calendar/PaymentsCard";
@@ -53,7 +53,7 @@ export function StatsCardsSection({
   // Updated KPI cards at the top based on the screenshot
   const renderKpiCards = () => (
     <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-      {/* Total Annual SaaS Spend Card */}
+      {/* Total Annual SaaS Spend Card - Fix the $ sign alignment */}
       <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
         <div className="flex justify-between items-start">
           <div>

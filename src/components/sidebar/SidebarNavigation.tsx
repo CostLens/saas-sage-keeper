@@ -33,7 +33,6 @@ interface SidebarNavigationProps {
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
   showShadowITFeatures: boolean;
-  showInsightsFeatures: boolean;
 }
 
 export const SidebarNavigation = ({ 
@@ -47,8 +46,7 @@ export const SidebarNavigation = ({
   showDuplicateAppFeatures,
   showCopilotFeatures,
   showProcurementFeatures,
-  showShadowITFeatures,
-  showInsightsFeatures
+  showShadowITFeatures
 }: SidebarNavigationProps) => {
   
   // Build navigation items based on feature flags and the requested order
@@ -56,7 +54,7 @@ export const SidebarNavigation = ({
     // Define all items in the desired order with their visibility logic
     const orderedItems = [
       { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard, show: true },
-      { name: "Insights", href: "/insights", icon: Lightbulb, show: showInsightsFeatures },
+      { name: "Insights", href: "/insights", icon: Lightbulb, show: true },
       { name: "Spend Analytics", href: "/spend-trends", icon: TrendingUp, show: true },
       { name: "Usage Analytics", href: "/usage", icon: Gauge, show: showUsageFeatures },
       { name: "App Discovery", href: "/app-discovery", icon: Layers, show: true },

@@ -19,19 +19,11 @@ export function useInsightsData() {
   const [recommendedInsights, setRecommendedInsights] = useState<InsightData[]>([]);
   const [dismissedInsights, setDismissedInsights] = useState<InsightData[]>([]);
   const [resolvedInsights, setResolvedInsights] = useState<InsightData[]>([]);
-  const [averageUtilizationRate, setAverageUtilizationRate] = useState<number>(0);
 
   useEffect(() => {
     // Generate insights based on mock data
     const critical: InsightData[] = [];
     const recommended: InsightData[] = [];
-
-    // Calculate average utilization rate
-    const totalUtilization = mockSaaSData.reduce((sum, app) => {
-      return sum + app.usage.utilizationRate;
-    }, 0);
-    
-    setAverageUtilizationRate(Math.round(totalUtilization / mockSaaSData.length));
 
     // Add upcoming renewal insights
     mockSaaSData.slice(0, 2).forEach((saas, index) => {
@@ -106,13 +98,6 @@ export function useInsightsData() {
     setRecommendedInsights(recommended);
   }, []);
 
-  // Calculate total potential savings from all active insights
-  const calculateTotalSavings = () => {
-    const allActiveInsights = [...criticalInsights, ...recommendedInsights];
-    return allActiveInsights.reduce((sum, insight) => sum + insight.potentialSavings, 0);
-  };
-
-  // Dismiss an insight - moves it from critical/recommended to dismissed
   const dismissInsight = (id: string) => {
     // Find the insight in either critical or recommended
     const criticalMatch = criticalInsights.find(insight => insight.id === id);
@@ -130,12 +115,10 @@ export function useInsightsData() {
     toast.success("Insight dismissed");
   };
 
-  // Resolve an insight - moves it from critical/recommended to resolved
   const resolveInsight = (id: string) => {
     // Find the insight in either critical or recommended
     const criticalMatch = criticalInsights.find(insight => insight.id === id);
     const recommendedMatch = recommendedInsights.find(insight => insight.id === id);
-    const dismissedMatch = dismissedInsights.find(insight => insight.id === id);
     
     // Add to resolved insights
     if (criticalMatch) {
@@ -144,36 +127,9 @@ export function useInsightsData() {
     } else if (recommendedMatch) {
       setResolvedInsights(prev => [...prev, recommendedMatch]);
       setRecommendedInsights(prev => prev.filter(insight => insight.id !== id));
-    } else if (dismissedMatch) {
-      setResolvedInsights(prev => [...prev, dismissedMatch]);
-      setDismissedInsights(prev => prev.filter(insight => insight.id !== id));
     }
     
     toast.success("Insight marked as resolved");
-  };
-
-  // Dismiss a resolved insight - moves it from resolved to dismissed
-  const dismissResolvedInsight = (id: string) => {
-    const resolvedMatch = resolvedInsights.find(insight => insight.id === id);
-    
-    if (resolvedMatch) {
-      setDismissedInsights(prev => [...prev, resolvedMatch]);
-      setResolvedInsights(prev => prev.filter(insight => insight.id !== id));
-    }
-    
-    toast.success("Resolved insight dismissed");
-  };
-
-  // Restore a dismissed insight - moves it back to active (resolved)
-  const restoreDismissedInsight = (id: string) => {
-    const dismissedMatch = dismissedInsights.find(insight => insight.id === id);
-    
-    if (dismissedMatch) {
-      setResolvedInsights(prev => [...prev, dismissedMatch]);
-      setDismissedInsights(prev => prev.filter(insight => insight.id !== id));
-    }
-    
-    toast.success("Insight resolved");
   };
 
   return {
@@ -182,10 +138,6 @@ export function useInsightsData() {
     dismissedInsights,
     resolvedInsights,
     dismissInsight,
-    resolveInsight,
-    dismissResolvedInsight,
-    restoreDismissedInsight,
-    calculateTotalSavings,
-    averageUtilizationRate
+    resolveInsight
   };
 }

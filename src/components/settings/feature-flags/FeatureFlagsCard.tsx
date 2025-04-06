@@ -1,9 +1,9 @@
 
 import React from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { FeatureToggleList } from "./FeatureToggleList";
 
-export interface FeatureFlagsCardProps {
+interface FeatureFlagsCardProps {
   showUsageFeatures: boolean;
   showBoardingFeatures: boolean;
   showNegotiationFeatures: boolean;
@@ -14,8 +14,7 @@ export interface FeatureFlagsCardProps {
   showCopilotFeatures: boolean;
   showProcurementFeatures: boolean;
   showShadowITFeatures: boolean;
-  showDiscoveryExtendedFeatures?: boolean;
-  showInsightsFeatures: boolean;
+  showDiscoveryExtendedFeatures: boolean; // New feature flag
   onFeatureToggle: (feature: string, enabled: boolean) => void;
 }
 
@@ -30,35 +29,31 @@ export function FeatureFlagsCard({
   showCopilotFeatures,
   showProcurementFeatures,
   showShadowITFeatures,
-  showDiscoveryExtendedFeatures = false,
-  showInsightsFeatures,
+  showDiscoveryExtendedFeatures,
   onFeatureToggle
 }: FeatureFlagsCardProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Feature Flags</CardTitle>
+        <CardTitle>Feature Toggles</CardTitle>
         <CardDescription>
-          Enable or disable features in the application
+          Enable or disable specific features of the application
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent>
         <FeatureToggleList
-          features={[
-            { id: "show-usage-features", name: "Usage Analytics", enabled: showUsageFeatures },
-            { id: "show-boarding-features", name: "User Boarding", enabled: showBoardingFeatures },
-            { id: "show-negotiation-features", name: "Renewals", enabled: showNegotiationFeatures },
-            { id: "show-benchmarking-features", name: "Benchmarking", enabled: showBenchmarkingFeatures },
-            { id: "show-compliance-features", name: "Compliance", enabled: showComplianceFeatures },
-            { id: "show-workflow-features", name: "Workflow Builder", enabled: showWorkflowFeatures },
-            { id: "show-duplicate-app-features", name: "Duplicate App Comparison", enabled: showDuplicateAppFeatures },
-            { id: "show-copilot-features", name: "AI Assistant", enabled: showCopilotFeatures },
-            { id: "show-procurement-features", name: "Procurement Intake", enabled: showProcurementFeatures },
-            { id: "show-shadow-it-features", name: "Shadow IT", enabled: showShadowITFeatures },
-            { id: "show-discovery-extended-features", name: "Extended Discovery", enabled: showDiscoveryExtendedFeatures },
-            { id: "show-insights-features", name: "Insights", enabled: showInsightsFeatures }
-          ]}
-          onToggle={onFeatureToggle}
+          showUsageFeatures={showUsageFeatures}
+          showBoardingFeatures={showBoardingFeatures}
+          showNegotiationFeatures={showNegotiationFeatures}
+          showBenchmarkingFeatures={showBenchmarkingFeatures}
+          showComplianceFeatures={showComplianceFeatures}
+          showWorkflowFeatures={showWorkflowFeatures}
+          showDuplicateAppFeatures={showDuplicateAppFeatures}
+          showCopilotFeatures={showCopilotFeatures}
+          showProcurementFeatures={showProcurementFeatures}
+          showShadowITFeatures={showShadowITFeatures}
+          showDiscoveryExtendedFeatures={showDiscoveryExtendedFeatures}
+          onFeatureToggle={onFeatureToggle}
         />
       </CardContent>
     </Card>

@@ -51,11 +51,10 @@ export function StatsCardsSection({
   };
 
   // Updated KPI cards at the top based on the screenshot
-  const renderKpiCards = () => {
-    // Base cards that are always visible
-    const baseCards = [
-      // Total Annual SaaS Spend Card
-      <div key="spend" className="rounded-lg border border-border bg-white p-6 shadow-sm">
+  const renderKpiCards = () => (
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+      {/* Total Annual SaaS Spend Card */}
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-sm font-normal text-muted-foreground mb-1">
@@ -73,53 +72,10 @@ export function StatsCardsSection({
             <DollarSign className="h-5 w-5 text-blue-500" />
           </div>
         </div>
-      </div>,
-      
-      // Potential Cost Savings Card
-      <div key="savings" className="rounded-lg border border-border bg-white p-6 shadow-sm">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-sm font-normal text-muted-foreground mb-1">
-              Potential Cost Savings
-            </h3>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold">{formatCurrency(potentialSavings)}</p>
-            </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              {unusedLicenses} unused licenses across all apps
-            </p>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-            <TrendingDown className="h-5 w-5 text-blue-500" />
-          </div>
-        </div>
-      </div>,
-      
-      // Total Apps Card
-      <div key="apps" className="rounded-lg border border-border bg-white p-6 shadow-sm">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-sm font-normal text-muted-foreground mb-1">
-              Total Apps
-            </h3>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold">{totalApps}</p>
-            </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              Across all departments
-            </p>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-            <LayoutGrid className="h-5 w-5 text-blue-500" />
-          </div>
-        </div>
       </div>
-    ];
-    
-    // Usage feature dependent cards
-    const usageCards = [
-      // License Utilization Card
-      <div key="utilization" className="rounded-lg border border-border bg-white p-6 shadow-sm">
+
+      {/* License Utilization Card */}
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
         <div className="flex justify-between items-start mb-3">
           <div>
             <h3 className="text-sm font-normal text-muted-foreground mb-1">
@@ -137,10 +93,50 @@ export function StatsCardsSection({
           </div>
         </div>
         <Progress value={overallUtilization} className="h-2" />
-      </div>,
-      
-      // Active People Card
-      <div key="people" className="rounded-lg border border-border bg-white p-6 shadow-sm">
+      </div>
+
+      {/* Potential Cost Savings Card */}
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-sm font-normal text-muted-foreground mb-1">
+              Potential Cost Savings
+            </h3>
+            <div className="flex items-baseline gap-2">
+              <p className="text-3xl font-bold">{formatCurrency(potentialSavings)}</p>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              {unusedLicenses} unused licenses across all apps
+            </p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+            <TrendingDown className="h-5 w-5 text-blue-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Total Apps Card */}
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
+        <div className="flex justify-between items-start">
+          <div>
+            <h3 className="text-sm font-normal text-muted-foreground mb-1">
+              Total Apps
+            </h3>
+            <div className="flex items-baseline gap-2">
+              <p className="text-3xl font-bold">{totalApps}</p>
+            </div>
+            <p className="text-sm text-muted-foreground mt-1">
+              Across all departments
+            </p>
+          </div>
+          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+            <LayoutGrid className="h-5 w-5 text-blue-500" />
+          </div>
+        </div>
+      </div>
+
+      {/* Active People Card */}
+      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
         <div className="flex justify-between items-start">
           <div>
             <h3 className="text-sm font-normal text-muted-foreground mb-1">
@@ -159,19 +155,8 @@ export function StatsCardsSection({
           </div>
         </div>
       </div>
-    ];
-    
-    // Combine cards based on feature flag
-    const allCards = showUsageFeatures 
-      ? [baseCards[0], usageCards[0], baseCards[1], baseCards[2], usageCards[1]] 
-      : [...baseCards];
-    
-    return (
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
-        {allCards}
-      </div>
-    );
-  };
+    </div>
+  );
   
   // Render the cards section
   return (

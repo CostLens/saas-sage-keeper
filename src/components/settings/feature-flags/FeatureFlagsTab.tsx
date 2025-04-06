@@ -22,7 +22,6 @@ export function FeatureFlagsTab() {
   const [showProcurementFeatures, setShowProcurementFeatures] = useState(featureFlags.showProcurementFeatures);
   const [showShadowITFeatures, setShowShadowITFeatures] = useState(featureFlags.showShadowITFeatures);
   const [showDiscoveryExtendedFeatures, setShowDiscoveryExtendedFeatures] = useState(featureFlags.showDiscoveryExtendedFeatures);
-  const [showInsightsFeatures, setShowInsightsFeatures] = useState(featureFlags.showInsightsFeatures);
 
   // Update local state when context values change
   useEffect(() => {
@@ -37,7 +36,6 @@ export function FeatureFlagsTab() {
     setShowProcurementFeatures(featureFlags.showProcurementFeatures);
     setShowShadowITFeatures(featureFlags.showShadowITFeatures);
     setShowDiscoveryExtendedFeatures(featureFlags.showDiscoveryExtendedFeatures);
-    setShowInsightsFeatures(featureFlags.showInsightsFeatures);
   }, [featureFlags]);
 
   // Dark theme state
@@ -105,9 +103,6 @@ export function FeatureFlagsTab() {
       case "show-discovery-extended-features":
         setShowDiscoveryExtendedFeatures(enabled);
         break;
-      case "show-insights-features":
-        setShowInsightsFeatures(enabled);
-        break;
     }
     
     // Dispatch custom event for the context provider to listen to
@@ -148,7 +143,6 @@ export function FeatureFlagsTab() {
         showProcurementFeatures={showProcurementFeatures}
         showShadowITFeatures={showShadowITFeatures}
         showDiscoveryExtendedFeatures={showDiscoveryExtendedFeatures}
-        showInsightsFeatures={showInsightsFeatures}
         onFeatureToggle={handleFeatureToggle}
       />
     </div>

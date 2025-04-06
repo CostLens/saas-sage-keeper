@@ -13,6 +13,7 @@ import { KeyInfoCards } from "./saas-detail/KeyInfoCards";
 import { AnalyticsTab } from "./saas-detail/AnalyticsTab";
 import { ContractTab } from "./saas-detail/ContractTab";
 import { UserActivityTab } from "./UserActivityTab";
+import { useFeatureFlags } from "@/contexts/FeatureFlagsContext";
 
 interface SaasDetailModalProps {
   saas: SaaSData | null;
@@ -21,25 +22,15 @@ interface SaasDetailModalProps {
 }
 
 export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalProps) {
-  const [showUsageFeatures, setShowUsageFeatures] = useState(false);
+  const [activeTab, setActiveTab] = useState("analytics");
+  const { showUsageFeatures } = useFeatureFlags();
   
+  // Reset to analytics tab when modal opens
   useEffect(() => {
-    const savedValue = localStorage.getItem("show-usage-features");
-    setShowUsageFeatures(savedValue === "true");
-    
-    const handleStorageChange = () => {
-      const savedValue = localStorage.getItem("show-usage-features");
-      setShowUsageFeatures(savedValue === "true");
-    };
-    
-    window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('usageFeaturesToggled', handleStorageChange);
-    
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('usageFeaturesToggled', handleStorageChange);
-    };
-  }, []);
+    if (open) {
+      setActiveTab("analytics");
+    }
+  }, [open]);
 
   if (!saas) return null;
 
@@ -58,11 +49,11 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
           <KeyInfoCards saas={saas} />
 
           {/* Tabs for different data views */}
-          <Tabs defaultValue="analytics" className="w-full">
-            <TabsList className="grid grid-cols-2 w-full">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full" style={{ gridTemplateColumns: showUsageFeatures ? "repeat(3, 1fr)" : "repeat(2, 1fr)" }}>
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="contract">Contract Details</TabsTrigger>
-              {showUsageFeatures && <TabsTrigger value="users" className="hidden">Users</TabsTrigger>}
+              {showUsageFeatures && <TabsTrigger value="users">Users</TabsTrigger>}
             </TabsList>
             
             <TabsContent value="analytics">

@@ -74,46 +74,50 @@ export function StatsCardsSection({
         </div>
       </div>
 
-      {/* License Utilization Card */}
-      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
-        <div className="flex justify-between items-start mb-3">
-          <div>
-            <h3 className="text-sm font-normal text-muted-foreground mb-1">
-              License Utilization
-            </h3>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold">{overallUtilization}%</p>
+      {/* License Utilization Card - Only show when usage features are on */}
+      {showUsageFeatures && (
+        <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
+          <div className="flex justify-between items-start mb-3">
+            <div>
+              <h3 className="text-sm font-normal text-muted-foreground mb-1">
+                License Utilization
+              </h3>
+              <div className="flex items-baseline gap-2">
+                <p className="text-3xl font-bold">{overallUtilization}%</p>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                {activeUsers} active of {totalLicenses} total licenses
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              {activeUsers} active of {totalLicenses} total licenses
-            </p>
+            <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+              <Users className="h-5 w-5 text-blue-500" />
+            </div>
           </div>
-          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-            <Users className="h-5 w-5 text-blue-500" />
-          </div>
+          <Progress value={overallUtilization} className="h-2" />
         </div>
-        <Progress value={overallUtilization} className="h-2" />
-      </div>
+      )}
 
-      {/* Potential Cost Savings Card */}
-      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-sm font-normal text-muted-foreground mb-1">
-              Potential Cost Savings
-            </h3>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold">{formatCurrency(potentialSavings)}</p>
+      {/* Potential Cost Savings Card - Only show when usage features are on */}
+      {showUsageFeatures && (
+        <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-sm font-normal text-muted-foreground mb-1">
+                Potential Cost Savings
+              </h3>
+              <div className="flex items-baseline gap-2">
+                <p className="text-3xl font-bold">{formatCurrency(potentialSavings)}</p>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                {unusedLicenses} unused licenses across all apps
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              {unusedLicenses} unused licenses across all apps
-            </p>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-            <TrendingDown className="h-5 w-5 text-blue-500" />
+            <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+              <TrendingDown className="h-5 w-5 text-blue-500" />
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       {/* Total Apps Card */}
       <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
@@ -135,26 +139,28 @@ export function StatsCardsSection({
         </div>
       </div>
 
-      {/* Active People Card */}
-      <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
-        <div className="flex justify-between items-start">
-          <div>
-            <h3 className="text-sm font-normal text-muted-foreground mb-1">
-              Total Active People
-            </h3>
-            <div className="flex items-baseline gap-2">
-              <p className="text-3xl font-bold">{activeEmployees}</p>
-              <span className="text-sm font-medium text-green-500">+5%</span>
+      {/* Active People Card - Only show when usage features are on */}
+      {showUsageFeatures && (
+        <div className="rounded-lg border border-border bg-white p-6 shadow-sm">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="text-sm font-normal text-muted-foreground mb-1">
+                Total Active People
+              </h3>
+              <div className="flex items-baseline gap-2">
+                <p className="text-3xl font-bold">{activeEmployees}</p>
+                <span className="text-sm font-medium text-green-500">+5%</span>
+              </div>
+              <p className="text-sm text-muted-foreground mt-1">
+                5% growth since last quarter
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground mt-1">
-              5% growth since last quarter
-            </p>
-          </div>
-          <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
-            <UserCheck className="h-5 w-5 text-blue-500" />
+            <div className="h-10 w-10 rounded-full bg-blue-50 flex items-center justify-center">
+              <UserCheck className="h-5 w-5 text-blue-500" />
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
   

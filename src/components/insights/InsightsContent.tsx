@@ -22,6 +22,11 @@ export function InsightsContent() {
   // Combine critical and recommended insights for "All Insights" tab
   const allInsights = [...criticalInsights, ...recommendedInsights];
   
+  // Calculate KPI metrics
+  const totalPotentialSavings = allInsights.reduce((sum, insight) => sum + insight.potentialSavings, 0);
+  const licenseUtilizationRate = 72; // This would come from actual data in a real app
+  const unusedLicenses = 125; // This would come from actual data in a real app
+  
   const renderBadge = (priority: string) => {
     if (priority === "high") {
       return (
@@ -127,7 +132,11 @@ export function InsightsContent() {
 
   return (
     <div className="space-y-6">
-      <InsightsHeader totalSavings={0} />
+      <InsightsHeader 
+        totalSavings={totalPotentialSavings} 
+        utilizationRate={licenseUtilizationRate}
+        unusedLicenses={unusedLicenses}
+      />
       
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full grid-cols-3">

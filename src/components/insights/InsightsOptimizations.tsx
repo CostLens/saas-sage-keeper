@@ -2,9 +2,12 @@
 import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { X, CheckCircle, ArrowRight } from "lucide-react";
+import { X, CheckCircle } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { InsightData } from "@/hooks/useInsightsData";
+
+// NOTE: This component is no longer used in the main UI - see InsightsContent.tsx
+// This file is kept for backwards compatibility
 
 interface InsightsOptimizationsProps {
   insights: InsightData[];

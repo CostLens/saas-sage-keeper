@@ -142,6 +142,7 @@ const Usage = () => {
             app={selectedApp} 
             isOpen={showAppDetails} 
             onClose={handleCloseDialog}
+            source="usage"
           />
         )}
       </div>

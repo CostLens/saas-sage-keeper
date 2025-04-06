@@ -1,12 +1,15 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { InsightsHeader } from "./InsightsHeader";
-import { InsightsSavingsOpportunities } from "./InsightsSavingsOpportunities";
-import { InsightsOptimizations } from "./InsightsOptimizations";
 import { useInsightsData } from "@/hooks/useInsightsData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card } from "@/components/ui/card";
 import { TrendingUp, AlertTriangle, LineChart, BadgeDollarSign } from "lucide-react";
+import { DataTable } from "@/components/ui/data-table";
+import { Button } from "@/components/ui/button";
+import { CheckCircle, X, ArrowUpRight } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { toast } from "sonner";
 
 export function InsightsContent() {
   const { 
@@ -20,6 +23,85 @@ export function InsightsContent() {
     (sum, insight) => sum + insight.potentialSavings, 
     0
   );
+
+  const renderBadge = (priority: string) => {
+    if (priority === "high") {
+      return (
+        <Badge variant="destructive" className="font-medium">
+          High Priority
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge variant="outline" className="bg-amber-100 text-amber-800 border-amber-200 font-medium">
+          Medium Priority
+        </Badge>
+      );
+    }
+  };
+
+  // Prepare columns for the DataTable
+  const insightsColumns = [
+    {
+      id: "priority",
+      header: "Priority",
+      cell: (insight: any) => renderBadge(insight.priority)
+    },
+    {
+      id: "app",
+      header: "Application",
+      cell: (insight: any) => (
+        <div className="flex items-center space-x-3">
+          <div className="flex justify-center items-center rounded-md w-8 h-8 bg-blue-100 text-blue-700">
+            <span className="font-medium">{insight.appInitials}</span>
+          </div>
+          <span className="font-medium">{insight.appName}</span>
+        </div>
+      )
+    },
+    {
+      id: "insight",
+      header: "Insight",
+      cell: (insight: any) => (
+        <div>
+          <p className="font-medium">{insight.title}</p>
+          <p className="text-sm text-muted-foreground">{insight.description}</p>
+        </div>
+      )
+    },
+    {
+      id: "savings",
+      header: "Potential Savings",
+      cell: (insight: any) => (
+        <div className="text-green-600 font-semibold">
+          ${insight.potentialSavings.toFixed(2)}/mo
+        </div>
+      )
+    },
+    {
+      id: "actions",
+      header: "Actions",
+      cell: (insight: any) => (
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => dismissInsight(insight.id)}
+          >
+            <X className="mr-2 h-4 w-4" /> Dismiss
+          </Button>
+          <Button
+            variant="default"
+            size="sm"
+            onClick={() => resolveInsight(insight.id)}
+            className="bg-blue-600 hover:bg-blue-700"
+          >
+            <CheckCircle className="mr-2 h-4 w-4" /> Resolve
+          </Button>
+        </div>
+      )
+    }
+  ];
 
   return (
     <div className="space-y-6">
@@ -76,16 +158,15 @@ export function InsightsContent() {
                 <h2 className="text-2xl font-bold">Critical Savings Opportunities</h2>
               </div>
               
-              <InsightsSavingsOpportunities 
-                insights={criticalInsights} 
-                onDismiss={dismissInsight}
-                onResolve={resolveInsight}
+              <DataTable
+                data={criticalInsights}
+                columns={insightsColumns}
               />
             </div>
           )}
           
           {recommendedInsights.length > 0 && (
-            <div>
+            <div className="mt-8">
               <div className="flex items-center space-x-4 mb-4">
                 <div className="bg-amber-400 text-white px-4 py-1 rounded-full text-sm font-medium">
                   Medium Priority
@@ -93,10 +174,9 @@ export function InsightsContent() {
                 <h2 className="text-2xl font-bold">Recommended Optimizations</h2>
               </div>
               
-              <InsightsOptimizations 
-                insights={recommendedInsights}
-                onDismiss={dismissInsight}
-                onResolve={resolveInsight}
+              <DataTable
+                data={recommendedInsights}
+                columns={insightsColumns}
               />
             </div>
           )}
@@ -118,10 +198,9 @@ export function InsightsContent() {
                 <h2 className="text-2xl font-bold">Critical Savings Opportunities</h2>
               </div>
               
-              <InsightsSavingsOpportunities 
-                insights={criticalInsights} 
-                onDismiss={dismissInsight}
-                onResolve={resolveInsight}
+              <DataTable
+                data={criticalInsights}
+                columns={insightsColumns}
               />
             </div>
           ) : (
@@ -141,10 +220,9 @@ export function InsightsContent() {
                 <h2 className="text-2xl font-bold">Recommended Optimizations</h2>
               </div>
               
-              <InsightsOptimizations 
-                insights={recommendedInsights}
-                onDismiss={dismissInsight}
-                onResolve={resolveInsight}
+              <DataTable
+                data={recommendedInsights}
+                columns={insightsColumns}
               />
             </div>
           ) : (

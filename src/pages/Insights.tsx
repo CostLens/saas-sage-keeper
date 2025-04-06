@@ -1,12 +1,14 @@
 
 import React from "react";
-import { InsightsContent } from "@/components/insights/InsightsContent";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
+import { InsightsContent } from "@/components/insights/InsightsContent";
 
 const Insights = () => {
   return (
     <DashboardLayout>
-      <InsightsContent />
+      <div className="p-6">
+        <InsightsContent />
+      </div>
     </DashboardLayout>
   );
 };

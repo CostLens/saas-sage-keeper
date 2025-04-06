@@ -49,10 +49,12 @@ export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ 
   const [showInsightsFeatures, setShowInsightsFeatures] = useState(false);
 
   useEffect(() => {
-    // Initialize feature flags with all set to false by default
+    // Initialize feature flags from localStorage with default value false
+    // Only set localStorage if item doesn't exist yet
     Object.entries(FEATURE_KEYS).forEach(([key, value]) => {
-      // Always set default value to false regardless of localStorage
-      localStorage.setItem(value, 'false');
+      if (localStorage.getItem(value) === null) {
+        localStorage.setItem(value, 'false');
+      }
     });
     
     // Initialize dark theme setting
@@ -60,7 +62,7 @@ export const FeatureFlagsProvider: React.FC<{ children: React.ReactNode }> = ({ 
       localStorage.setItem("dark-theme-enabled", "false");
     }
     
-    // Initialize state from localStorage (will be false due to above initialization)
+    // Initialize state from localStorage
     setShowUsageFeatures(localStorage.getItem(FEATURE_KEYS.USAGE) === "true");
     setShowBoardingFeatures(localStorage.getItem(FEATURE_KEYS.BOARDING) === "true");
     setShowNegotiationFeatures(localStorage.getItem(FEATURE_KEYS.NEGOTIATION) === "true");

@@ -17,7 +17,7 @@ interface FeatureFlagsContextType {
   showInsightsFeatures: boolean;
 }
 
-const FeatureFlagsContext = createContext<FeatureFlagsContextType>({
+export const FeatureFlagsContext = createContext<FeatureFlagsContextType>({
   showUsageFeatures: false,
   showBoardingFeatures: false,
   showNegotiationFeatures: false,

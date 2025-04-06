@@ -37,84 +37,84 @@ export function FeatureToggleList({
   const features = [
     {
       id: FEATURE_KEYS.USAGE,
-      name: "Usage Analytics",
+      title: "Usage Analytics",
       enabled: showUsageFeatures,
       description:
         "Enable detailed usage analytics and license utilization tracking",
     },
     {
       id: FEATURE_KEYS.BOARDING,
-      name: "User Boarding",
+      title: "User Boarding",
       enabled: showBoardingFeatures,
       description:
         "Enable user onboarding and offboarding workflows",
     },
     {
       id: FEATURE_KEYS.NEGOTIATION,
-      name: "Contract Negotiation",
+      title: "Contract Negotiation",
       enabled: showNegotiationFeatures,
       description:
         "Enable contract negotiation and optimization tools",
     },
     {
       id: FEATURE_KEYS.BENCHMARKING,
-      name: "Benchmarking",
+      title: "Benchmarking",
       enabled: showBenchmarkingFeatures,
       description:
         "Enable price benchmarking tools and market comparisons",
     },
     {
       id: FEATURE_KEYS.COMPLIANCE,
-      name: "Compliance",
+      title: "Compliance",
       enabled: showComplianceFeatures,
       description:
         "Enable compliance monitoring and certification tracking",
     },
     {
       id: FEATURE_KEYS.WORKFLOW,
-      name: "Workflow Builder",
+      title: "Workflow Builder",
       enabled: showWorkflowFeatures,
       description:
         "Enable creating and managing custom workflows",
     },
     {
       id: FEATURE_KEYS.DUPLICATE_APP,
-      name: "Duplicate App Detection",
+      title: "Duplicate App Detection",
       enabled: showDuplicateAppFeatures,
       description:
         "Enable detection and comparison of duplicate applications",
     },
     {
       id: FEATURE_KEYS.COPILOT,
-      name: "AI Copilot",
+      title: "AI Copilot",
       enabled: showCopilotFeatures,
       description:
         "Enable AI-driven suggestions and automations",
     },
     {
       id: FEATURE_KEYS.PROCUREMENT,
-      name: "Procurement",
+      title: "Procurement",
       enabled: showProcurementFeatures,
       description:
         "Enable procurement request flows and approval processes",
     },
     {
       id: FEATURE_KEYS.SHADOW_IT,
-      name: "Shadow IT Detection",
+      title: "Shadow IT Detection",
       enabled: showShadowITFeatures,
       description:
         "Enable detection and management of unauthorized applications",
     },
     {
       id: FEATURE_KEYS.DISCOVERY_EXTENDED,
-      name: "Extended App Discovery",
+      title: "Extended App Discovery",
       enabled: showDiscoveryExtendedFeatures,
       description:
         "Enable advanced application discovery features and integrations",
     },
     {
       id: FEATURE_KEYS.INSIGHTS,
-      name: "AI-Powered Insights",
+      title: "AI-Powered Insights",
       enabled: showInsightsFeatures,
       description:
         "Enable AI-generated insights and recommendations for your SaaS portfolio",
@@ -126,10 +126,10 @@ export function FeatureToggleList({
       {features.map((feature) => (
         <FeatureFlag
           key={feature.id}
-          name={feature.name}
           id={feature.id}
+          title={feature.title}
           checked={feature.enabled}
-          onChange={(checked) => onFeatureToggle(feature.id, checked)}
+          onCheckedChange={(checked) => onFeatureToggle(feature.id, checked)}
           description={feature.description}
         />
       ))}

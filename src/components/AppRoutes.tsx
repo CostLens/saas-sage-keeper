@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useFeatureFlags } from '@/contexts/FeatureFlagsContext';
@@ -24,7 +25,7 @@ import DuplicateAppComparison from "@/pages/DuplicateAppComparison";
 import ContractNegotiation from "@/pages/ContractNegotiation";
 import ProcurementIntake from "@/pages/ProcurementIntake";
 import ShadowIT from "@/pages/ShadowIT";
-import Insights from "@/pages/Insights";
+import OptimizationInsights from "@/pages/Insights";
 
 export function AppRoutes() {
   const {
@@ -37,7 +38,8 @@ export function AppRoutes() {
     showDuplicateAppFeatures,
     showCopilotFeatures,
     showProcurementFeatures,
-    showShadowITFeatures
+    showShadowITFeatures,
+    showInsightsFeatures
   } = useFeatureFlags();
 
   return (
@@ -48,7 +50,12 @@ export function AppRoutes() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/spend-trends" element={<SpendTrends />} />
       <Route path="/app-discovery" element={<AppDiscovery />} />
-      <Route path="/insights" element={<Insights />} />
+      
+      {showInsightsFeatures ? (
+        <Route path="/insights" element={<OptimizationInsights />} />
+      ) : (
+        <Route path="/insights" element={<Navigate to="/dashboard" replace />} />
+      )}
       
       {showUsageFeatures ? (
         <Route path="/usage" element={<Usage />} />

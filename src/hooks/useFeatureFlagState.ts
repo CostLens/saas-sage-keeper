@@ -1,6 +1,5 @@
 
 import { useState, useEffect } from "react";
-import { CustomEvent } from "react";
 
 /**
  * A hook that manages the state for a feature flag

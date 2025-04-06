@@ -7,12 +7,10 @@ import { DialogHeader } from './details/DialogHeader';
 import { OverviewTab } from './details/OverviewTab';
 import { UsersTab } from './details/UsersTab';
 import { TeamsTab } from './details/TeamsTab';
-import { RecommendationsTab } from './details/RecommendationsTab';
-import { SentimentTab } from './details/SentimentTab';
 import { FeaturesTab } from './details/FeaturesTab';
-import { FeatureUsageTab } from './details/FeatureUsageTab';
-import { TeamUsageTab } from './details/TeamUsageTab';
 import { useFeatureFlags } from '@/contexts/FeatureFlagsContext';
+import { TeamUsageTab } from './details/TeamUsageTab';
+import { FeatureUsageTab } from './details/FeatureUsageTab';
 
 interface AppDetailsDialogProps {
   app: AppDiscoveryData;
@@ -35,15 +33,11 @@ export function AppDetailsDialog({ app, isOpen, onClose, source }: AppDetailsDia
         <DialogHeader app={app} onClose={onClose} />
         
         <Tabs value={activeTab} onValueChange={handleTabChange} className="mt-6">
-          <TabsList className="grid w-full grid-cols-3 md:grid-cols-6 lg:grid-cols-8">
+          <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             {showUsageFeatures && <TabsTrigger value="users">Users</TabsTrigger>}
             {showUsageFeatures && <TabsTrigger value="teams">Teams</TabsTrigger>}
-            {showUsageFeatures && <TabsTrigger value="feature-usage">Feature Usage</TabsTrigger>}
-            {showUsageFeatures && <TabsTrigger value="team-usage">Team Usage</TabsTrigger>}
             <TabsTrigger value="features">Features</TabsTrigger>
-            <TabsTrigger value="recommendations">Recommendations</TabsTrigger>
-            <TabsTrigger value="sentiment">Sentiment</TabsTrigger>
           </TabsList>
           
           <TabsContent value="overview" className="mt-6">
@@ -58,32 +52,18 @@ export function AppDetailsDialog({ app, isOpen, onClose, source }: AppDetailsDia
           
           {showUsageFeatures && (
             <TabsContent value="teams" className="mt-6">
-              <TeamsTab app={app} />
-            </TabsContent>
-          )}
-          
-          {showUsageFeatures && (
-            <TabsContent value="feature-usage" className="mt-6">
-              <FeatureUsageTab app={app} />
-            </TabsContent>
-          )}
-          
-          {showUsageFeatures && (
-            <TabsContent value="team-usage" className="mt-6">
-              <TeamUsageTab app={app} />
+              <div className="space-y-6">
+                <TeamsTab app={app} />
+                <TeamUsageTab app={app} />
+              </div>
             </TabsContent>
           )}
           
           <TabsContent value="features" className="mt-6">
-            <FeaturesTab app={app} />
-          </TabsContent>
-          
-          <TabsContent value="recommendations" className="mt-6">
-            <RecommendationsTab app={app} />
-          </TabsContent>
-          
-          <TabsContent value="sentiment" className="mt-6">
-            <SentimentTab app={app} />
+            <div className="space-y-6">
+              <FeaturesTab app={app} />
+              {showUsageFeatures && <FeatureUsageTab app={app} />}
+            </div>
           </TabsContent>
         </Tabs>
       </DialogContent>

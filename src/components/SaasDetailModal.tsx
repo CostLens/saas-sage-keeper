@@ -59,17 +59,17 @@ export function SaasDetailModal({ saas, open, onOpenChange }: SaasDetailModalPro
 
           {/* Tabs for different data views */}
           <Tabs defaultValue="analytics" className="w-full">
-            <TabsList className={`${showUsageFeatures ? 'grid grid-cols-3' : 'grid grid-cols-2 justify-center mx-auto'} mb-6`}>
+            <TabsList className="grid grid-cols-2 w-full">
               <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="contract">Contract Details</TabsTrigger>
-              {showUsageFeatures && <TabsTrigger value="users">Users</TabsTrigger>}
+              {showUsageFeatures && <TabsTrigger value="users" className="hidden">Users</TabsTrigger>}
             </TabsList>
             
-            <TabsContent value="analytics" className={`${!showUsageFeatures && 'flex justify-center'}`}>
+            <TabsContent value="analytics">
               <AnalyticsTab saas={saas} />
             </TabsContent>
             
-            <TabsContent value="contract" className={`${!showUsageFeatures && 'flex justify-center'}`}>
+            <TabsContent value="contract">
               <ContractTab saas={saas} />
             </TabsContent>
             

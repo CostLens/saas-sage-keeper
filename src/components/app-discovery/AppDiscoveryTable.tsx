@@ -171,7 +171,8 @@ export function AppDiscoveryTable({ data }: AppDiscoveryTableProps) {
         <AppDetailsDialog 
           app={selectedApp} 
           isOpen={isDialogOpen} 
-          onClose={handleCloseDialog} 
+          onClose={handleCloseDialog}
+          source="discovery"
         />
       )}
     </>

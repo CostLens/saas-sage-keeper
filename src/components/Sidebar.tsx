@@ -46,7 +46,10 @@ export function Sidebar() {
         isCollapsed ? "w-16" : "w-64"
       )}
     >
-      <SidebarHeader isCollapsed={isCollapsed} />
+      <SidebarHeader 
+        isCollapsed={isCollapsed} 
+        toggleCollapse={handleToggleCollapsed} 
+      />
       <SidebarNavigation 
         isCollapsed={isCollapsed} 
         showUsageFeatures={showUsageFeatures}

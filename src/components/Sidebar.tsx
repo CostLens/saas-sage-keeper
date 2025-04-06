@@ -28,7 +28,8 @@ export const Sidebar = ({ children }: SidebarProps) => {
     showDuplicateAppFeatures,
     showCopilotFeatures,
     showProcurementFeatures,
-    showShadowITFeatures
+    showShadowITFeatures,
+    showInsightsFeatures
   } = useSidebarFeatures();
 
   const closeMobileMenu = () => setIsMobileOpen(false);
@@ -87,6 +88,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
           showCopilotFeatures={showCopilotFeatures}
           showProcurementFeatures={showProcurementFeatures}
           showShadowITFeatures={showShadowITFeatures}
+          showInsightsFeatures={showInsightsFeatures}
         />
       </aside>
     </>

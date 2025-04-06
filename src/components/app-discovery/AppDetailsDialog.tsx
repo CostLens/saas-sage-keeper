@@ -33,7 +33,7 @@ export function AppDetailsDialog({ app, isOpen, onClose, source }: AppDetailsDia
         <DialogHeader app={app} onClose={onClose} />
         
         <Tabs value={activeTab} onValueChange={handleTabChange} className="mt-6">
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="overview">Overview</TabsTrigger>
             {showUsageFeatures && <TabsTrigger value="users">Users</TabsTrigger>}
             {showUsageFeatures && <TabsTrigger value="teams">Teams</TabsTrigger>}

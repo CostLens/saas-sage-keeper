@@ -2,129 +2,31 @@
 import React from "react";
 import { FeatureFlag } from "./FeatureFlag";
 
-interface FeatureToggleListProps {
-  // Feature flags
-  showUsageFeatures: boolean;
-  showBoardingFeatures: boolean;
-  showNegotiationFeatures: boolean;
-  showBenchmarkingFeatures: boolean;
-  showComplianceFeatures: boolean;
-  showWorkflowFeatures: boolean;
-  showDuplicateAppFeatures: boolean;
-  showCopilotFeatures: boolean;
-  showProcurementFeatures: boolean;
-  showShadowITFeatures: boolean;
-  showDiscoveryExtendedFeatures: boolean; // New feature flag
-  // Toggle handlers
-  onFeatureToggle: (feature: string, enabled: boolean) => void;
+interface Feature {
+  id: string;
+  key: string;
+  title: string;
+  description: string;
+  checked: boolean;
 }
 
-export function FeatureToggleList({
-  showUsageFeatures,
-  showBoardingFeatures,
-  showNegotiationFeatures,
-  showBenchmarkingFeatures,
-  showComplianceFeatures,
-  showWorkflowFeatures,
-  showDuplicateAppFeatures,
-  showCopilotFeatures,
-  showProcurementFeatures,
-  showShadowITFeatures,
-  showDiscoveryExtendedFeatures,
-  onFeatureToggle
-}: FeatureToggleListProps) {
-  
-  const features = [
-    {
-      id: "usage-features-toggle",
-      key: "show-usage-features",
-      title: "Usage Analytics",
-      description: "Enables usage analytics features",
-      checked: showUsageFeatures
-    },
-    {
-      id: "boarding-features-toggle",
-      key: "show-boarding-features",
-      title: "User Boarding",
-      description: "Enables user boarding features",
-      checked: showBoardingFeatures
-    },
-    {
-      id: "negotiation-features-toggle",
-      key: "show-negotiation-features",
-      title: "Renewals & Negotiation",
-      description: "Enables contract negotiation features",
-      checked: showNegotiationFeatures
-    },
-    {
-      id: "benchmarking-features-toggle",
-      key: "show-benchmarking-features",
-      title: "Benchmarking",
-      description: "Enables benchmarking features",
-      checked: showBenchmarkingFeatures
-    },
-    {
-      id: "compliance-features-toggle",
-      key: "show-compliance-features",
-      title: "Compliance",
-      description: "Enables compliance certifications tracking",
-      checked: showComplianceFeatures
-    },
-    {
-      id: "workflow-features-toggle",
-      key: "show-workflow-features",
-      title: "Workflow Builder",
-      description: "Enables workflow automation features",
-      checked: showWorkflowFeatures
-    },
-    {
-      id: "duplicate-app-features-toggle",
-      key: "show-duplicate-app-features",
-      title: "Duplicate Application",
-      description: "Enables duplicate app detection and comparison features",
-      checked: showDuplicateAppFeatures
-    },
-    {
-      id: "copilot-features-toggle",
-      key: "show-copilot-features",
-      title: "Co-Pilot",
-      description: "Enables AI-powered assistant for procurement optimization",
-      checked: showCopilotFeatures
-    },
-    {
-      id: "procurement-features-toggle",
-      key: "show-procurement-features",
-      title: "Procurement Intake",
-      description: "Enables procurement intake forms and IT/Security questionnaires",
-      checked: showProcurementFeatures
-    },
-    {
-      id: "shadow-it-features-toggle",
-      key: "show-shadow-it-features",
-      title: "Shadow IT",
-      description: "Enables Shadow IT detection and risk management features",
-      checked: showShadowITFeatures
-    },
-    {
-      id: "discovery-extended-features-toggle",
-      key: "show-discovery-extended-features",
-      title: "Discovery Extended",
-      description: "Enables detailed application discovery features including detailed view popups",
-      checked: showDiscoveryExtendedFeatures
-    }
-  ];
+export interface FeatureToggleListProps {
+  features: { id: string; name: string; enabled: boolean }[];
+  onToggle: (feature: string, enabled: boolean) => void;
+}
 
+export function FeatureToggleList({ features, onToggle }: FeatureToggleListProps) {
   return (
     <div className="space-y-4">
       {features.map(feature => (
         <FeatureFlag
           key={feature.id}
           id={feature.id}
-          title={feature.title}
-          description={feature.description}
-          checked={feature.checked}
+          title={feature.name}
+          description={`Controls ${feature.name} functionality`}
+          checked={feature.enabled}
           onCheckedChange={(checked) => {
-            onFeatureToggle(feature.key, checked);
+            onToggle(feature.id, checked);
           }}
         />
       ))}

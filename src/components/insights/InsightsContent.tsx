@@ -16,7 +16,11 @@ export function InsightsContent() {
     dismissedInsights,
     resolvedInsights,
     dismissInsight,
-    resolveInsight 
+    resolveInsight,
+    dismissResolvedInsight,
+    restoreDismissedInsight,
+    calculateTotalSavings,
+    averageUtilizationRate
   } = useInsightsData();
 
   // Combine critical and recommended insights for "All Insights" tab
@@ -112,7 +116,7 @@ export function InsightsContent() {
           <Button
             variant="default"
             size="sm"
-            onClick={() => resolveInsight(insight.id)}
+            onClick={() => restoreDismissedInsight(insight.id)}
             className="bg-blue-600 hover:bg-blue-700"
           >
             <CheckCircle className="mr-2 h-4 w-4" /> Resolve
@@ -122,12 +126,32 @@ export function InsightsContent() {
     }
   ];
 
-  // Columns for resolved insights (no actions needed)
-  const resolvedColumns = insightsColumns.filter(col => col.id !== "actions");
+  // Columns for resolved insights with dismiss action
+  const resolvedColumns = [
+    ...insightsColumns.filter(col => col.id !== "actions"),
+    {
+      id: "actions",
+      header: "Actions",
+      cell: (insight: any) => (
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => dismissResolvedInsight(insight.id)}
+          >
+            <X className="mr-2 h-4 w-4" /> Dismiss
+          </Button>
+        </div>
+      )
+    }
+  ];
+
+  // Calculate total potential savings and average utilization rate
+  const totalSavings = calculateTotalSavings();
 
   return (
     <div className="space-y-6">
-      <InsightsHeader totalSavings={0} />
+      <InsightsHeader totalSavings={totalSavings} utilizationRate={averageUtilizationRate} />
       
       <Tabs defaultValue="all" className="w-full">
         <TabsList className="grid w-full grid-cols-3">

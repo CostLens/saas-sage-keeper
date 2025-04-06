@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { useFeatureFlags } from '@/contexts/FeatureFlagsContext';
@@ -48,7 +49,12 @@ export function AppRoutes() {
       <Route path="/dashboard" element={<Dashboard />} />
       <Route path="/spend-trends" element={<SpendTrends />} />
       <Route path="/app-discovery" element={<AppDiscovery />} />
-      <Route path="/insights" element={<Insights />} />
+      
+      {showCopilotFeatures ? (
+        <Route path="/insights" element={<Insights />} />
+      ) : (
+        <Route path="/insights" element={<Navigate to="/dashboard" replace />} />
+      )}
       
       {showUsageFeatures ? (
         <Route path="/usage" element={<Usage />} />
